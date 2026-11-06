@@ -7,3 +7,6 @@ _ta-only/
 node_modules/
 dist/
 *.tsbuildinfo
+
+# Windows alternate data streams that WSL exposes as real files
+*:Zone.Identifier
