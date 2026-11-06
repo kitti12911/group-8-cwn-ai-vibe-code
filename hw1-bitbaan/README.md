@@ -78,6 +78,7 @@ docker compose up -d backend                                          # กล�
 | `DESIGN.md` + `design/*.png` | LAB 3 · 11 แผนภาพ |
 | `TEST-DATA.md` | LAB 4 · quote 27 แถว · ค่าขอบ 141 แถว |
 | `API-CONTRACT.md` | สัญญา API ของร้านนี้ (frontend · backend · test ใช้ร่วมกัน) |
+| `SPEC.md` · `ASSETS.md` | LAB 6 · สิ่งที่ AI อ้างว่าสร้าง [A] · รูปและไฟล์ที่เว็บใช้ (เขียนย้อนหลังจากโค้ด) |
 | `CONSISTENCY.md` | เทียบงานของเรากับหน้าออกแบบของทีม และเหตุผลที่เลือก |
 | `design/*.html` | หน้าออกแบบของทีม (อ้างของ 12 รายการ ดู `CONSISTENCY.md`) |
 | `frontend/` | หน้าเว็บ Vite + React + TypeScript |
