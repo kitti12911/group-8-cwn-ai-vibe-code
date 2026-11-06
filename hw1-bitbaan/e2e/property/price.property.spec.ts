@@ -97,7 +97,7 @@ test(`P5 · ยอดเงินอยู่ในกรอบที่เป�
   );
 });
 
-test(`P4 · metamorphic — เพิ่มของลงตะกร้าแล้วยอดสินค้าไม่ลดลง (${Math.floor(RUNS / 2)} แบบ · seed ${SEED})`, async () => {
+test(`P4 · metamorphic — เพิ่มของลงตะกร้าแล้วยอดสินค้าไม่ลดลง (${RUNS} แบบ · seed ${SEED})`, async () => {
   await fc.assert(
     fc.asyncProperty(arbCase, fc.constantFrom(...BUYABLE.map((p) => p.sku)), async (c, extra) => {
       const base = c as Case;
@@ -106,11 +106,11 @@ test(`P4 · metamorphic — เพิ่มของลงตะกร้าแ�
       const after = await priceIt({ ...base, items: [...base.items, { sku: extra, qty: 1 }] });
       expect(after.body.g4, `เพิ่ม ${extra} แล้วยอดสินค้าลดลง`).toBeGreaterThanOrEqual(before.body.g4);
     }),
-    { numRuns: Math.floor(RUNS / 2), seed: SEED },
+    { numRuns: RUNS, seed: SEED },
   );
 });
 
-test(`P6 · คิดซ้ำด้วย input เดิมและเวลาเดิม ได้ผลเดิมเสมอ (${Math.floor(RUNS / 4)} แบบ · seed ${SEED})`, async () => {
+test(`P6 · คิดซ้ำด้วย input เดิมและเวลาเดิม ได้ผลเดิมเสมอ (${RUNS} แบบ · seed ${SEED})`, async () => {
   await fc.assert(
     fc.asyncProperty(arbCase, async (c) => {
       const a = await priceIt(c as Case);
@@ -119,11 +119,11 @@ test(`P6 · คิดซ้ำด้วย input เดิมและเวล�
       expect(b.body.vat).toBe(a.body.vat);
       expect(b.body.coupon.amount).toBe(a.body.coupon.amount);
     }),
-    { numRuns: Math.floor(RUNS / 4), seed: SEED },
+    { numRuns: RUNS, seed: SEED },
   );
 });
 
-test(`P2 · ตะกร้าที่ผิดกฎต้องถูกปฏิเสธเสมอ ไม่เงียบ (${Math.floor(RUNS / 4)} แบบ · seed ${SEED})`, async () => {
+test(`P2 · ตะกร้าที่ผิดกฎต้องถูกปฏิเสธเสมอ ไม่เงียบ (${RUNS} แบบ · seed ${SEED})`, async () => {
   const arbBad = fc.oneof(
     // จำนวนเกินของที่มี
     fc.constantFrom(...BUYABLE.map((p) => p.sku)).map((sku) => ({
@@ -159,7 +159,7 @@ test(`P2 · ตะกร้าที่ผิดกฎต้องถูกป�
       const body = await r.json();
       expect(bad.wants, `ได้ error=${body.error}`).toContain(body.error);
     }),
-    { numRuns: Math.floor(RUNS / 4), seed: SEED },
+    { numRuns: RUNS, seed: SEED },
   );
 });
 
