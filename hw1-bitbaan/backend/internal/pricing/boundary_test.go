@@ -260,3 +260,26 @@ func TestAssemblyNeedsPCSpec(t *testing.T) {
 		t.Fatalf("RAM ชิ้นเดียว + ประกอบ: available=%v fee=%d ต้องเป็น false / 0", q.AssemblyAvailable, q.AssemblyFee)
 	}
 }
+
+// R41 ขอบ: ต้องมีทั้ง CPU และเมนบอร์ด ข้างเดียวไม่นับเป็นสเปกเครื่อง · ฆ่า mutant M065–M067
+func TestAssemblyNeedsBothCPUAndBoard(t *testing.T) {
+	cpu := Product{SKU: "SYNTH-CPU", Name: "CPU ทดสอบ", Category: "CPU", Price: 1000}
+	mb := Product{SKU: "SYNTH-MB", Name: "บอร์ดทดสอบ", Category: "MB", Price: 1000}
+	for _, c := range []struct {
+		name  string
+		lines []Line
+		want  bool
+	}{
+		{"CPU อย่างเดียว", []Line{{Product: cpu, Qty: 1}}, false},
+		{"เมนบอร์ดอย่างเดียว", []Line{{Product: mb, Qty: 1}}, false},
+		{"CPU + เมนบอร์ด", []Line{{Product: cpu, Qty: 1}, {Product: mb, Qty: 1}}, true},
+	} {
+		q := Compute(Input{Lines: c.lines, Tier: TierGeneral, Shipping: "pickup", Assembly: true, Now: thu1000})
+		if q.AssemblyAvailable != c.want {
+			t.Errorf("%s: assemblyAvailable = %v ต้องเป็น %v", c.name, q.AssemblyAvailable, c.want)
+		}
+		if want := map[bool]int64{true: 500, false: 0}[c.want]; q.AssemblyFee != want {
+			t.Errorf("%s: ค่าประกอบ %d ต้องเป็น %d", c.name, q.AssemblyFee, want)
+		}
+	}
+}
