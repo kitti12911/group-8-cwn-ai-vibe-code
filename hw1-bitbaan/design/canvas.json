@@ -1,0 +1,25 @@
+{"v":3,"createdOnFiles":{"v":1,"at":"2026-11-06T12:00:00Z"},"title":"BitBaan Computer — Website","launch":{"view":"canvas"},"pages":[],
+"boards":{
+"Main.dc.html":{"x":0,"y":0,"w":1440,"h":2050,"title":"01 หน้าแรก","expand":"fill","is_interactive":true},
+"Category.dc.html":{"x":1520,"y":0,"w":1440,"h":1650,"title":"02 รายการสินค้า","expand":"fill","is_interactive":true},
+"Product.dc.html":{"x":3040,"y":0,"w":1440,"h":1450,"title":"03 รายละเอียดสินค้า","expand":"fill","is_interactive":true},
+"Cart.dc.html":{"x":0,"y":2430,"w":1440,"h":1350,"title":"04 ตะกร้า","expand":"fill","is_interactive":true},
+"Checkout.dc.html":{"x":1520,"y":2430,"w":1440,"h":1500,"title":"05 ชำระเงิน (กันของ 30 นาที)","expand":"fill","is_interactive":true},
+"Order.dc.html":{"x":3040,"y":2430,"w":1440,"h":1350,"title":"06 สถานะคำสั่งซื้อ","expand":"fill","is_interactive":true},
+"Login.dc.html":{"x":0,"y":4310,"w":1440,"h":1000,"title":"07 เข้าสู่ระบบ / สมัคร","expand":"fill","is_interactive":true},
+"Account.dc.html":{"x":1520,"y":4310,"w":1440,"h":1300,"title":"08 บัญชีและระดับสมาชิก","expand":"fill","is_interactive":true},
+"Quote.dc.html":{"x":3040,"y":4310,"w":1440,"h":1500,"title":"09 ใบเสนอราคา (Business)","expand":"fill","is_interactive":true},
+"Admin.dc.html":{"x":0,"y":6190,"w":1440,"h":1350,"title":"10 หลังร้าน: สต็อกและการจอง","expand":"fill"}
+},
+"order":["Main.dc.html","Category.dc.html","Product.dc.html","Cart.dc.html","Checkout.dc.html","Order.dc.html","Login.dc.html","Account.dc.html","Quote.dc.html","Admin.dc.html"],
+"notes":{
+"t1":{"x":0,"y":-280,"text":"เลือกซื้อ","kind":"title1","maxW":4480},
+"t2":{"x":0,"y":2150,"text":"ตะกร้า ชำระเงิน และหลังสั่งซื้อ","kind":"title1","maxW":4480},
+"t3":{"x":0,"y":4030,"text":"บัญชี สมาชิก และลูกค้าธุรกิจ","kind":"title1","maxW":4480},
+"t4":{"x":0,"y":5910,"text":"หลังร้าน","kind":"title1","maxW":1440},
+"q1":{"x":4600,"y":0,"w":420,"fill":"orange","size":"m","text":"รอเจ้าของยืนยัน (คนพูดไม่ตรงกัน)\n\n• ส่วนลดสมาชิกซ้อนคูปองได้ไหม: เจ๊เก่งว่าได้ (สมาชิกก่อน แล้วคูปอง) / มิ้นท์ไม่ให้ซ้อน\n• flash sale + ส่วนลดสมาชิก: เจ๊เก่งว่าได้ / มิ้นท์ไม่หักเพิ่ม\n• ชุดประกอบ: CPU+เมนบอร์ด (เจ๊เก่ง) หรือ CPU+เมนบอร์ด+แรม (มิ้นท์)\n\nดีไซน์นี้ใช้ตามที่เจ้าของพูด"},
+"q2":{"x":4600,"y":600,"w":420,"fill":"orange","size":"m","text":"ยังไม่มีกติกา\n\n• ลำดับคิด: ชุดประกอบ → สมาชิก → คูปอง (สมมติ)\n• ปัดเศษสตางค์: ดีไซน์แสดงถึงสตางค์ ปัดครึ่งขึ้น (สมมติ)\n• flash sale ใช้ราคาตอนใส่ตะกร้า หรือตอนจ่ายเสร็จ (กรณีคุณโอ๊ต 12:58 / 13:02)\n• จำกัด 1 ใบ: ต่อบัญชี หรือต่อที่อยู่จัดส่ง"},
+"q3":{"x":4600,"y":2430,"w":420,"fill":"orange","size":"m","text":"หน้าชำระเงิน\n\n• นับถอยหลังใช้ 30 นาทีตามเจ้าของ (คุณโอ๊ตเห็นร้านอื่นใช้ 15)\n• ช่องทางจ่ายเงินยังไม่ได้ระบุ ใส่ PromptPay / บัตร ไว้ก่อน\n• ส่วนลดพิเศษที่มิ้นท์ให้ลูกค้าประจำ (฿100–200) ทำในระบบหรือไม่"},
+"q4":{"x":4600,"y":4310,"w":420,"fill":"orange","size":"m","text":"ลูกค้าธุรกิจ\n\n• Business ใช้คูปองได้ไหม (คุณจอยไม่แน่ใจ)\n• แยกส่ง 10 สาขา คิดค่าส่งยังไง\n• ใบเสนอราคายืน 7 วัน แต่กันสต็อกด้วยหรือไม่"}
+},
+"designSystems":[]}

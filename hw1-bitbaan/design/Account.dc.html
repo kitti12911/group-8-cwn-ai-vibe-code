@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>บิตบ้าน — บัญชีของฉัน</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0;background:#F4F3EF;color:#141518;font-family:'IBM Plex Sans Thai',system-ui,sans-serif}
+a{color:#141518}a:hover{color:#B3101F}
+.mono{font-family:'IBM Plex Mono',ui-monospace,monospace}
+</style>
+</helmet>
+<div style="min-height: 1300px">
+<header style="background: #FFFFFF; border-bottom: 1px solid #D9D7D0">
+<div style="max-width: 1280px; margin: 0 auto; padding: 16px 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 16px 32px">
+<a href="Main.dc.html" style="display: flex; align-items: baseline; gap: 10px; text-decoration: none"><span style="font-size: 26px; font-weight: 700">บิตบ้าน</span><span class="mono" style="font-size: 12px; font-weight: 600; color: #B3101F; letter-spacing: 2px">BITBAAN.PC</span></a>
+<nav aria-label="หมวดหลัก" style="display: flex; flex-wrap: wrap; gap: 4px 24px; font-size: 16px; font-weight: 500">
+<a href="Category.dc.html" style="text-decoration: none; padding: 10px 0">สินค้าทั้งหมด</a>
+<a href="Quote.dc.html" style="text-decoration: none; padding: 10px 0">สำหรับธุรกิจ</a>
+</nav>
+<div style="flex: 1 1 240px"></div>
+<a href="Cart.dc.html" style="text-decoration: none; padding: 10px 14px; background: #141518; color: #FFFFFF; border-radius: 6px; font-size: 15px; font-weight: 500">ตะกร้า <span class="mono">0</span></a>
+</div>
+</header>
+
+<div style="max-width: 1280px; margin: 0 auto; padding: 40px 24px 64px; display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start">
+<nav aria-label="เมนูบัญชี" style="flex: 1 1 220px; max-width: 100%; display: flex; flex-direction: column; gap: 4px">
+<a href="Account.dc.html" style="min-height: 44px; display: flex; align-items: center; padding: 0 14px; border-radius: 6px; background: #141518; color: #FFFFFF; text-decoration: none; font-weight: 600">ภาพรวม</a>
+<a href="Order.dc.html" style="min-height: 44px; display: flex; align-items: center; padding: 0 14px; text-decoration: none">คำสั่งซื้อ</a>
+<a href="Account.dc.html" style="min-height: 44px; display: flex; align-items: center; padding: 0 14px; text-decoration: none">ที่อยู่จัดส่ง</a>
+<a href="Account.dc.html" style="min-height: 44px; display: flex; align-items: center; padding: 0 14px; text-decoration: none">ข้อมูลใบกำกับภาษี</a>
+<a href="Login.dc.html" style="min-height: 44px; display: flex; align-items: center; padding: 0 14px; text-decoration: none; color: #5B5D63">ออกจากระบบ</a>
+</nav>
+
+<div style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 24px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-size: 36px">สวัสดี คุณโอ๊ต</h1>
+<span class="mono" style="font-size: 14px; color: #5B5D63">oat@bitbaan.test</span>
+</div>
+
+<section style="background: #141518; color: #F4F3EF; border-radius: 10px; padding: 32px; display: flex; flex-direction: column; gap: 24px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span class="mono" style="font-size: 13px; letter-spacing: 2px; color: #B9BBC1">ระดับสมาชิก</span>
+<span style="font-size: 44px; font-weight: 700; line-height: 1">Silver</span>
+<span style="font-size: 16px; color: #D4D5D9">ลด 3% ทุกออเดอร์ ใช้คู่กับคูปองได้</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px; align-items: flex-end">
+<span style="font-size: 14px; color: #B9BBC1">ยอดซื้อสะสม 12 เดือนล่าสุด</span>
+<span class="mono" style="font-size: 32px; font-weight: 600">฿20,000.00</span>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px">
+<div style="position: relative; height: 10px; background: #3A3C42; border-radius: 5px">
+<div style="width: 20%; height: 10px; background: #F4F3EF; border-radius: 5px"></div>
+</div>
+<div style="display: flex; justify-content: space-between; font-size: 14px; color: #D4D5D9; flex-wrap: wrap; gap: 8px">
+<span>Silver ฿20,000</span><span>อีก <span class="mono" style="color: #FFFFFF; font-weight: 600">฿80,000</span> เป็น Gold ลด 5%</span><span>Gold ฿100,000</span>
+</div>
+</div>
+<p style="margin: 0; font-size: 14px; color: #B9BBC1; line-height: 1.6; border-top: 1px solid #3A3C42; padding-top: 16px">ยอดที่ซื้อเกิน 12 เดือนจะหลุดออกจากการนับ ถ้ายอดสะสมต่ำกว่า ฿20,000 ระดับจะกลับเป็นสมาชิกทั่วไป</p>
+</section>
+
+<section style="background: #FFFFFF; border: 1px solid #D9D7D0; border-radius: 10px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px"><h2 style="margin: 0; font-size: 22px">คำสั่งซื้อล่าสุด</h2><a href="Order.dc.html" style="font-size: 15px">ดูทั้งหมด</a></div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 560px; border-collapse: collapse; font-size: 15px">
+<thead><tr style="text-align: left; color: #5B5D63; border-bottom: 1px solid #D9D7D0"><th style="padding: 10px 8px; font-weight: 500">เลขที่</th><th style="padding: 10px 8px; font-weight: 500">วันที่</th><th style="padding: 10px 8px; font-weight: 500">สถานะ</th><th style="padding: 10px 8px; font-weight: 500; text-align: right">ยอด</th></tr></thead>
+<tbody>
+<tr style="border-bottom: 1px solid #E7E5DF"><td style="padding: 14px 8px"><a href="Order.dc.html" class="mono">#BB-261106-0042</a></td><td style="padding: 14px 8px">6 พ.ย. 2026</td><td style="padding: 14px 8px"><span style="background: #F4F3EF; border-radius: 4px; padding: 3px 8px; font-size: 14px">รอแพ็กของ</span></td><td class="mono" style="padding: 14px 8px; text-align: right">17,431.38</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section style="background: #FFFFFF; border: 1px solid #D9D7D0; border-radius: 10px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+<h2 style="margin: 0; font-size: 22px">การแจ้งเตือนของเข้า</h2>
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; border: 1px solid #D9D7D0; border-radius: 8px; padding: 14px 16px">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-weight: 600">การ์ดจอ Vexa 5700 12GB</span><span style="font-size: 14px; color: #5B5D63">เปิดขาย จ. 16 พ.ย. 2026 10:00 · จำกัด 1 ใบต่อบัญชี</span></div>
+<button type="button" style="min-height: 44px; padding: 0 16px; border: 1px solid #C9C6BE; background: #FFFFFF; border-radius: 6px; font: inherit; cursor: pointer">ยกเลิกแจ้งเตือน</button>
+</div>
+</section>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1300}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

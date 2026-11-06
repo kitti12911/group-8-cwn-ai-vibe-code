@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>บิตบ้าน คอมพิวเตอร์ — หน้าแรก</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0;background:#F4F3EF;color:#141518;font-family:'IBM Plex Sans Thai',system-ui,sans-serif}
+a{color:#141518}a:hover{color:#B3101F}
+.mono{font-family:'IBM Plex Mono',ui-monospace,monospace}
+.ph{background:repeating-linear-gradient(135deg,#E7E5DF 0 10px,#EFEDE8 10px 20px)}
+</style>
+</helmet>
+<div style="min-height: 2050px">
+<div style="background: #141518; color: #F4F3EF; font-size: 14px">
+<div style="max-width: 1280px; margin: 0 auto; padding: 10px 24px; display: flex; flex-wrap: wrap; gap: 8px 32px; justify-content: center">
+<span>ราคารวม VAT แล้วทุกชิ้น</span><span>ส่งฟรีเมื่อซื้อครบ ฿3,000</span><span>รับที่ร้านฟรี 10:00–21:00 ทุกวัน</span>
+</div>
+</div>
+<header style="background: #FFFFFF; border-bottom: 1px solid #D9D7D0">
+<div style="max-width: 1280px; margin: 0 auto; padding: 16px 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 16px 32px">
+<a href="Main.dc.html" style="display: flex; align-items: baseline; gap: 10px; text-decoration: none">
+<span style="font-size: 26px; font-weight: 700; letter-spacing: -0.5px">บิตบ้าน</span>
+<span class="mono" style="font-size: 12px; font-weight: 600; color: #B3101F; letter-spacing: 2px">BITBAAN.PC</span>
+</a>
+<nav aria-label="หมวดหลัก" style="display: flex; flex-wrap: wrap; gap: 4px 24px; font-size: 16px; font-weight: 500">
+<a href="Category.dc.html" style="text-decoration: none; padding: 10px 0">สินค้าทั้งหมด</a>
+<a href="Category.dc.html" style="text-decoration: none; padding: 10px 0; color: #B3101F">Flash Sale</a>
+<a href="Category.dc.html" style="text-decoration: none; padding: 10px 0">ชุดประกอบ</a>
+<a href="Quote.dc.html" style="text-decoration: none; padding: 10px 0">สำหรับธุรกิจ</a>
+</nav>
+<div style="flex: 1 1 240px; display: flex; align-items: center; gap: 8px; border: 1px solid #C9C6BE; border-radius: 6px; padding: 0 12px; background: #F4F3EF">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5B5D63" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg>
+<label for="q" style="position: absolute; left: -9999px">ค้นหาสินค้า</label>
+<input id="q" type="search" placeholder="ค้นหา เช่น การ์ดจอ, SSD, CPU-N7" style="flex: 1; border: 0; background: transparent; height: 44px; font: inherit; font-size: 15px; outline: none">
+</div>
+<div style="display: flex; gap: 8px; align-items: center">
+<a href="Login.dc.html" style="display: flex; align-items: center; gap: 8px; text-decoration: none; padding: 10px 12px; font-size: 15px">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 4-6 8-6s8 2 8 6"></path></svg>เข้าสู่ระบบ</a>
+<a href="Cart.dc.html" style="display: flex; align-items: center; gap: 8px; text-decoration: none; padding: 10px 14px; background: #141518; color: #FFFFFF; border-radius: 6px; font-size: 15px; font-weight: 500">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 4h2l2.5 11h11L21 7H6.2"></path><circle cx="9" cy="20" r="1.5"></circle><circle cx="18" cy="20" r="1.5"></circle></svg>ตะกร้า <span class="mono">3</span></a>
+</div>
+</div>
+</header>
+
+<section style="max-width: 1280px; margin: 0 auto; padding: 56px 24px 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(480px, 100%), 1fr)); gap: 32px; align-items: stretch">
+<div style="display: flex; flex-direction: column; justify-content: center; gap: 24px">
+<p class="mono" style="margin: 0; font-size: 13px; letter-spacing: 2px; color: #5B5D63">ร้านชิ้นส่วนคอม · ชั้น 4 ห้างไอที ปิ่นเกล้า</p>
+<h1 style="margin: 0; font-size: 56px; line-height: 1.15; font-weight: 700; letter-spacing: -1px; text-wrap: balance">เลือก สั่ง จ่ายเองได้ทันที ไม่ต้องรอแอดมินตอบแชต</h1>
+<p style="margin: 0; font-size: 19px; line-height: 1.6; color: #3E4046; max-width: 560px">ราคาบนเว็บตรงกับหน้าร้าน รวม VAT แล้วทุกชิ้น กดสั่งแล้วระบบกันของไว้ให้คุณ 30 นาที ชิ้นที่คุณจองจะไม่ถูกขายซ้ำให้คนอื่น</p>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<a href="Category.dc.html" style="display: inline-flex; align-items: center; min-height: 52px; padding: 0 28px; background: #141518; color: #FFFFFF; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 17px">เลือกซื้อสินค้า</a>
+<a href="Quote.dc.html" style="display: inline-flex; align-items: center; min-height: 52px; padding: 0 24px; border: 1.5px solid #141518; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 17px">ขอใบเสนอราคาสำหรับบริษัท</a>
+</div>
+</div>
+<article style="background: #141518; color: #F4F3EF; border-radius: 10px; padding: 32px; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap">
+<span class="mono" style="font-size: 13px; letter-spacing: 2px; color: #FF8A8A">ของเข้าล็อตถัดไป</span>
+<span class="mono" style="font-size: 13px; padding: 4px 10px; border: 1px solid #55575E; border-radius: 4px">GPU-V57</span>
+</div>
+<div class="ph" style="height: 200px; border-radius: 6px; opacity: 0.12"></div>
+<h2 style="margin: 0; font-size: 30px; line-height: 1.3">การ์ดจอ Vexa 5700 12GB</h2>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">
+<div style="border-top: 1px solid #55575E; padding-top: 12px"><div style="font-size: 13px; color: #B9BBC1">เปิดขาย</div><div style="font-size: 18px; font-weight: 600">จ. 16 พ.ย. 10:00</div></div>
+<div style="border-top: 1px solid #55575E; padding-top: 12px"><div style="font-size: 13px; color: #B9BBC1">จำนวน</div><div style="font-size: 18px; font-weight: 600">2 ใบ</div></div>
+<div style="border-top: 1px solid #55575E; padding-top: 12px"><div style="font-size: 13px; color: #B9BBC1">ราคา</div><div class="mono" style="font-size: 18px; font-weight: 600">฿23,990</div></div>
+</div>
+<p style="margin: 0; font-size: 15px; color: #D4D5D9; line-height: 1.6">จำกัดคนละ 1 ใบ ใครกดสั่งก่อนได้สิทธิ์ก่อน ระบบกันของให้ 30 นาทีเพื่อชำระเงิน</p>
+<a href="Product.dc.html" style="align-self: flex-start; display: inline-flex; align-items: center; min-height: 48px; padding: 0 22px; background: #F4F3EF; color: #141518; border-radius: 6px; text-decoration: none; font-weight: 600">ดูรายละเอียด</a>
+</article>
+</section>
+
+<section style="background: #B3101F; color: #FFFFFF">
+<div style="max-width: 1280px; margin: 0 auto; padding: 40px 24px; display: flex; flex-direction: column; gap: 28px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span class="mono" style="font-size: 13px; letter-spacing: 2px">FLASH SALE · ทุกวันศุกร์ 12:00–13:00</span>
+<h2 style="margin: 0; font-size: 38px; line-height: 1.2">สินค้าป้ายแดงลด 10%</h2>
+<span style="font-size: 16px">รอบถัดไป ศุกร์ 13 พ.ย. 2026 · สมาชิกได้ส่วนลดสมาชิกเพิ่มอีกต่อ</span>
+</div>
+<div role="timer" aria-label="เหลือเวลาก่อนเริ่ม flash sale" style="display: flex; gap: 8px">
+<sc-for list="{{countdown}}" as="c" hint-placeholder-count="4">
+<div style="background: #FFFFFF; color: #141518; border-radius: 6px; width: 76px; padding: 10px 0; display: flex; flex-direction: column; align-items: center">
+<span class="mono" style="font-size: 30px; font-weight: 600">{{c.v}}</span><span style="font-size: 12px">{{c.l}}</span>
+</div>
+</sc-for>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 16px">
+<sc-for list="{{redtag}}" as="p" hint-placeholder-count="4">
+<a href="Product.dc.html" style="background: #FFFFFF; color: #141518; border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 10px; text-decoration: none">
+<div class="ph" style="height: 140px; border-radius: 4px; position: relative">
+<span style="position: absolute; top: 8px; left: 8px; background: #B3101F; color: #FFFFFF; font-size: 12px; font-weight: 600; padding: 3px 8px; border-radius: 3px">ป้ายแดง −10%</span>
+</div>
+<span class="mono" style="font-size: 12px; color: #5B5D63">{{p.sku}}</span>
+<span style="font-size: 16px; font-weight: 600">{{p.name}}</span>
+<div style="display: flex; align-items: baseline; gap: 10px">
+<span class="mono" style="font-size: 20px; font-weight: 600; color: #B3101F">{{p.sale}}</span>
+<span class="mono" style="font-size: 14px; color: #5B5D63; text-decoration: line-through">{{p.price}}</span>
+</div>
+</a>
+</sc-for>
+</div>
+</div>
+</section>
+
+<section style="max-width: 1280px; margin: 0 auto; padding: 56px 24px 24px; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap">
+<h2 style="margin: 0; font-size: 30px">เลือกตามหมวด</h2>
+<a href="Category.dc.html" style="font-size: 16px; font-weight: 500">ดูสินค้าทั้งหมด 12 รายการ</a>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 12px">
+<sc-for list="{{cats}}" as="c" hint-placeholder-count="8">
+<a href="Category.dc.html" style="background: #FFFFFF; border: 1px solid #D9D7D0; border-radius: 8px; padding: 20px; min-height: 88px; box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; text-decoration: none">
+<span style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 18px; font-weight: 600">{{c.name}}</span><span style="font-size: 14px; color: #5B5D63">{{c.count}}</span></span>
+<span class="mono" style="font-size: 13px; color: #5B5D63">{{c.code}}</span>
+</a>
+</sc-for>
+</div>
+</section>
+
+<section style="max-width: 1280px; margin: 0 auto; padding: 32px 24px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(400px, 100%), 1fr)); gap: 16px">
+<div style="background: #FFFFFF; border: 1px solid #D9D7D0; border-radius: 10px; padding: 32px; display: flex; flex-direction: column; gap: 14px">
+<span class="mono" style="font-size: 13px; letter-spacing: 2px; color: #5B5D63">ชุดประกอบ</span>
+<h3 style="margin: 0; font-size: 28px; line-height: 1.3">ซื้อ CPU กับเมนบอร์ดในออเดอร์เดียว ลดเพิ่ม ฿500</h3>
+<p style="margin: 0; font-size: 16px; color: #3E4046; line-height: 1.6">ระบบหักให้อัตโนมัติในตะกร้า ไม่ต้องใส่โค้ด</p>
+<a href="Category.dc.html" style="align-self: flex-start; font-weight: 600; font-size: 16px; padding: 10px 0">จับคู่ CPU กับเมนบอร์ด</a>
+</div>
+<div style="background: #FFFFFF; border: 1px solid #D9D7D0; border-radius: 10px; padding: 32px; display: flex; flex-direction: column; gap: 16px">
+<span class="mono" style="font-size: 13px; letter-spacing: 2px; color: #5B5D63">สมาชิก · คิดจากยอดซื้อ 12 เดือนล่าสุด</span>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">
+<div style="border-top: 3px solid #8A8C92; padding-top: 12px; display: flex; flex-direction: column; gap: 4px"><span style="font-weight: 600; font-size: 18px">Silver</span><span class="mono" style="font-size: 26px; font-weight: 600">−3%</span><span style="font-size: 14px; color: #5B5D63">ยอดสะสม ฿20,000+</span></div>
+<div style="border-top: 3px solid #A8781A; padding-top: 12px; display: flex; flex-direction: column; gap: 4px"><span style="font-weight: 600; font-size: 18px">Gold</span><span class="mono" style="font-size: 26px; font-weight: 600">−5%</span><span style="font-size: 14px; color: #5B5D63">ยอดสะสม ฿100,000+</span></div>
+<div style="border-top: 3px solid #141518; padding-top: 12px; display: flex; flex-direction: column; gap: 4px"><span style="font-weight: 600; font-size: 18px">Business</span><span class="mono" style="font-size: 26px; font-weight: 600">−8%</span><span style="font-size: 14px; color: #5B5D63">บริษัทมีเลขผู้เสียภาษี</span></div>
+</div>
+<a href="Login.dc.html" style="align-self: flex-start; font-weight: 600; font-size: 16px; padding: 10px 0">สมัครสมาชิก</a>
+</div>
+</section>
+
+<section style="max-width: 1280px; margin: 0 auto; padding: 24px 24px 64px">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 0; border-top: 1px solid #C9C6BE; border-bottom: 1px solid #C9C6BE">
+<div style="padding: 24px 20px 24px 0; display: flex; flex-direction: column; gap: 6px"><span style="font-weight: 600; font-size: 17px">ส่งปกติ ฿60</span><span style="font-size: 15px; color: #5B5D63">ฟรีเมื่อซื้อครบ ฿3,000</span></div>
+<div style="padding: 24px 20px; display: flex; flex-direction: column; gap: 6px"><span style="font-weight: 600; font-size: 17px">ส่งด่วนในกรุงเทพฯ ฿150</span><span style="font-size: 15px; color: #5B5D63">ไม่มีส่งฟรีสำหรับส่งด่วน</span></div>
+<div style="padding: 24px 20px; display: flex; flex-direction: column; gap: 6px"><span style="font-weight: 600; font-size: 17px">รับที่ร้านฟรี</span><span style="font-size: 15px; color: #5B5D63">เปิด 10:00–21:00 ทุกวัน</span></div>
+<div style="padding: 24px 0 24px 20px; display: flex; flex-direction: column; gap: 6px"><span style="font-weight: 600; font-size: 17px">คืนของได้ใน 7 วัน</span><span style="font-size: 15px; color: #5B5D63">แกะกล่องแล้วหักค่าธรรมเนียม 10%</span></div>
+</div>
+</section>
+
+<footer style="background: #141518; color: #D4D5D9">
+<div style="max-width: 1280px; margin: 0 auto; padding: 40px 24px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 24px; font-size: 15px">
+<div style="display: flex; flex-direction: column; gap: 6px"><span style="color: #FFFFFF; font-weight: 700; font-size: 20px">บิตบ้าน คอมพิวเตอร์</span><span>ชั้น 4 ห้างไอทีย่านปิ่นเกล้า · เปิด 10:00–21:00 ทุกวัน</span></div>
+<nav aria-label="ลิงก์ท้ายหน้า" style="display: flex; flex-wrap: wrap; gap: 8px 24px">
+<a href="Order.dc.html" style="color: #D4D5D9">ติดตามคำสั่งซื้อ</a>
+<a href="Order.dc.html" style="color: #D4D5D9">การยกเลิกและคืนของ</a>
+<a href="Quote.dc.html" style="color: #D4D5D9">ลูกค้าธุรกิจ</a>
+</nav>
+</div>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2050}}'>
+class Component extends DCLogic {
+renderVals() {
+return {
+countdown: [{v:'06',l:'วัน'},{v:'23',l:'ชม.'},{v:'14',l:'นาที'},{v:'08',l:'วินาที'}],
+redtag: [
+{sku:'MB-B6',name:'เมนบอร์ด B6-Lite',price:'฿4,590',sale:'฿4,131'},
+{sku:'RAM-32',name:'แรม DDR5 32GB (2×16)',price:'฿3,490',sale:'฿3,141'},
+{sku:'GPU-V46',name:'การ์ดจอ Vexa 4600 8GB',price:'฿11,490',sale:'฿10,341'},
+{sku:'SSD-1T',name:'SSD NVMe 1TB',price:'฿2,190',sale:'฿1,971'}
+],
+cats: [
+{name:'CPU',count:'2 รุ่น',code:'CPU'},{name:'เมนบอร์ด',count:'2 รุ่น',code:'MB'},
+{name:'แรม',count:'2 รุ่น',code:'RAM'},{name:'การ์ดจอ',count:'2 รุ่น',code:'GPU'},
+{name:'SSD',count:'1 รุ่น',code:'SSD'},{name:'พาวเวอร์ซัพพลาย',count:'1 รุ่น',code:'PSU'},
+{name:'เคส',count:'1 รุ่น',code:'CASE'},{name:'จอ',count:'1 รุ่น',code:'MON'}
+]
+};
+}
+}
+</script>
+</body>
+</html>
