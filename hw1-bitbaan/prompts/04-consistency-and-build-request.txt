@@ -1,0 +1,1 @@
+you check ours and theirs and make data consistency. theirs consider latest update but if ours is better, use ours. then you create folder of frontend and backend, use vite and go, then execute from plan and create docker compose
