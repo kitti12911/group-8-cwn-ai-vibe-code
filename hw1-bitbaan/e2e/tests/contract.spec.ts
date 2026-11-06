@@ -12,7 +12,10 @@ test.beforeEach(async () => { await reset(api); });
 
 test('contract · ตัวช่วยทดสอบครบ 4 ตัว (TC-NFR-05 · TC-NFR-06 · TC-NFR-08)', async () => {
   expect((await api.get('/api/health')).status()).toBe(200);
-  expect(await bugMode(api)).toBe(0);
+  // โหมดบั๊กต้องเป็น 0/1/2 เสมอ · ค่าที่คาดกำหนดด้วย EXPECT_BUG_MODE ตอนรันโหมดบั๊ก
+  const mode = await bugMode(api);
+  expect([0, 1, 2], 'bugMode ต้องเป็น 0, 1 หรือ 2').toContain(mode);
+  expect(mode, 'โหมดที่เว็บรายงานต้องตรงกับที่ตั้งใจรัน').toBe(Number(process.env.EXPECT_BUG_MODE ?? 0));
   expect(await getClock(api)).toMatchObject({ now: NOW_DEFAULT, running: false });
 
   await setClock(api, '2026-11-13T12:00:00+07:00');
