@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>บิตบ้าน — ชำระเงิน</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0;background:#F4F3EF;color:#141518;font-family:'IBM Plex Sans Thai',system-ui,sans-serif}
+a{color:#141518}a:hover{color:#B3101F}
+.mono{font-family:'IBM Plex Mono',ui-monospace,monospace}
+</style>
+</head>
+<body>
+<div id="dc-root"></div>
+<script type="text/x-template" id="dc-template">
+<div style="min-height: 1500px">
+<div style="position: sticky; top: 0; z-index: 2; background: #141518; color: #FFFFFF">
+<div style="max-width: 1280px; margin: 0 auto; padding: 14px 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px">
+<div style="display: flex; align-items: center; gap: 12px">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FF8A8A" stroke-width="2" aria-hidden="true"><circle cx="12" cy="13" r="8"></circle><path d="M12 9v4l2.5 2M9 2h6"></path></svg>
+<span style="font-size: 16px">กันสินค้าในออเดอร์นี้ไว้ให้คุณแล้ว ชำระเงินภายใน</span>
+</div>
+<div role="timer" aria-live="off" style="display: flex; align-items: baseline; gap: 10px">
+<span class="mono" style="font-size: 32px; font-weight: 600; letter-spacing: 1px">{{mmss}}</span>
+<span style="font-size: 14px; color: #D4D5D9">หมดเวลา 18:52 น.</span>
+</div>
+</div>
+<div style="height: 4px; background: #3A3C42"><div style="height: 4px; background: #FF5A5F; width: {{pct}}%"></div></div>
+</div>
+
+<header style="background: #FFFFFF; border-bottom: 1px solid #D9D7D0">
+<div style="max-width: 1280px; margin: 0 auto; padding: 16px 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 16px 32px">
+<a href="index.html" style="display: flex; align-items: baseline; gap: 10px; text-decoration: none"><span style="font-size: 26px; font-weight: 700">บิตบ้าน</span><span class="mono" style="font-size: 12px; font-weight: 600; color: #B3101F; letter-spacing: 2px">BITBAAN.PC</span></a>
+<ol aria-label="ขั้นตอน" style="list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 15px">
+<li style="color: #5B5D63">1 ตะกร้า</li><li style="font-weight: 600; border-bottom: 2px solid #141518">2 จัดส่งและชำระเงิน</li><li style="color: #5B5D63">3 เสร็จสิ้น</li>
+</ol>
+</div>
+</header>
+
+<div style="max-width: 1280px; margin: 0 auto; padding: 36px 24px 64px; display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start">
+<div style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 24px">
+<section style="background: #FFFFFF; border: 1px solid #D9D7D0; border-radius: 10px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+<h2 style="margin: 0; font-size: 22px">วิธีรับสินค้า</h2>
+<sc-for list="{{ships}}" as="s" hint-placeholder-count="3">
+<label style="{{s.box}}">
+<input type="radio" name="ship" checked="{{s.on}}" onChange="{{s.pick}}" style="width: 20px; height: 20px; accent-color: #141518; flex: none">
+<span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-weight: 600; font-size: 16px">{{s.name}}</span><span style="font-size: 14px; color: #5B5D63">{{s.desc}}</span></span>
+<span class="mono" style="font-weight: 600; font-size: 16px">{{s.fee}}</span>
+</label>
+</sc-for>
+</section>
+
+<sc-if value="{{needsAddr}}" hint-placeholder-val="{{true}}">
+<section style="background: #FFFFFF; border: 1px solid #D9D7D0; border-radius: 10px; padding: 24px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px"><h2 style="margin: 0; font-size: 22px">ที่อยู่จัดส่ง</h2><button type="button" style="min-height: 44px; border: 0; background: transparent; font: inherit; text-decoration: underline; cursor: pointer">เปลี่ยนที่อยู่</button></div>
+<div style="font-size: 16px; line-height: 1.7">คุณโอ๊ต · <span class="mono">08x-xxx-xxxx</span><br>[ที่อยู่จัดส่งของลูกค้า]</div>
+</section>
+</sc-if>
+
+<section style="background: #FFFFFF; border: 1px solid #D9D7D0; border-radius: 10px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+<h2 style="margin: 0; font-size: 22px">ชำระเงิน</h2>
+<label style="display: flex; gap: 14px; align-items: center; border: 2px solid #141518; border-radius: 8px; padding: 16px; min-height: 44px">
+<input type="radio" name="pay" checked="{{true}}" style="width: 20px; height: 20px; accent-color: #141518">
+<span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-weight: 600">PromptPay QR</span><span style="font-size: 14px; color: #5B5D63">ยืนยันยอดอัตโนมัติ ไม่ต้องส่งสลิป</span></span>
+</label>
+<label style="display: flex; gap: 14px; align-items: center; border: 1px solid #C9C6BE; border-radius: 8px; padding: 16px; min-height: 44px">
+<input type="radio" name="pay" style="width: 20px; height: 20px; accent-color: #141518">
+<span style="font-weight: 600">บัตรเครดิต / เดบิต</span>
+</label>
+<label style="display: flex; gap: 12px; align-items: center; font-size: 15px; min-height: 44px; margin-top: 4px">
+<input type="checkbox" style="width: 20px; height: 20px; accent-color: #141518">ขอใบกำกับภาษีเต็มรูป (แยก VAT ยอดตรงกับที่จ่าย)
+</label>
+</section>
+</div>
+
+<aside aria-label="สรุปออเดอร์" style="flex: 1 1 360px; max-width: 100%; background: #FFFFFF; border: 1px solid #D9D7D0; border-radius: 10px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+<h2 style="margin: 0; font-size: 20px">ออเดอร์ <span class="mono" style="font-size: 16px; color: #5B5D63">#BB-261106-0042</span></h2>
+<div style="display: flex; flex-direction: column; gap: 8px; font-size: 15px">
+<div style="display: flex; justify-content: space-between; gap: 12px"><span>CPU Nexa 5 (6 คอร์)</span><span class="mono">6,290.00</span></div>
+<div style="display: flex; justify-content: space-between; gap: 12px"><span>เมนบอร์ด B6-Lite</span><span class="mono">4,590.00</span></div>
+<div style="display: flex; justify-content: space-between; gap: 12px"><span>จอ 27" 165Hz</span><span class="mono">7,990.00</span></div>
+</div>
+<div style="border-top: 1px solid #E7E5DF; padding-top: 12px; display: flex; flex-direction: column; gap: 8px; font-size: 15px">
+<div style="display: flex; justify-content: space-between; color: #2E6B3A"><span>ชุดประกอบ</span><span class="mono">−500.00</span></div>
+<div style="display: flex; justify-content: space-between; color: #2E6B3A"><span>สมาชิก Silver 3%</span><span class="mono">−551.10</span></div>
+<div style="display: flex; justify-content: space-between; color: #2E6B3A"><span>คูปอง GAMER5</span><span class="mono">−387.52</span></div>
+<div style="display: flex; justify-content: space-between"><span>ค่าส่ง</span><span class="mono">{{fee}}</span></div>
+</div>
+<div style="border-top: 1px solid #141518; padding-top: 14px; display: flex; justify-content: space-between; align-items: baseline">
+<span style="font-weight: 600; font-size: 17px">ยอดชำระ</span><span class="mono" style="font-size: 30px; font-weight: 600">฿{{total}}</span>
+</div>
+<div style="background: #F4F3EF; border-radius: 6px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; font-size: 14px; color: #3E4046">
+<div style="display: flex; justify-content: space-between"><span>มูลค่าก่อน VAT</span><span class="mono">{{net}}</span></div>
+<div style="display: flex; justify-content: space-between"><span>VAT 7%</span><span class="mono">{{vat}}</span></div>
+</div>
+<a href="Order.html" style="display: flex; justify-content: center; align-items: center; min-height: 54px; background: #B3101F; color: #FFFFFF; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 17px">ชำระเงิน ฿{{total}}</a>
+<p style="margin: 0; font-size: 13px; color: #5B5D63; line-height: 1.6">ราคาและส่วนลดล็อกตามเวลาที่กดสั่งซื้อ (18:22 น.) ถ้าหมดเวลา ของจะถูกปล่อยคืนและต้องสั่งใหม่</p>
+</aside>
+</div>
+</div>
+</script>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1500}}'>
+class Component extends DCLogic {
+constructor(p){ super(p); this.state = { left: 29 * 60 + 41, ship: 'std' }; }
+componentDidMount(){ this.t = setInterval(() => this.setState({ left: Math.max(0, this.state.left - 1) }), 1000); }
+componentWillUnmount(){ clearInterval(this.t); }
+renderVals() {
+const s = this.state;
+const m = String(Math.floor(s.left / 60)).padStart(2, '0'), sec = String(s.left % 60).padStart(2, '0');
+const opts = [
+{ id: 'std', name: 'ส่งปกติ', desc: 'ปกติ ฿60 · ฟรีเพราะยอดเกิน ฿3,000', fee: 'ฟรี', total: '17,431.38', net: '16,291.01', vat: '1,140.37' },
+{ id: 'exp', name: 'ส่งด่วนในกรุงเทพฯ', desc: 'ไม่มีส่งฟรีสำหรับส่งด่วน', fee: '150.00', total: '17,581.38', net: '16,431.20', vat: '1,150.18' },
+{ id: 'pick', name: 'รับที่ร้าน', desc: 'ชั้น 4 ห้างไอที ปิ่นเกล้า · 10:00–21:00 ทุกวัน', fee: 'ฟรี', total: '17,431.38', net: '16,291.01', vat: '1,140.37' }
+];
+const cur = opts.find(o => o.id === s.ship);
+return {
+mmss: m + ':' + sec, pct: (s.left / 1800 * 100).toFixed(1),
+ships: opts.map(o => ({ ...o, on: o.id === s.ship, pick: () => this.setState({ ship: o.id }),
+box: 'display:flex;gap:14px;align-items:center;border-radius:8px;padding:16px;cursor:pointer;' + (o.id === s.ship ? 'border:2px solid #141518' : 'border:1px solid #C9C6BE') })),
+fee: cur.fee, total: cur.total, net: cur.net, vat: cur.vat, needsAddr: s.ship !== 'pick'
+};
+}
+}
+</script>
+<script src="dc-lite.js"></script>
+</body>
+</html>

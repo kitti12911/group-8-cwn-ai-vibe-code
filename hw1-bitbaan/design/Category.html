@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>บิตบ้าน — สินค้าทั้งหมด</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0;background:#F4F3EF;color:#141518;font-family:'IBM Plex Sans Thai',system-ui,sans-serif}
+a{color:#141518}a:hover{color:#B3101F}
+.mono{font-family:'IBM Plex Mono',ui-monospace,monospace}
+.ph{background:repeating-linear-gradient(135deg,#E7E5DF 0 10px,#EFEDE8 10px 20px)}
+</style>
+</head>
+<body>
+<div id="dc-root"></div>
+<script type="text/x-template" id="dc-template">
+<div style="min-height: 1650px">
+<header style="background: #FFFFFF; border-bottom: 1px solid #D9D7D0">
+<div style="max-width: 1280px; margin: 0 auto; padding: 16px 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 16px 32px">
+<a href="index.html" style="display: flex; align-items: baseline; gap: 10px; text-decoration: none"><span style="font-size: 26px; font-weight: 700">บิตบ้าน</span><span class="mono" style="font-size: 12px; font-weight: 600; color: #B3101F; letter-spacing: 2px">BITBAAN.PC</span></a>
+<nav aria-label="หมวดหลัก" style="display: flex; flex-wrap: wrap; gap: 4px 24px; font-size: 16px; font-weight: 500">
+<a href="Category.html" style="text-decoration: none; padding: 10px 0; border-bottom: 2px solid #141518">สินค้าทั้งหมด</a>
+<a href="Category.html" style="text-decoration: none; padding: 10px 0; color: #B3101F">Flash Sale</a>
+<a href="Category.html" style="text-decoration: none; padding: 10px 0">ชุดประกอบ</a>
+<a href="Quote.html" style="text-decoration: none; padding: 10px 0">สำหรับธุรกิจ</a>
+</nav>
+<div style="flex: 1 1 240px"></div>
+<div style="display: flex; gap: 8px; align-items: center">
+<a href="Account.html" style="text-decoration: none; padding: 10px 12px; font-size: 15px">คุณโอ๊ต · Silver</a>
+<a href="Cart.html" style="display: flex; align-items: center; gap: 8px; text-decoration: none; padding: 10px 14px; background: #141518; color: #FFFFFF; border-radius: 6px; font-size: 15px; font-weight: 500">ตะกร้า <span class="mono">3</span></a>
+</div>
+</div>
+</header>
+
+<div style="max-width: 1280px; margin: 0 auto; padding: 32px 24px 64px; display: flex; flex-direction: column; gap: 24px">
+<nav aria-label="breadcrumb" style="font-size: 14px; color: #5B5D63; display: flex; gap: 8px"><a href="index.html" style="color: #5B5D63">หน้าแรก</a><span>/</span><span>สินค้าทั้งหมด</span></nav>
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-size: 40px; letter-spacing: -0.5px">สินค้าทั้งหมด</h1>
+<span style="font-size: 16px; color: #5B5D63">แสดง {{shown}} จาก 12 รายการ · ราคารวม VAT แล้ว</span>
+</div>
+<div style="display: flex; align-items: center; gap: 10px">
+<label for="sort" style="font-size: 15px">เรียงตาม</label>
+<select id="sort" style="height: 44px; padding: 0 12px; font: inherit; font-size: 15px; border: 1px solid #C9C6BE; border-radius: 6px; background: #FFFFFF">
+<option>แนะนำ</option><option>ราคาต่ำ → สูง</option><option>ราคาสูง → ต่ำ</option>
+</select>
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start">
+<aside aria-label="ตัวกรอง" style="flex: 1 1 240px; max-width: 100%; display: flex; flex-direction: column; gap: 24px">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0 0 4px; font-size: 14px; letter-spacing: 1px; color: #5B5D63">หมวด</h2>
+<sc-for list="{{cats}}" as="c" hint-placeholder-count="9">
+<button type="button" onClick="{{c.pick}}" style="{{c.style}}">{{c.name}}<span class="mono" style="font-size: 13px">{{c.n}}</span></button>
+</sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px; border-top: 1px solid #D9D7D0; padding-top: 20px">
+<h2 style="margin: 0; font-size: 14px; letter-spacing: 1px; color: #5B5D63">ตัวกรอง</h2>
+<label style="display: flex; gap: 10px; align-items: center; font-size: 15px; min-height: 44px"><input type="checkbox" checked="{{redOnly}}" onChange="{{toggleRed}}" style="width: 20px; height: 20px; accent-color: #B3101F">เฉพาะป้ายแดง (ลด 10% ช่วง flash sale)</label>
+<label style="display: flex; gap: 10px; align-items: center; font-size: 15px; min-height: 44px"><input type="checkbox" checked="{{inStock}}" onChange="{{toggleStock}}" style="width: 20px; height: 20px; accent-color: #141518">มีของพร้อมส่ง</label>
+</div>
+<div style="background: #FFFFFF; border: 1px solid #D9D7D0; border-radius: 8px; padding: 18px; display: flex; flex-direction: column; gap: 8px">
+<span style="font-weight: 600; font-size: 16px">ชุดประกอบลด ฿500</span>
+<span style="font-size: 14px; color: #3E4046; line-height: 1.6">ใส่ CPU และเมนบอร์ดในออเดอร์เดียวกัน ระบบหักให้ในตะกร้า</span>
+</div>
+</aside>
+
+<section aria-label="รายการสินค้า" style="flex: 999 1 560px; min-width: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(240px, 100%), 1fr)); gap: 16px">
+<sc-for list="{{items}}" as="p" hint-placeholder-count="12">
+<article style="background: #FFFFFF; border: 1px solid #D9D7D0; border-radius: 8px; padding: 14px; display: flex; flex-direction: column; gap: 10px">
+<a href="Product.html" class="ph" style="display: block; height: 150px; border-radius: 4px; position: relative" aria-label="{{p.name}}">
+<sc-if value="{{p.red}}" hint-placeholder-val="{{false}}"><span style="position: absolute; top: 8px; left: 8px; background: #B3101F; color: #FFFFFF; font-size: 12px; font-weight: 600; padding: 3px 8px; border-radius: 3px">ป้ายแดง</span></sc-if>
+<sc-if value="{{p.limit}}" hint-placeholder-val="{{false}}"><span style="position: absolute; top: 8px; left: 8px; background: #141518; color: #FFFFFF; font-size: 12px; font-weight: 600; padding: 3px 8px; border-radius: 3px">รุ่นใหม่ · คนละ 1</span></sc-if>
+</a>
+<span class="mono" style="font-size: 12px; color: #5B5D63">{{p.sku}} · {{p.cat}}</span>
+<a href="Product.html" style="font-size: 16px; font-weight: 600; text-decoration: none; line-height: 1.4; min-height: 44px">{{p.name}}</a>
+<span class="mono" style="font-size: 20px; font-weight: 600">{{p.price}}</span>
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 8px">
+<span style="{{p.stockStyle}}">{{p.stock}}</span>
+<button type="button" aria-label="ใส่ตะกร้า {{p.name}}" style="height: 44px; padding: 0 14px; border: 0; border-radius: 6px; background: #141518; color: #FFFFFF; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer">ใส่ตะกร้า</button>
+</div>
+</article>
+</sc-for>
+<sc-if value="{{empty}}" hint-placeholder-val="{{false}}"><p style="font-size: 16px; color: #5B5D63">ไม่มีสินค้าตรงกับตัวกรอง</p></sc-if>
+</section>
+</div>
+</div>
+</div>
+</script>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1650}}'>
+class Component extends DCLogic {
+constructor(p){ super(p); this.state = { cat: 'ทั้งหมด', redOnly: false, inStock: false }; }
+renderVals() {
+const all = [
+['CPU-N5','CPU Nexa 5 (6 คอร์)','CPU',6290,8,false],
+['CPU-N7','CPU Nexa 7 (8 คอร์)','CPU',10990,5,false],
+['MB-B6','เมนบอร์ด B6-Lite','เมนบอร์ด',4590,6,true],
+['MB-X7','เมนบอร์ด X7-Pro','เมนบอร์ด',8790,3,false],
+['RAM-16','แรม DDR5 16GB (2×8)','แรม',1890,20,false],
+['RAM-32','แรม DDR5 32GB (2×16)','แรม',3490,12,true],
+['GPU-V46','การ์ดจอ Vexa 4600 8GB','การ์ดจอ',11490,4,true],
+['GPU-V57','การ์ดจอ Vexa 5700 12GB','การ์ดจอ',23990,1,false],
+['SSD-1T','SSD NVMe 1TB','SSD',2190,15,true],
+['PSU-750','พาวเวอร์ 750W Gold','พาวเวอร์ซัพพลาย',3290,7,false],
+['CASE-M','เคส Airflow M','เคส',1590,9,false],
+['MON-27','จอ 27" 165Hz','จอ',7990,5,false]
+];
+const s = this.state;
+const names = ['ทั้งหมด','CPU','เมนบอร์ด','แรม','การ์ดจอ','SSD','พาวเวอร์ซัพพลาย','เคส','จอ'];
+const cats = names.map(n => {
+const on = s.cat === n;
+return { name: n, n: n === 'ทั้งหมด' ? 12 : all.filter(a => a[2] === n).length,
+pick: () => this.setState({ cat: n }),
+style: 'display:flex;justify-content:space-between;align-items:center;min-height:44px;padding:0 12px;border-radius:6px;font:inherit;font-size:15px;text-align:left;cursor:pointer;border:0;' + (on ? 'background:#141518;color:#FFFFFF;font-weight:600' : 'background:transparent;color:#141518') };
+});
+const items = all.filter(a => (s.cat === 'ทั้งหมด' || a[2] === s.cat) && (!s.redOnly || a[5]) && (!s.inStock || a[4] > 0))
+.map(a => {
+const low = a[4] <= 3;
+return { sku: a[0], name: a[1], cat: a[2], price: '฿' + a[3].toLocaleString('en-US'), red: a[5], limit: a[0] === 'GPU-V57',
+stock: a[4] === 1 ? 'เหลือ 1 ชิ้นสุดท้าย' : (low ? 'เหลือ ' + a[4] + ' ชิ้น' : 'มีของ'),
+stockStyle: 'font-size:14px;font-weight:500;color:' + (low ? '#9A4A00' : '#2E6B3A') };
+});
+return { cats, items, shown: items.length, empty: items.length === 0, redOnly: s.redOnly, inStock: s.inStock,
+toggleRed: () => this.setState({ redOnly: !s.redOnly }), toggleStock: () => this.setState({ inStock: !s.inStock }) };
+}
+}
+</script>
+<script src="dc-lite.js"></script>
+</body>
+</html>

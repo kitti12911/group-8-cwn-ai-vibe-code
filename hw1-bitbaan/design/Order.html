@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>บิตบ้าน — สถานะคำสั่งซื้อ</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0;background:#F4F3EF;color:#141518;font-family:'IBM Plex Sans Thai',system-ui,sans-serif}
+a{color:#141518}a:hover{color:#B3101F}
+.mono{font-family:'IBM Plex Mono',ui-monospace,monospace}
+</style>
+</head>
+<body>
+<div id="dc-root"></div>
+<script type="text/x-template" id="dc-template">
+<div style="min-height: 1350px">
+<header style="background: #FFFFFF; border-bottom: 1px solid #D9D7D0">
+<div style="max-width: 1280px; margin: 0 auto; padding: 16px 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 16px 32px">
+<a href="index.html" style="display: flex; align-items: baseline; gap: 10px; text-decoration: none"><span style="font-size: 26px; font-weight: 700">บิตบ้าน</span><span class="mono" style="font-size: 12px; font-weight: 600; color: #B3101F; letter-spacing: 2px">BITBAAN.PC</span></a>
+<div style="flex: 1 1 240px"></div>
+<a href="Account.html" style="text-decoration: none; padding: 10px 12px; font-size: 15px">คุณโอ๊ต · Silver</a>
+</div>
+</header>
+
+<div style="max-width: 1080px; margin: 0 auto; padding: 40px 24px 64px; display: flex; flex-direction: column; gap: 24px">
+<div style="background: #E9F2EA; border: 1px solid #9CC3A3; border-radius: 10px; padding: 24px; display: flex; flex-wrap: wrap; gap: 16px 24px; align-items: center">
+<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#1F4A28" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M7 12l3.5 3.5L17 9"></path></svg>
+<div style="flex: 1 1 300px; display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-size: 28px; color: #1F4A28">ชำระเงินแล้ว สินค้าเป็นของคุณ</h1>
+<span style="font-size: 16px; color: #1F4A28">ออเดอร์ <span class="mono" style="font-weight: 600">#BB-261106-0042</span> · ชำระ 18:31 น. · ยืนยันโดยระบบ ไม่ต้องรอแอดมิน</span>
+</div>
+</div>
+
+<section style="background: #FFFFFF; border: 1px solid #D9D7D0; border-radius: 10px; padding: 28px; display: flex; flex-direction: column; gap: 20px">
+<h2 style="margin: 0; font-size: 22px">สถานะ</h2>
+<ol style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr)); gap: 12px">
+<sc-for list="{{steps}}" as="s" hint-placeholder-count="5">
+<li style="{{s.bar}}">
+<span style="font-weight: 600; font-size: 16px">{{s.name}}</span>
+<span style="font-size: 14px; color: #5B5D63">{{s.when}}</span>
+</li>
+</sc-for>
+</ol>
+</section>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr)); gap: 24px; align-items: start">
+<section style="background: #FFFFFF; border: 1px solid #D9D7D0; border-radius: 10px; padding: 24px; display: flex; flex-direction: column; gap: 12px">
+<h2 style="margin: 0; font-size: 20px">รายการ</h2>
+<div style="display: flex; flex-direction: column; gap: 8px; font-size: 15px">
+<div style="display: flex; justify-content: space-between; gap: 12px"><span>CPU Nexa 5 (6 คอร์) × 1</span><span class="mono">6,290.00</span></div>
+<div style="display: flex; justify-content: space-between; gap: 12px"><span>เมนบอร์ด B6-Lite × 1</span><span class="mono">4,590.00</span></div>
+<div style="display: flex; justify-content: space-between; gap: 12px"><span>จอ 27" 165Hz × 1</span><span class="mono">7,990.00</span></div>
+<div style="display: flex; justify-content: space-between; color: #2E6B3A"><span>ส่วนลดรวม</span><span class="mono">−1,438.62</span></div>
+<div style="display: flex; justify-content: space-between"><span>ส่งปกติ</span><span>ฟรี</span></div>
+</div>
+<div style="border-top: 1px solid #141518; padding-top: 12px; display: flex; justify-content: space-between; align-items: baseline"><span style="font-weight: 600">ชำระแล้ว</span><span class="mono" style="font-size: 24px; font-weight: 600">฿17,431.38</span></div>
+<a href="Order.html" style="align-self: flex-start; padding: 10px 0; font-size: 15px; font-weight: 500">ดาวน์โหลดใบกำกับภาษี (PDF)</a>
+</section>
+
+<section style="background: #FFFFFF; border: 1px solid #D9D7D0; border-radius: 10px; padding: 24px; display: flex; flex-direction: column; gap: 16px">
+<h2 style="margin: 0; font-size: 20px">ยกเลิก / คืนของ / เคลม</h2>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-weight: 600; font-size: 16px">ยกเลิกออเดอร์</span>
+<span style="font-size: 15px; color: #3E4046; line-height: 1.6">ร้านยังไม่แพ็กของ ยกเลิกตอนนี้ได้เงินคืนเต็มจำนวน ฿17,431.38</span>
+<button type="button" style="align-self: flex-start; min-height: 46px; padding: 0 20px; border: 1.5px solid #9E0E1C; color: #9E0E1C; background: #FFFFFF; border-radius: 6px; font: inherit; font-weight: 600; cursor: pointer">ยกเลิกและขอคืนเงิน</button>
+</div>
+<div style="border-top: 1px solid #E7E5DF; padding-top: 14px; display: flex; flex-direction: column; gap: 6px">
+<span style="font-weight: 600; font-size: 16px">คืนของ</span>
+<span style="font-size: 15px; color: #3E4046; line-height: 1.6">ภายใน 7 วันหลังได้รับ ยังไม่แกะกล่องคืนเต็ม แกะกล่องแล้วหักค่าธรรมเนียม 10%</span>
+</div>
+<div style="border-top: 1px solid #E7E5DF; padding-top: 14px; display: flex; flex-direction: column; gap: 6px">
+<span style="font-weight: 600; font-size: 16px">สินค้าเสียจากโรงงาน</span>
+<span style="font-size: 15px; color: #3E4046; line-height: 1.6">เคลมตามประกันผู้ผลิต แยกจากการคืนของ ไม่หักค่าธรรมเนียม</span>
+</div>
+</section>
+</div>
+</div>
+</div>
+</script>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1350}}'>
+class Component extends DCLogic {
+renderVals() {
+const raw = [['สั่งซื้อ','6 พ.ย. 18:22',1],['ชำระเงิน','6 พ.ย. 18:31',1],['แพ็กของ','รอดำเนินการ',2],['จัดส่ง','–',0],['ได้รับสินค้า','–',0]];
+return { steps: raw.map(r => ({ name: r[0], when: r[1],
+bar: 'display:flex;flex-direction:column;gap:4px;padding-top:12px;border-top:4px solid ' + (r[2] === 1 ? '#2E6B3A' : r[2] === 2 ? '#141518' : '#D9D7D0') })) };
+}
+}
+</script>
+<script src="dc-lite.js"></script>
+</body>
+</html>
