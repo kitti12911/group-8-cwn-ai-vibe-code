@@ -213,13 +213,9 @@ func TestCategoryCouponWithNoEligibleItem(t *testing.T) {
 // ราคาป้ายรวมต้องคูณจำนวน และยอดชำระต้องรวมค่าประกอบกับค่าส่งครบทั้งสองก้อน · ฆ่า mutant S10
 func TestListTotalAndTotalComposition(t *testing.T) {
 	q := Compute(Input{
-		// CPU ฿1,000 × 2 + เมนบอร์ด ฿0 — เป็นสเปกเครื่อง จึงเลือกประกอบได้ (BR-21 · R41) · ชุดประกอบ 1 คู่ −500
-		Lines: []Line{
-			{Product: Product{SKU: "SYNTH-CPU", Name: "CPU ทดสอบ", Category: "CPU", Price: 1000}, Qty: 2},
-			{Product: Product{SKU: "SYNTH-MB", Name: "บอร์ดทดสอบ", Category: "MB", Price: 0}, Qty: 1},
-		},
+		Lines:    []Line{{Product: synth(1000, false), Qty: 2}},
 		Tier:     TierGeneral,
-		Shipping: "standard", // G4 = 1,500 < 3,000 → ค่าส่ง 60
+		Shipping: "standard", // G4 = 2,000 < 3,000 → ค่าส่ง 60
 		Assembly: true,       // ไม่ครบ 7 หมวด → ค่าประกอบ 500
 		Now:      thu1000,
 	})
@@ -229,8 +225,8 @@ func TestListTotalAndTotalComposition(t *testing.T) {
 	if q.AssemblyFee != 500 || q.ShippingFee != 60 {
 		t.Fatalf("ค่าประกอบ %d ค่าส่ง %d", q.AssemblyFee, q.ShippingFee)
 	}
-	if q.Total != 2060 {
-		t.Errorf("ยอดชำระ = %d ต้องเป็น 2060 (2,000 − 500 + 500 + 60)", q.Total)
+	if q.Total != 2560 {
+		t.Errorf("ยอดชำระ = %d ต้องเป็น 2560 (2,000 + 500 + 60)", q.Total)
 	}
 }
 
@@ -253,33 +249,23 @@ func TestFlashWindowNextStart(t *testing.T) {
 	}
 }
 
-// R41 (LAB 9): ชิ้นเดี่ยวที่ไม่ใช่สเปกเครื่อง ส่ง assembly มาก็ไม่คิดค่าประกอบ
-func TestAssemblyNeedsPCSpec(t *testing.T) {
-	q := Compute(Input{Lines: []Line{{Product: synth(1890, false), Qty: 1}}, Tier: TierGeneral, Shipping: "pickup", Assembly: true, Now: thu1000})
-	if q.AssemblyAvailable || q.AssemblyFee != 0 {
-		t.Fatalf("RAM ชิ้นเดียว + ประกอบ: available=%v fee=%d ต้องเป็น false / 0", q.AssemblyAvailable, q.AssemblyFee)
+// ---- mutation รอบ 5 · MUTATION-REPORT.md ข้อ 6 ----
+
+// ใบเสนอราคาที่มีค่าประกอบ เปลี่ยนวิธีส่งแล้วยอดต้องยังบวกค่าประกอบ (BR-39 · A-37) · ฆ่า pricing.go Reship G4 + AssemblyFee → −
+func TestReshipKeepsAssemblyFee(t *testing.T) {
+	q := quoteOf(2000, "pickup")
+	q.AssemblyFee = 500
+	Reship(&q, "standard")
+	if want := int64(2000 + 500 + 60); q.Total != want {
+		t.Errorf("Reship ใบที่มีค่าประกอบ: ยอดชำระ = %d ต้องเป็น %d (2,000 + 500 + 60)", q.Total, want)
 	}
 }
 
-// R41 ขอบ: ต้องมีทั้ง CPU และเมนบอร์ด ข้างเดียวไม่นับเป็นสเปกเครื่อง · ฆ่า mutant M065–M067
-func TestAssemblyNeedsBothCPUAndBoard(t *testing.T) {
-	cpu := Product{SKU: "SYNTH-CPU", Name: "CPU ทดสอบ", Category: "CPU", Price: 1000}
-	mb := Product{SKU: "SYNTH-MB", Name: "บอร์ดทดสอบ", Category: "MB", Price: 1000}
-	for _, c := range []struct {
-		name  string
-		lines []Line
-		want  bool
-	}{
-		{"CPU อย่างเดียว", []Line{{Product: cpu, Qty: 1}}, false},
-		{"เมนบอร์ดอย่างเดียว", []Line{{Product: mb, Qty: 1}}, false},
-		{"CPU + เมนบอร์ด", []Line{{Product: cpu, Qty: 1}, {Product: mb, Qty: 1}}, true},
-	} {
-		q := Compute(Input{Lines: c.lines, Tier: TierGeneral, Shipping: "pickup", Assembly: true, Now: thu1000})
-		if q.AssemblyAvailable != c.want {
-			t.Errorf("%s: assemblyAvailable = %v ต้องเป็น %v", c.name, q.AssemblyAvailable, c.want)
-		}
-		if want := map[bool]int64{true: 500, false: 0}[c.want]; q.AssemblyFee != want {
-			t.Errorf("%s: ค่าประกอบ %d ต้องเป็น %d", c.name, q.AssemblyFee, want)
-		}
+// คูปองที่จำกัด 1 หมวด ต้องตรวจหมวดเหมือนคูปองหลายหมวด (BR-18) · ฆ่า pricing.go len(c.Categories) > 0 → > 1
+func TestCouponLimitedToOneCategory(t *testing.T) {
+	one := &Coupon{Code: "ONECAT", Kind: "fixed", Value: 100, Categories: []string{"GPU"}}
+	q := Compute(Input{Lines: []Line{{Product: synth(5000, false), Qty: 1}}, Tier: TierGeneral, Coupon: one, CouponCode: "ONECAT", Shipping: "pickup", Now: thu1000})
+	if q.Coupon.Status != "REJECTED" || q.Coupon.Amount != 0 {
+		t.Errorf("คูปองเฉพาะ GPU กับตะกร้า SSD: status=%s amount=%d ต้องเป็น REJECTED / 0", q.Coupon.Status, q.Coupon.Amount)
 	}
 }

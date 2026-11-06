@@ -3,6 +3,7 @@ package compat
 import (
 	"testing"
 
+	"bitbaan/backend/internal/catalog"
 	"bitbaan/backend/internal/pricing"
 )
 
@@ -86,5 +87,50 @@ func TestOptionsAndBudget(t *testing.T) {
 	r = Evaluate(full, &budget, true, list)
 	if r.AssemblyFee != 500 || len(r.MissingCategories) != 1 {
 		t.Errorf("six build: fee %d missing %v", r.AssemblyFee, r.MissingCategories)
+	}
+}
+
+// ---- mutation รอบ 5 · MUTATION-REPORT.md ข้อ 6 ----
+
+func synthGPU(mm int) catalog.Item {
+	return catalog.Item{Product: pricing.Product{SKU: "SYN-GPU", Category: "GPU"}, InBuilder: true, Specs: catalog.Specs{GPULengthMm: &mm}}
+}
+func synthCase(mm int) catalog.Item {
+	return catalog.Item{Product: pricing.Product{SKU: "SYN-CASE", Category: "CASE"}, InBuilder: true, Specs: catalog.Specs{CaseMaxGPUMm: &mm}}
+}
+
+// E84–E86: การ์ดจอยาวเท่าที่เคสรับพอดีต้องใส่ได้ · ยาวเกิน 1 mm ใส่ไม่ได้ (BR-27) · ฆ่า compat.go:80 > → >=
+func TestGPULengthBoundary(t *testing.T) {
+	for _, c := range []struct {
+		gpu  int
+		fits bool
+	}{{299, true}, {300, true}, {301, false}} {
+		got := pairCheck("gpu", synthGPU(c.gpu), "case", synthCase(300)) == nil
+		if got != c.fits {
+			t.Errorf("การ์ดจอ %d mm เคสรับ 300 mm: ใส่ได้ = %v ต้องเป็น %v", c.gpu, got, c.fits)
+		}
+	}
+}
+
+// E120: งบเหลือ ฿0 พอดีไม่ใช่ "เกินงบ" · เกิน ฿1 คือเกิน (BR-35) · ฆ่า compat.go:166 rem < 0 → <=
+func TestBudgetExactlyZero(t *testing.T) {
+	parts := map[string]string{"cpu": "CPU-N5"}
+	exact := int64(6290)
+	if r := Evaluate(parts, &exact, false, list); r.OverBudget || *r.Remaining != 0 {
+		t.Errorf("งบ 6,290 พอดีกับ CPU-N5: overBudget=%v remaining=%d ต้องเป็น false / 0", r.OverBudget, *r.Remaining)
+	}
+	under := int64(6289)
+	if r := Evaluate(parts, &under, false, list); !r.OverBudget || *r.Remaining != -1 {
+		t.Errorf("งบ 6,289: overBudget=%v remaining=%d ต้องเป็น true / −1", r.OverBudget, *r.Remaining)
+	}
+}
+
+// สเปกว่างเปล่ากดใส่ตะกร้าไม่ได้ · มี 1 ชิ้นกดได้ (FR-16) · ฆ่า compat.go:174 len(sel) > 0 → >=
+func TestEmptyBuildCannotAddToCart(t *testing.T) {
+	if r := Evaluate(map[string]string{}, nil, false, list); r.CanAddToCart {
+		t.Error("สเปกว่างเปล่าต้องกดใส่ตะกร้าไม่ได้")
+	}
+	if r := Evaluate(map[string]string{"ssd": "SSD-1T"}, nil, false, list); !r.CanAddToCart {
+		t.Error("สเปกที่มี SSD 1 ชิ้นต้องกดใส่ตะกร้าได้")
 	}
 }

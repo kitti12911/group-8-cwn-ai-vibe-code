@@ -39,7 +39,7 @@ docker compose up -d --build        # http://localhost:3000
 ```bash
 cd backend && go test ./internal/...               # ชั้น unit · ตาราง quote 27 แถว + ความเข้ากันได้ทุกคู่
 cd e2e && npm ci && npx playwright install         # ติดตั้งครั้งเดียว
-cd e2e && npm test                                 # 167 test · api + ui 3 เบราว์เซอร์ (≈ 1 นาที 15 วินาที)
+cd e2e && npm test                                 # 166 test · api + ui 3 เบราว์เซอร์ (≈ 1 นาที 15 วินาที)
 cd e2e && npm run test:race                        # ขั้น 2 · 50 รอบ × N = 2, 5, 10 (≈ 50 วินาที)
 cd e2e && npm run evidence                         # LAB 12 · อัดวิดีโอ Chromium + กรอบแดง → GIF 20 ไฟล์ใน test-report/gifs (≈ 1.5 นาที · ต้องมี ffmpeg)
 cd e2e && SEED=2026 npm run test:property     # ขั้น 3 · property 4,000 แบบ (≈ 2 นาที 40 วินาที)
@@ -89,7 +89,7 @@ docker compose up -d backend                                          # กล�
 | `prompts/` | พรอมต์ที่ใช้ เรียงตามลำดับ |
 | `docker-compose.yml` | 3 container ใน network `bitbaan-net` |
 | `QUESTIONS-TO-OWNER.md` | ขั้น 1 · 51 คำถามแบบปิดถึงร้าน พร้อมสมมติฐานและ TC ที่กระทบ |
-| `TEST-PLAN.md` | 127 TC ครอบ FR 59 · BR 40 · NFR 16 · ค่าขอบ E01–E141 (§3.13 +9 TC จาก `SPEC.md` · §3.14 +13 TC จากผลสำรวจ LAB 8) |
+| `TEST-PLAN.md` | 126 TC ครอบ FR 59 · BR 40 · NFR 16 · ค่าขอบ E01–E141 (§3.13 +9 TC จาก `SPEC.md` · §3.14 +12 TC จากผลสำรวจ LAB 8) |
 | `EXPLORATION.md` · `EXPLORATION-R1.md` · `PLAN-REVIEW.md` · `BUILD-PROMPT.md` | LAB 9 รวมผลสำรวจรอบ 2 · รอบ 1 (6 พ.ย.) · ทบทวนแผน · ข้อกำหนดการสร้างเว็บ |
 | `e2e/` | Playwright · `tests/` ตามแผน · `race/` ขั้น 2 · `property/` ขั้น 3 · `index.html` สรุปผล · `triage.json` |
 | `mutation/` | ตัวรัน mutation testing ของโมดูลกฎ (ขั้น 4) |
