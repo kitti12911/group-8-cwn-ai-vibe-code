@@ -1,0 +1,8 @@
+# ลำดับ    : 07
+# เวลา     : 2026-11-06 16:44:13 +07 (Asia/Bangkok) · UTC 2026-11-06T09:44:13.922Z
+# ผู้พิมพ์   : Peerapat Sattapornnar (git: peerapatsta)
+# เซสชัน   : 20d42315-a6e9-4fc6-8f81-70557847eb40 · branch develop · cwd ai-vibe-code
+# ที่มา     : กู้ verbatim จาก Claude Code transcript (type=user · origin.kind=human · promptSource=typed) — คำสั่งกู้อยู่ใน README.md
+# ได้อะไร  : ผลตรวจเทียบรูบริก → กลายเป็นเนื้อ REVIEW.md
+--- PROMPT (verbatim) ---
+Teaching_CWN2026-main\Teaching_CWN2026-main\00_week01 เข้าไปอ่าน workshop week01, เพื่อนในกลุ่มมีทำเว็ป group-8\group-8-cwn-ai-vibe-code-develop\hw1-bitbaan แล้ว เราต้องตรวจสอบความเรียบร้อย ตามจุดประสงค์ของ workshop

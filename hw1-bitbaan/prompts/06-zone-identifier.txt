@@ -1,0 +1,8 @@
+# ลำดับ    : 06
+# เวลา     : 2026-11-06 16:26:15 +07 (Asia/Bangkok) · UTC 2026-11-06T09:26:15.142Z
+# ผู้พิมพ์   : Peerapat Sattapornnar (git: peerapatsta)
+# เซสชัน   : 20d42315-a6e9-4fc6-8f81-70557847eb40 · branch develop · cwd ai-vibe-code
+# ที่มา     : กู้ verbatim จาก Claude Code transcript (type=user · origin.kind=human · promptSource=typed) — คำสั่งกู้อยู่ใน README.md
+# ได้อะไร  : commit `42c3e3d` ลบไฟล์ `:Zone.Identifier` + กฎใน `.gitignore` (เข้ามากับ `4e442d2`)
+--- PROMPT (verbatim) ---
+Zone.Identifier คืออะไร จะแตกไฟล์จาก zip ก็ไม่ได้

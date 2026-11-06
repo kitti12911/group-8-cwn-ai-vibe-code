@@ -1,1 +1,8 @@
+# ลำดับ    : 04
+# เวลา     : ไม่ทราบเวลาที่พิมพ์ (ไม่มี transcript) · ไฟล์เข้า git 2026-11-06 16:06:46 +07
+# ผู้พิมพ์   : Kitti Srijantanakul
+# ที่มา     : บันทึกด้วยมือลง prompts/ · commit `9be7260`
+# ได้อะไร  : CONSISTENCY.md · API-CONTRACT.md (`9be7260`) · backend Go (`63d18bc`) · frontend Vite + docker-compose (`0169873`)
+# หมายเหตุ : ไม่มี Claude Code transcript ของพรอมต์นี้ในเครื่องนี้ เนื้อความด้านล่างคงไว้ตามไฟล์เดิมทุกไบต์
+--- PROMPT (verbatim) ---
 you check ours and theirs and make data consistency. theirs consider latest update but if ours is better, use ours. then you create folder of frontend and backend, use vite and go, then execute from plan and create docker compose

@@ -1,0 +1,8 @@
+# ลำดับ    : 09
+# เวลา     : 2026-11-06 17:07:22 +07 (Asia/Bangkok) · UTC 2026-11-06T10:07:22.466Z
+# ผู้พิมพ์   : Peerapat Sattapornnar (git: peerapatsta)
+# เซสชัน   : 20d42315-a6e9-4fc6-8f81-70557847eb40 · branch develop · cwd ai-vibe-code
+# ที่มา     : กู้ verbatim จาก Claude Code transcript (type=user · origin.kind=human · promptSource=typed) — คำสั่งกู้อยู่ใน README.md
+# ได้อะไร  : REVIEW.md 103 บรรทัด · commit `4e442d2`
+--- PROMPT (verbatim) ---
+ทำเป็นสรุปให้ทีม และแผนแก้

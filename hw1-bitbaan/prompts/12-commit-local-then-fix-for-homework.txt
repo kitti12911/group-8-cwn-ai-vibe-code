@@ -1,0 +1,8 @@
+# ลำดับ    : 12
+# เวลา     : 2026-11-06 17:16:56 +07 (Asia/Bangkok) · UTC 2026-11-06T10:16:56.547Z
+# ผู้พิมพ์   : Peerapat Sattapornnar (git: peerapatsta)
+# เซสชัน   : 20d42315-a6e9-4fc6-8f81-70557847eb40 · branch develop · cwd ai-vibe-code
+# ที่มา     : กู้ verbatim จาก Claude Code transcript (type=user · origin.kind=human · promptSource=typed) — คำสั่งกู้อยู่ใน README.md
+# ได้อะไร  : commit `4e442d2` · TEST-PLAN.md 105 TC (`0c1ff96`) · QUESTIONS-TO-OWNER.md 51 คำถาม (`ea15241`) · `1e3fe0f`
+--- PROMPT (verbatim) ---
+commit ใน local ไว้ แล้วทำแก้เพิ่มไปเพื่อตอบโจทย์กับสิ่งที่การบ้านต้องการมากที่สุด

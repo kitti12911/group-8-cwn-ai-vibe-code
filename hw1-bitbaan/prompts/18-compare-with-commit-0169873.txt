@@ -1,0 +1,8 @@
+# ลำดับ    : 18
+# เวลา     : 2026-11-06 20:15:47 +07 (Asia/Bangkok) · UTC 2026-11-06T13:15:47.001Z
+# ผู้พิมพ์   : Peerapat Sattapornnar (git: peerapatsta)
+# เซสชัน   : c576396a-bf2b-40a2-9675-1c5dcaf1e784 · branch develop · cwd ai-vibe-code
+# ที่มา     : กู้ verbatim จาก Claude Code transcript (type=user · origin.kind=human · promptSource=typed) — คำสั่งกู้อยู่ใน README.md
+# ได้อะไร  : ตอบในเซสชัน — พิมพ์ใหม่เป็นพรอมต์ 19 (ห่างกัน 44 วินาที)
+--- PROMPT (verbatim) ---
+เทียบกับ commit นี้ 0169873a50606f4c6f74859de0a16dcf88018964 อันไหนดีกว่ากัน

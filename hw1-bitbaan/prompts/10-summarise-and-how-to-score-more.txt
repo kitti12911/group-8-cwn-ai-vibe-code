@@ -1,0 +1,8 @@
+# ลำดับ    : 10
+# เวลา     : 2026-11-06 17:09:06 +07 (Asia/Bangkok) · UTC 2026-11-06T10:09:06.548Z
+# ผู้พิมพ์   : Peerapat Sattapornnar (git: peerapatsta)
+# เซสชัน   : 20d42315-a6e9-4fc6-8f81-70557847eb40 · branch develop · cwd ai-vibe-code
+# ที่มา     : กู้ verbatim จาก Claude Code transcript (type=user · origin.kind=human · promptSource=typed) — คำสั่งกู้อยู่ใน README.md
+# ได้อะไร  : หัวข้อ "สิ่งที่ต้องทำต่อ" ใน REVIEW.md → กลายเป็นคิวงานขั้น 0-4 ทั้งหมด
+--- PROMPT (verbatim) ---
+ทำเป็นสรุปให้ทีม และ สิ่งควรทำต่อให้ดีกว่านี้เพื่อคะแนนเยอะขึ้น

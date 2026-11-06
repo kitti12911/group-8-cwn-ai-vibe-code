@@ -1,0 +1,8 @@
+# ลำดับ    : 15
+# เวลา     : 2026-11-06 18:50:19 +07 (Asia/Bangkok) · UTC 2026-11-06T11:50:19.221Z
+# ผู้พิมพ์   : Peerapat Sattapornnar (git: peerapatsta)
+# เซสชัน   : 20d42315-a6e9-4fc6-8f81-70557847eb40 · branch develop · cwd ai-vibe-code\hw1-bitbaan\backend
+# ที่มา     : กู้ verbatim จาก Claude Code transcript (type=user · origin.kind=human · promptSource=typed) — คำสั่งกู้อยู่ใน README.md
+# ได้อะไร  : MUTATION-REPORT.md · `mutation/run.mjs` + `round1-3.json` · `backend/internal/pricing/boundary_test.go` 12 TC ใหม่ · score 56.0% → 78.8% (commit `dbda838`)
+--- PROMPT (verbatim) ---
+ต่อ

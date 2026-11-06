@@ -1,0 +1,8 @@
+# ลำดับ    : 05
+# เวลา     : 2026-11-06 15:21:51 +07 (Asia/Bangkok) · UTC 2026-11-06T08:21:51.273Z
+# ผู้พิมพ์   : Peerapat Sattapornnar (git: peerapatsta)
+# เซสชัน   : 20d42315-a6e9-4fc6-8f81-70557847eb40 · branch main · cwd ai-vibe-code
+# ที่มา     : กู้ verbatim จาก Claude Code transcript (type=user · origin.kind=human · promptSource=typed) — คำสั่งกู้อยู่ใน README.md
+# ได้อะไร  : ตอบในเซสชัน (ยังไม่มีไฟล์ผลลัพธ์) — เป็นพรอมต์แรกของเซสชัน 20d42315
+--- PROMPT (verbatim) ---
+git checkout develop ไม่ได้?

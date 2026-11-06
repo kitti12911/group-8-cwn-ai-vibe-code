@@ -1,0 +1,8 @@
+# ลำดับ    : 16
+# เวลา     : 2026-11-06 19:21:34 +07 (Asia/Bangkok) · UTC 2026-11-06T12:21:34.542Z
+# ผู้พิมพ์   : Peerapat Sattapornnar (git: peerapatsta)
+# เซสชัน   : c576396a-bf2b-40a2-9675-1c5dcaf1e784 · branch develop · cwd ai-vibe-code
+# ที่มา     : กู้ verbatim จาก Claude Code transcript (type=user · origin.kind=human · promptSource=typed) — คำสั่งกู้อยู่ใน README.md
+# ได้อะไร  : การประเมินเทียบรูบริก 25 คะแนน (ตอบในเซสชัน) → อัปเดตตารางคะแนนใน REVIEW.md
+--- PROMPT (verbatim) ---
+ตรวจสอบว่า C:\Users\PeerapatSattapornnar\Documents\workshop\ai-vibe-code\hw1-bitbaan การบ้านอันนี้ตอบโจทย์ C:\Users\PeerapatSattapornnar\Documents\workshop\Teaching_CWN2026-main\Teaching_CWN2026-main\00_week01 ไหมถ้าคุณเป็นอาจารย์จะให้กี่คะแนน

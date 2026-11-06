@@ -1,1 +1,8 @@
+# ลำดับ    : 01
+# เวลา     : ไม่ทราบเวลาที่พิมพ์ (ไม่มี transcript) · ไฟล์เข้า git 2026-11-06 16:06:46 +07
+# ผู้พิมพ์   : Kitti Srijantanakul
+# ที่มา     : บันทึกด้วยมือลง prompts/ · commit `bef512c` — เครื่องของสมาชิกอีกคนในทีม · path ในพรอมต์ยังเป็น `@playground/`
+# ได้อะไร  : USER-STORIES.md · REQUIREMENTS.md · DESIGN.md · TEST-DATA.md (commit bef512c)
+# หมายเหตุ : ไม่มี Claude Code transcript ของพรอมต์นี้ในเครื่องนี้ เนื้อความด้านล่างคงไว้ตามไฟล์เดิมทุกไบต์
+--- PROMPT (verbatim) ---
 do you see @playground/image.png ? from our @playground/hw1-bitbaan/INTERVIEW.md , can you create 1, 2, 3, and 4 for me? user story ยิ่งยากได้คะแนนเยอะ แล้ว ก้ มี รูป ภาพ แทรใน user story ด้วย ถึงนะดี

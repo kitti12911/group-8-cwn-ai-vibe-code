@@ -1,0 +1,8 @@
+# ลำดับ    : 20
+# เวลา     : 2026-11-07 03:46:58 +07 (Asia/Bangkok) · UTC 2026-11-06T20:46:58.048Z
+# ผู้พิมพ์   : Peerapat Sattapornnar (git: peerapatsta)
+# เซสชัน   : c576396a-bf2b-40a2-9675-1c5dcaf1e784 · branch develop · cwd ai-vibe-code
+# ที่มา     : กู้ verbatim จาก Claude Code transcript (type=user · origin.kind=human · promptSource=typed) — คำสั่งกู้อยู่ใน README.md
+# ได้อะไร  : งานขั้น 5 (แลกบั๊ก) + การรื้อ `prompts/` ครั้งนี้ — พิมพ์ซ้ำเป็นพรอมต์ 21 (ห่างกัน 56 วินาที)
+--- PROMPT (verbatim) ---
+สามารถเพิ่มเรื่องการ แลกบั้ก และทำ เขียน prompts/ ให้ดีกว่านี้ได้ไหม อย่างน้อยอยากได้ 20 คะแนน

@@ -1,3 +1,10 @@
+# ลำดับ    : 14
+# เวลา     : ไม่ทราบเวลาที่พิมพ์แน่ชัด · ไฟล์เข้า git 2026-11-06 18:23:25 +07 (ระหว่างช่วงพรอมต์ 13)
+# ผู้พิมพ์   : Peerapat Sattapornnar (peerapatsta)
+# ที่มา     : บันทึกด้วยมือลง prompts/ · commit `2cda283` — เขียนไว้ให้รันใน agent แยก ที่สั่งห้ามอ่าน `backend/` `frontend/` `e2e/` `design/` `TEST-DATA.md` `CONSISTENCY.md`
+# ได้อะไร  : `e2e/property/oracle/price.ts` + `oracle.spec.ts` (commit `2cda283`) · ใช้เป็นตัวเทียบของ property test P1
+# หมายเหตุ : ไม่มี Claude Code transcript ของพรอมต์นี้ในเครื่องนี้ เนื้อความด้านล่างคงไว้ตามไฟล์เดิมทุกไบต์
+--- PROMPT (verbatim) ---
 [ใช้ในเซสชันใหม่เท่านั้น — การบ้านขั้น 3.1 · oracle ต้องอิสระจากโค้ดเว็บ]
 
 คุณคือผู้เขียน "ตัวคำนวณราคาที่ถูกต้อง" (oracle) สำหรับวิชา QA ภาษาไทย
