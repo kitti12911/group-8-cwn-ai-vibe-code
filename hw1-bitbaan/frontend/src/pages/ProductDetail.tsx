@@ -175,7 +175,7 @@ export function ProductDetail() {
                 if (put()) navigate('/cart');
               }}
             >
-              สั่งซื้อและกันของ 30 นาที
+              ซื้อเลย
             </button>
             <button type="button" className="btn btn-outline btn-lg grow" data-testid="add-to-cart" disabled={soldOut} onClick={put}>
               {soldOut ? 'สินค้าหมด' : 'ใส่ตะกร้า'}
@@ -190,7 +190,7 @@ export function ProductDetail() {
               {msg} · <Link to="/cart">ไปที่ตะกร้า</Link>
             </p>
           )}
-          <p className="small muted">ใส่ตะกร้ายังไม่กันของ ระบบกันของเมื่อกดสั่งซื้อเท่านั้น</p>
+          <p className="small muted">“ซื้อเลย” จะใส่ตะกร้าแล้วพาไปหน้าตะกร้า · ระบบกันของ 30 นาทีเมื่อกดสั่งซื้อในหน้าตะกร้าเท่านั้น</p>
 
           {p.nextLot && (
             <div className="divider-top stack-xs">
