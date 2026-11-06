@@ -4,21 +4,31 @@
  * ทำไมเขียนเอง: Stryker ใช้กับ Go ไม่ได้ · gremlins (build `dev`) รันกับ Go 1.27 แล้วหา mutant ไม่เจอเลย
  * ("Gathering coverage... done · No results to report") จึงเขียนตัวรันเองที่อธิบายได้ทุกบรรทัด
  *
- *   node mutation/run.mjs                 # รันทุก mutant แล้วเขียน mutation/round1.json
- *   OUT=round2.json node mutation/run.mjs # รอบที่สอง หลังเพิ่ม TC
+ *   node mutation/run.mjs                 # รันทุก mutant แล้วเขียน mutation/round<N>.json รอบถัดไปที่ยังว่าง (ไม่ทับรอบเก่า)
+ *   OUT=round2.json node mutation/run.mjs # ตั้งชื่อไฟล์เอง (ถ้ามีอยู่แล้วต้องใส่ OVERWRITE=1)
  *   ONLY=pricing node mutation/run.mjs    # จำกัดไฟล์
  *
  * ตัวฆ่า mutant = `go test ./internal/...` (ตาราง quote 27 แถว + ความเข้ากันได้ทุกคู่)
  * โมดูลกฎเป็น pure function ไม่ต้องขึ้นเว็บ จึงรันได้เร็วพอที่จะทดสอบ mutant หลายร้อยตัว
  */
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync, mkdirSync, rmSync } from 'node:fs';
 import { execSync } from 'node:child_process';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const BACKEND = join(ROOT, 'backend');
-const OUT = join(ROOT, 'mutation', process.env.OUT ?? 'round1.json');
+// ผลแต่ละรอบเป็นหลักฐาน ห้ามทับเงียบ ๆ: ไม่ตั้ง OUT = รอบถัดไปที่ยังว่าง · ตั้ง OUT ที่มีอยู่แล้วต้อง OVERWRITE=1
+const nextRound = () => {
+  let n = 1;
+  while (existsSync(join(ROOT, 'mutation', `round${n}.json`))) n++;
+  return `round${n}.json`;
+};
+const OUT = join(ROOT, 'mutation', process.env.OUT ?? nextRound());
+if (process.env.OUT && existsSync(OUT) && process.env.OVERWRITE !== '1') {
+  console.error(`${process.env.OUT} มีอยู่แล้ว · ใส่ OVERWRITE=1 ถ้าตั้งใจทับ หรือไม่ต้องตั้ง OUT เพื่อเขียนรอบถัดไป`);
+  process.exit(1);
+}
 
 /** โมดูลกฎเท่านั้น — ไม่ mutate ชั้น API, store หรือ seed (TEST-PLAN.md §2.1) */
 const TARGETS = [
@@ -118,7 +128,21 @@ function runTests() {
 const results = [];
 for (const t of TARGETS) {
   const path = join(BACKEND, t.file);
+  // กันโค้ดกลายพันธุ์ค้างใน repo: เก็บสำเนาไว้ก่อน · ถ้ารอบก่อนถูก kill จนสำเนายังอยู่ ให้คืนจากสำเนาก่อนเริ่ม
+  const backup = `${path}.mutation-backup`;
+  if (existsSync(backup)) {
+    writeFileSync(path, readFileSync(backup, 'utf8'));
+    console.log(`คืน ${t.file} จากสำเนาของรอบที่ถูกหยุดกลางคัน`);
+  }
   const original = readFileSync(path, 'utf8');
+  writeFileSync(backup, original);
+  const restore = () => {
+    writeFileSync(path, original);
+    rmSync(backup, { force: true });
+    process.exit(130);
+  };
+  process.once('SIGINT', restore);
+  process.once('SIGTERM', restore);
   const mutants = buildMutants(original, t.file);
   console.log(`${t.file}: ${mutants.length} mutants`);
 
@@ -127,11 +151,15 @@ for (const t of TARGETS) {
     const mutated = original.slice(0, m.pos) + m.repl + original.slice(m.pos + m.len);
     writeFileSync(path, mutated);
     const status = runTests();
+    await new Promise((r) => setImmediate(r)); // ให้ Ctrl+C / kill ทำงานได้ระหว่างรอบ
     results.push({ id: `M${String(results.length + 1).padStart(3, '0')}`, module: t.module, ...m, status });
     n++;
     process.stdout.write(`\r  ${n}/${mutants.length} · ${status.padEnd(9)}`);
   }
   writeFileSync(path, original);                                     // คืนไฟล์เดิมเสมอ
+  rmSync(backup, { force: true });
+  process.removeListener('SIGINT', restore);
+  process.removeListener('SIGTERM', restore);
   console.log('');
 }
 

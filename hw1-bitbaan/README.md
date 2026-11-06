@@ -43,7 +43,7 @@ cd e2e && npm test                                 # 167 test · api + ui 3 เ�
 cd e2e && npm run test:race                        # ขั้น 2 · 50 รอบ × N = 2, 5, 10 (≈ 50 วินาที)
 cd e2e && npm run evidence                         # LAB 12 · อัดวิดีโอ Chromium + กรอบแดง → GIF 20 ไฟล์ใน test-report/gifs (≈ 1.5 นาที · ต้องมี ffmpeg)
 cd e2e && SEED=2026 npm run test:property     # ขั้น 3 · property 4,000 แบบ (≈ 2 นาที 40 วินาที)
-node mutation/run.mjs                              # ขั้น 4 · mutation testing ของโมดูลกฎ
+node mutation/run.mjs                              # ขั้น 4 · mutation testing ของโมดูลกฎ · เขียน round<N>.json รอบถัดไป ไม่ทับของเดิม
 ./tools/render-diagrams.sh                         # render แผนภาพใน DESIGN.md เป็น design/*.png
 ```
 
