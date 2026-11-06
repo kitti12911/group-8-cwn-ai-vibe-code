@@ -1,0 +1,21 @@
+{
+  "name": "bitbaan-e2e",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Playwright suite for TEST-PLAN.md (TC-* ids are in the test titles)",
+  "scripts": {
+    "test": "playwright test tests",
+    "test:ui": "playwright test tests --project=chromium-ui --project=firefox-ui --project=webkit-ui",
+    "test:race": "playwright test race --project=api --workers=1",
+    "test:property": "playwright test property --project=api --workers=1",
+    "test:oracle": "playwright test property/oracle --project=api",
+    "test:thrice": "playwright test tests && playwright test tests && playwright test tests",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.1",
+    "@types/node": "^22.10.2",
+    "fast-check": "^3.23.2",
+    "typescript": "^5.7.2"
+  }
+}
