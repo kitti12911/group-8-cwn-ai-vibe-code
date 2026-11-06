@@ -78,3 +78,15 @@ test('TC-BUILD-13 · ค่าประกอบ ฿500 และฟรีเม
   // ค่าประกอบต้องไม่ถูกลดด้วยส่วนลดใด (A-37)
   expect(q15.total - q15.g4 - q15.shippingFee, 'ค่าประกอบเข้ายอดเต็ม ๆ').toBe(baht(500));
 });
+
+test('TC-BUILD-13b · ประกอบฟรีต้องเป็น "หมวดละ 1 ชิ้น" เท่านั้น — BR-21 · บั๊ก BUG-EXPLORE-01', async () => {
+  test.fail(true, 'บั๊กที่เจอจากการสำรวจ · ดู EXPLORATION.md §3 และ e2e/triage.json BUG-EXPLORE-01 — ยังไม่แก้');
+  await setClock(api, THU_1000);
+  // ครบ 7 หมวดก็จริง แต่ CPU 2 ตัว = ไม่ใช่ "สเปกครบชุด" ตาม BR-21 และ API-CONTRACT.md ข้อ 3.3
+  const q = await quote(api, {
+    items: [{ sku: 'CPU-N5', qty: 2 }, { sku: 'MB-B6', qty: 1 }, { sku: 'RAM-D4', qty: 1 },
+            { sku: 'GPU-V46', qty: 1 }, { sku: 'SSD-1T', qty: 1 }, { sku: 'PSU-550', qty: 1 }, { sku: 'CASE-M', qty: 1 }],
+    user: 'C2', shipping: 'pickup', assembly: true,
+  });
+  expect(q.assemblyFee, 'หมวดที่มีมากกว่า 1 ชิ้นต้องไม่ได้ประกอบฟรี').toBe(baht(500));
+});

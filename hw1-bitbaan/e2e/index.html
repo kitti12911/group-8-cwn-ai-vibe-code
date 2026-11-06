@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ผลทดสอบ · บิตบ้าน คอมพิวเตอร์</title>
+<style>
+  :root { color-scheme: light dark; --line:#d8d8e0; --muted:#6b6b76; --ok:#157f3b; --bad:#b3261e; --warn:#8a6d00; }
+  @media (prefers-color-scheme: dark){ :root{ --line:#34343c; --muted:#9a9aa6; --ok:#5fd68a; --bad:#ff8a80; --warn:#e3b341; } }
+  body { font-family: "IBM Plex Sans Thai", -apple-system, Segoe UI, sans-serif; margin:0; padding:2rem 1.25rem 4rem; max-width:62rem; margin-inline:auto; line-height:1.65; }
+  h1 { font-size:1.6rem; margin:0 0 .25rem; } h2 { font-size:1.1rem; margin:2.2rem 0 .6rem; }
+  .sub { color:var(--muted); margin:0 0 1.5rem; }
+  table { border-collapse:collapse; width:100%; font-size:.93rem; }
+  th,td { border-bottom:1px solid var(--line); padding:.45rem .6rem; text-align:left; vertical-align:top; }
+  th { font-weight:600; } td.n, th.n { text-align:right; font-variant-numeric:tabular-nums; }
+  .ok{color:var(--ok);font-weight:600} .bad{color:var(--bad);font-weight:600} .warn{color:var(--warn);font-weight:600}
+  code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size:.88em; background:color-mix(in srgb, currentColor 8%, transparent); padding:.1em .35em; border-radius:4px; }
+  .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(11rem,1fr)); gap:.75rem; margin:1rem 0 0; }
+  .card { border:1px solid var(--line); border-radius:10px; padding:.8rem 1rem; }
+  .card b { display:block; font-size:1.5rem; font-variant-numeric:tabular-nums; }
+  .card span { color:var(--muted); font-size:.85rem; }
+  .wrap { overflow-x:auto; }
+</style>
+</head>
+<body>
+
+<h1>ผลทดสอบ · บิตบ้าน คอมพิวเตอร์</h1>
+<p class="sub">การบ้านข้อ 1 · TC ทุกตัวอ้างกลับไปที่ <code>TEST-PLAN.md</code> · อัปเดตล่าสุด 6 พ.ย. 2026</p>
+
+<div class="cards">
+  <div class="card"><b class="ok">126</b><span>TC ชั้น api + ui ผ่าน (3 เบราว์เซอร์)</span></div>
+  <div class="card"><b class="ok">7</b><span>TC การแย่งของผ่าน (150 รอบ)</span></div>
+  <div class="card"><b class="ok">5</b><span>property ผ่าน (4,000 แบบ)</span></div>
+  <div class="card"><b class="warn">1</b><span>บั๊กที่เจอจากการสำรวจ ยังไม่แก้</span></div>
+</div>
+
+<h2>รันอะไรได้บ้าง</h2>
+<div class="wrap">
+<table>
+  <tr><th>คำสั่ง</th><th>ครอบ TC</th><th>ผลล่าสุด</th></tr>
+  <tr><td><code>npm test</code></td><td>ทุก TC ชั้น api และ ui (chromium · firefox · webkit)</td><td class="ok">126 ผ่าน · 1m 20s</td></tr>
+  <tr><td><code>npm run test:race</code></td><td><code>TC-RACE-01</code> ถึง <code>TC-RACE-05</code> · 50 รอบ × N = 2, 5, 10</td><td class="ok">7 ผ่าน · 49s</td></tr>
+  <tr><td><code>npm run test:property</code></td><td><code>P2</code>–<code>P6</code> อย่างละ 250–1,000 แบบ · seed 2026</td><td class="ok">5 ผ่าน · 2m 36s</td></tr>
+  <tr><td><code>npm run test:oracle</code></td><td><code>P1</code> + ตาราง quote 27 แถว</td><td class="warn">ข้าม — รอ oracle อิสระ</td></tr>
+  <tr><td><code>cd ../backend &amp;&amp; go test ./internal/...</code></td><td>TC ชั้น unit (ค่าขอบที่หน้าเว็บไปไม่ถึง)</td><td class="ok">ผ่านทั้ง 2 package</td></tr>
+  <tr><td><code>node ../mutation/run.mjs</code></td><td>mutation testing ของโมดูลกฎ (ขั้น 4)</td><td>ดู <code>MUTATION-REPORT.md</code></td></tr>
+</table>
+</div>
+
+<h2>แผนครอบคลุมแค่ไหน</h2>
+<div class="wrap">
+<table>
+  <tr><th>ข้อกำหนด</th><th class="n">ทั้งหมด</th><th class="n">มี TC</th><th>อ้างอิง</th></tr>
+  <tr><td>FR · ระบบต้องทำอะไรได้</td><td class="n">59</td><td class="n ok">59</td><td><code>TEST-PLAN.md</code> §4.2</td></tr>
+  <tr><td>BR · กฎของร้าน</td><td class="n">40</td><td class="n ok">40</td><td>§4.1</td></tr>
+  <tr><td>NFR · ต้องดีแค่ไหน</td><td class="n">16</td><td class="n ok">16</td><td>§4.3</td></tr>
+  <tr><td>ค่าขอบ E01–E141</td><td class="n">141</td><td class="n ok">141</td><td>§4.4</td></tr>
+  <tr><td>TC ที่ยังติดป้าย <code>[O-ยังไม่ยืนยัน]</code></td><td class="n">105</td><td class="n warn">56</td><td>§5 · <code>QUESTIONS-TO-OWNER.md</code></td></tr>
+</table>
+</div>
+
+<h2>บั๊กที่เจอแล้ว</h2>
+<div class="wrap">
+<table>
+  <tr><th>รหัส</th><th>เรื่อง</th><th>กฎ</th><th>TC ที่จับได้</th><th>สถานะ</th></tr>
+  <tr><td><code>BUG-EXPLORE-01</code></td><td>ประกอบฟรีทั้งที่ซื้อ CPU 2 ตัว</td><td>BR-21</td><td><code>TC-BUILD-13b</code></td><td class="bad">ยังไม่แก้</td></tr>
+  <tr><td><code>B1</code></td><td>flash sale ยังใช้ได้ที่ 13:00:00</td><td>BR-06</td><td><code>TC-PRICE-01</code> · Q06</td><td class="ok">จับได้ (BUG_MODE=1)</td></tr>
+  <tr><td><code>B2</code></td><td>GAMER5 คิดก่อนหักส่วนลดสมาชิก</td><td>BR-18</td><td><code>TC-COUPON-04</code> + 4 TC</td><td class="ok">จับได้ (BUG_MODE=1)</td></tr>
+  <tr><td><code>B3</code></td><td>จ่ายได้หลังหมดเวลากันของ</td><td>BR-30</td><td><code>TC-ORDER-06</code> · <code>TC-ORDER-07</code></td><td class="ok">จับได้ (BUG_MODE=1)</td></tr>
+</table>
+</div>
+<p class="sub">รายละเอียดทั้งหมดอยู่ใน <code>e2e/triage.json</code> · <code>BUG-HUNT.md</code> · <code>EXPLORATION.md</code></p>
+
+<h2>รายงานฉบับเต็ม</h2>
+<ul>
+  <li><code>../RACE-REPORT.md</code> — การแย่งของ พร้อมหลักฐานก่อน/หลังถอดกลไก</li>
+  <li><code>../PROPERTY-REPORT.md</code> — property-based testing และสถานะ oracle</li>
+  <li><code>../MUTATION-REPORT.md</code> — ความแข็งแรงของแผนเป็นตัวเลข</li>
+  <li><code>../BUG-HUNT.md</code> — ล่าบั๊ก <code>BUG_MODE=1</code> และ <code>BUG_MODE=2</code></li>
+  <li><code>test-report/html/index.html</code> — รายงานของ Playwright (สร้างหลังรัน <code>npm test</code>)</li>
+</ul>
+
+</body>
+</html>

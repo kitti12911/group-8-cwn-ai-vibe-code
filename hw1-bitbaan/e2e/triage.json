@@ -1,0 +1,57 @@
+{
+  "$comment": "บั๊กที่เจอและการตัดสินว่าใครผิด (เว็บ / oracle / สมมติฐาน) ตามบท 04 · อัปเดตทุกครั้งที่ TC แดง",
+  "updatedAt": "2026-11-06",
+  "bugMode0": [
+    {
+      "id": "BUG-EXPLORE-01",
+      "foundBy": "exploratory · EXPLORATION.md charter C3",
+      "severity": "medium",
+      "rule": "BR-21",
+      "verdict": "เว็บผิด",
+      "title": "ประกอบฟรีทั้งที่หมวดใดหมวดหนึ่งมีมากกว่า 1 ชิ้น",
+      "repro": "POST /api/quote {\"items\":[{\"sku\":\"CPU-N5\",\"qty\":2},{\"sku\":\"MB-B6\",\"qty\":1},{\"sku\":\"RAM-D4\",\"qty\":1},{\"sku\":\"GPU-V46\",\"qty\":1},{\"sku\":\"SSD-1T\",\"qty\":1},{\"sku\":\"PSU-550\",\"qty\":1},{\"sku\":\"CASE-M\",\"qty\":1}],\"shipping\":\"pickup\",\"assembly\":true}",
+      "expected": { "assemblyFee": 50000 },
+      "actual": { "assemblyFee": 0 },
+      "impact": "ร้านเสีย ฿500 ต่อออเดอร์ที่เข้าเงื่อนไขนี้",
+      "source": "backend/internal/pricing/pricing.go · Compute() ตรวจแค่ว่าแต่ละหมวดมีของ ไม่ได้ตรวจจำนวน",
+      "tc": "TC-BUILD-13b",
+      "test": "e2e/tests/shipping.spec.ts (test.fail)",
+      "status": "open"
+    }
+  ],
+  "bugMode1": [
+    {
+      "id": "B1",
+      "rule": "BR-06",
+      "verdict": "เว็บผิด (บั๊กที่ Claude ฝังไว้)",
+      "title": "ราคา flash sale ยังใช้ได้ที่ 13:00:00 พอดี",
+      "caughtBy": ["TC-PRICE-01", "TC-PRICE-10 Q06"],
+      "expected": { "MB-B6": 459000 },
+      "actual": { "MB-B6": 413100 },
+      "status": "ตรวจพบแล้ว · ดู BUG-HUNT.md ส่วนที่ 1"
+    },
+    {
+      "id": "B2",
+      "rule": "BR-18",
+      "verdict": "เว็บผิด (บั๊กที่ Claude ฝังไว้)",
+      "title": "GAMER5 คิด 5% จากราคาก่อนหักส่วนลดสมาชิก",
+      "caughtBy": ["TC-COUPON-04", "TC-PRICE-07", "TC-PRICE-10 Q07", "TC-PRICE-10 Q22", "TC-PRICE-10 Q27"],
+      "expected": { "Q07.total": 933300 },
+      "actual": { "Q07.total": 930700 },
+      "status": "ตรวจพบแล้ว · ดู BUG-HUNT.md ส่วนที่ 1"
+    },
+    {
+      "id": "B3",
+      "rule": "BR-30",
+      "verdict": "เว็บผิด (บั๊กที่ Claude ฝังไว้)",
+      "title": "ออเดอร์ที่เลย 30 นาทีไปไม่ถึง 1 นาที ยังจ่ายได้",
+      "caughtBy": ["TC-ORDER-06", "TC-ORDER-07"],
+      "expected": { "payAt30m01s": "409 ORDER_EXPIRED" },
+      "actual": { "payAt30m01s": "200 PAID" },
+      "status": "ตรวจพบแล้ว · ดู BUG-HUNT.md ส่วนที่ 1"
+    }
+  ],
+  "bugMode2": [],
+  "oracleWrong": [],
+  "assumptionWrong": []
+}

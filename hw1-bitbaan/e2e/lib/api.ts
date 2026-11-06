@@ -6,7 +6,7 @@ export type Json = Record<string, any>;
 export const BASE_URL = process.env.BASE_URL ?? 'http://localhost:3000';
 
 /** header แทนการล็อกอิน (API-CONTRACT.md ข้อ 1 · มีเฉพาะ TEST_MODE=1) · 'C1' = ไม่ล็อกอิน */
-export const asUser = (code?: string) => (code && code !== 'C1' ? { 'X-Test-User': code } : {});
+export const asUser = (code?: string): Record<string, string> => (code && code !== 'C1' ? { 'X-Test-User': code } : {});
 
 export async function newApi(): Promise<APIRequestContext> {
   return request.newContext({ baseURL: BASE_URL });
