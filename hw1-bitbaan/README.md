@@ -41,6 +41,7 @@ cd backend && go test ./internal/...               # ชั้น unit · ตา
 cd e2e && npm ci && npx playwright install         # ติดตั้งครั้งเดียว
 cd e2e && npm test                                 # 146 test · api + ui 3 เบราว์เซอร์ (≈ 1 นาที 10 วินาที)
 cd e2e && npm run test:race                        # ขั้น 2 · 50 รอบ × N = 2, 5, 10 (≈ 50 วินาที)
+cd e2e && npm run evidence                         # LAB 12 · อัดวิดีโอ Chromium + กรอบแดง → GIF 16 ไฟล์ใน test-report/gifs (≈ 1 นาที · ต้องมี ffmpeg)
 cd e2e && npm run test:property -- --seed 2026     # ขั้น 3 · property 4,000 แบบ (≈ 2 นาที 40 วินาที)
 node mutation/run.mjs                              # ขั้น 4 · mutation testing ของโมดูลกฎ
 ./tools/render-diagrams.sh                         # render แผนภาพใน DESIGN.md เป็น design/*.png
@@ -79,6 +80,7 @@ docker compose up -d backend                                          # กล�
 | `TEST-DATA.md` | LAB 4 · quote 27 แถว · ค่าขอบ 141 แถว |
 | `API-CONTRACT.md` | สัญญา API ของร้านนี้ (frontend · backend · test ใช้ร่วมกัน) |
 | `SPEC.md` · `ASSETS.md` | LAB 6 · สิ่งที่ AI อ้างว่าสร้าง [A] · รูปและไฟล์ที่เว็บใช้ (เขียนย้อนหลังจากโค้ด) |
+| `CHARTERS.md` · `exploration/` | LAB 7–8 · แผนผังหน้า · charter 7 ใบ · ผลสำรวจทีละ charter |
 | `CONSISTENCY.md` | เทียบงานของเรากับหน้าออกแบบของทีม และเหตุผลที่เลือก |
 | `design/*.html` | หน้าออกแบบของทีม (อ้างของ 12 รายการ ดู `CONSISTENCY.md`) |
 | `frontend/` | หน้าเว็บ Vite + React + TypeScript |

@@ -1,0 +1,98 @@
+[
+  {
+    "id": "TC-RACE-02",
+    "gif": "gifs/TC-RACE-02.gif",
+    "seconds": 9.5,
+    "kb": 1086
+  },
+  {
+    "id": "TC-BUILD-19",
+    "gif": "gifs/TC-BUILD-19.gif",
+    "seconds": 9.5,
+    "kb": 1013
+  },
+  {
+    "id": "TC-CANCEL-08",
+    "gif": "gifs/TC-CANCEL-08.gif",
+    "seconds": 9.5,
+    "kb": 834
+  },
+  {
+    "id": "TC-NFR-14",
+    "gif": "gifs/TC-NFR-14.gif",
+    "seconds": 7.1,
+    "kb": 757
+  },
+  {
+    "id": "TC-PRICE-13",
+    "gif": "gifs/TC-PRICE-13.gif",
+    "seconds": 9.5,
+    "kb": 876
+  },
+  {
+    "id": "TC-PRICE-14",
+    "gif": "gifs/TC-PRICE-14.gif",
+    "seconds": 9.5,
+    "kb": 892
+  },
+  {
+    "id": "TC-ACCT-08",
+    "gif": "gifs/TC-ACCT-08.gif",
+    "seconds": 9.5,
+    "kb": 782
+  },
+  {
+    "id": "TC-BUILD-09",
+    "gif": "gifs/TC-BUILD-09.gif",
+    "seconds": 9.1,
+    "kb": 919
+  },
+  {
+    "id": "TC-BUILD-10",
+    "gif": "gifs/TC-BUILD-10.gif",
+    "seconds": 9.5,
+    "kb": 888
+  },
+  {
+    "id": "TC-CAT-03",
+    "gif": "gifs/TC-CAT-03.gif",
+    "seconds": 9.3,
+    "kb": 845
+  },
+  {
+    "id": "TC-CAT-05",
+    "gif": "gifs/TC-CAT-05.gif",
+    "seconds": 9.5,
+    "kb": 990
+  },
+  {
+    "id": "TC-NFR-01",
+    "gif": "gifs/TC-NFR-01.gif",
+    "seconds": 9.4,
+    "kb": 435
+  },
+  {
+    "id": "TC-NFR-07",
+    "gif": "gifs/TC-NFR-07.gif",
+    "seconds": 9.5,
+    "kb": 1516
+  },
+  {
+    "id": "TC-NFR-08",
+    "gif": "gifs/TC-NFR-08.gif",
+    "seconds": 8.8,
+    "kb": 805
+  },
+  {
+    "id": "TC-ORDER-05",
+    "gif": "gifs/TC-ORDER-05.gif",
+    "seconds": 9.5,
+    "kb": 1146
+  },
+  {
+    "id": "TC-PRICE-11",
+    "gif": "gifs/TC-PRICE-11.gif",
+    "seconds": 9.5,
+    "kb": 889
+  }
+]

@@ -1,4 +1,5 @@
 node_modules/
-test-report/
+test-report/*
+!test-report/gifs/
 test-results/
 playwright-report/

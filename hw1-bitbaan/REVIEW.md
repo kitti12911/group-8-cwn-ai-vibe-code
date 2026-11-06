@@ -54,7 +54,7 @@
 | --- | --- | --- | --- |
 | 1 | **oracle อิสระ** — เปิดเซสชันใหม่ วางพรอมต์ `prompts/05-oracle-independent.txt` เอาไฟล์มาวางทับ `e2e/property/oracle/price.ts` → `npm run test:oracle` ต้องผ่าน 27/27 → ตั้ง `ORACLE_READY = true` | เกณฑ์ C จาก 3 → 5 | 1–2 ชม. |
 | 2 | ไล่เก็บพรอมต์ย้อนหลังใส่ `prompts/` ให้ครบทุกตัว | กันโดน −3 | 1 ชม. |
-| 3 | `TC-RACE-02` 2 browser context + อัด GIF/MP4 ลง `e2e/test-report/` | B เต็ม · บท 02 ให้คะแนนหลักฐาน | 1 ชม. |
+| 3 | ~~`TC-RACE-02` 2 browser context + อัด GIF~~ | ✅ ทำแล้ว 7 พ.ย. · `e2e/race/ui-race.ui.spec.ts` · GIF คู่กัน 2 หน้าต่าง + GIF ทุก TC ชั้น ui 16 ไฟล์ใน `e2e/test-report/gifs/` | — |
 | 4 | mutation รอบ 4 — เพิ่ม 6 TC ใน `compat` ตาม `MUTATION-REPORT.md` ข้อ 6 | D เต็ม · score น่าจะแตะ ~87% | 1 ชม. |
 | 5 | ~~ตัดสิน `BUG-EXPLORE-01`~~ | ✅ แก้โค้ดตาม BR-21 แล้ว (7 พ.ย.) | — |
 | 6 | ขั้น 5 แลกบั๊กกับทีมคู่ | E 5 คะแนน | รอผู้สอน |
