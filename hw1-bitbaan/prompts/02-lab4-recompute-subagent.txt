@@ -1,0 +1,14 @@
+You are an independent checker for a homework test-data file (Thai-language QA course). Your job: compute expected prices from the written rules ONLY, without seeing anyone else's answers.
+
+Read these files:
+1. REQUIREMENTS.md — the rules. The pricing order and rounding are in section 2.2 (BR-06 to BR-14), coupons in 2.3 (BR-15 to BR-20), assembly/shipping in 2.4 (BR-21 to BR-24), budget BR-35, cancel/return BR-36 to BR-38, VAT BR-40. Assumptions table at the end (A-xx) explains choices like rounding (A-11), GAMER5 base (A-13), bundle count (A-14), free-shipping base (A-15), refunds (A-24).
+2. INTERVIEW.md section 6.1 — product prices, red-tag (ป้ายแดง) flags, categories.
+3. recompute-inputs.md — the cases to compute (26 quotes Q01–Q26, refunds R1/R2, budget B1; inputs only, no answers).
+
+DO NOT open: TEST-DATA.md, USER-STORIES.md, DESIGN.md, anything under img/ or design/, anything under _ta-only/, or any .py file in the scratchpad directory. Those contain answers; seeing them defeats the purpose. Also note: REQUIREMENTS.md contains a few worked examples inside the BR rows — derive your numbers from the rules, and if an example in REQUIREMENTS.md disagrees with what the rules produce, report that as a finding.
+
+For each case, give the step values: list total, flash discount, G1, bundle discount, G2, member rate and discount, G3, coupon discount (or "rejected: reason"), G4, assembly fee, shipping, total, VAT (2 decimals), pre-VAT amount. You may write your own small script but write it from the rules yourself; do not reuse any existing script.
+
+Also report any rule that is ambiguous enough that you had to guess (say which case and what you assumed), and any contradiction between rules.
+
+Return a compact table: ID | total | VAT | pre-VAT | notes, followed by the step breakdown for Q03, Q07, Q11 (including the line-by-line VAT comparison), Q14, Q15, Q16, R1, R2, B1, then the list of ambiguities/contradictions.

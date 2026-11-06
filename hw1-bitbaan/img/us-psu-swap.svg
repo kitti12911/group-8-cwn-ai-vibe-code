@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="380" viewBox="0 0 1100 380" font-family="Sukhumvit Set, Tahoma, 'Noto Sans Thai', sans-serif">
+  <rect width="1100" height="380" fill="#eef1f5"/>
+  <text x="24" y="34" font-size="20" font-weight="700" fill="#1f2a37">US-10 · คุณบีมเปลี่ยนการ์ดจอเป็นตัวแรงขึ้น แล้วพาวเวอร์ที่เลือกไว้ไม่พอ</text>
+  <text x="24" y="56" font-size="13" fill="#5b6470">เว็บต้องไม่เอาพาวเวอร์ออกเงียบ ๆ: ของในสเปกเหมือนเดิม แต่ขึ้นคำเตือนและปุ่มให้ลูกค้าเลือกเอง</text>
+
+  <g transform="translate(24,76)">
+    <rect width="470" height="280" rx="12" fill="#fff" stroke="#c7ced8"/>
+    <text x="20" y="34" font-size="16" font-weight="700" fill="#1f2a37">ก่อน</text>
+    <rect x="20" y="52" width="430" height="46" rx="8" fill="#f0fdf4" stroke="#86efac"/><text x="34" y="81" font-size="14">การ์ดจอ  Vexa 4600 · แนะนำ 550W</text>
+    <rect x="20" y="108" width="430" height="46" rx="8" fill="#f0fdf4" stroke="#86efac"/><text x="34" y="137" font-size="14">พาวเวอร์  550W Bronze</text>
+    <rect x="20" y="172" width="430" height="58" rx="8" fill="#ecfdf5" stroke="#34d399"/>
+    <text x="34" y="198" font-size="14" font-weight="700" fill="#065f46">✓ พาวเวอร์พอ</text><text x="34" y="218" font-size="13" fill="#065f46">550W ≥ ที่การ์ดจอแนะนำ 550W</text>
+    <text x="20" y="260" font-size="13" fill="#6b7280">ราคารวมส่วนนี้ ฿13,480</text>
+  </g>
+
+  <g font-size="15" font-weight="700" fill="#1d4ed8" text-anchor="middle">
+    <path d="M510 216 h70" stroke="#1d4ed8" stroke-width="4" marker-end="url(#a)"/>
+    <text x="545" y="196">กดเปลี่ยน</text><text x="545" y="246" font-size="12" font-weight="400">GPU-V46 → GPU-V57</text>
+  </g>
+  <defs><marker id="a" markerWidth="10" markerHeight="10" refX="6" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#1d4ed8"/></marker></defs>
+
+  <g transform="translate(606,76)">
+    <rect width="470" height="280" rx="12" fill="#fff" stroke="#c7ced8"/>
+    <text x="20" y="34" font-size="16" font-weight="700" fill="#1f2a37">หลัง</text>
+    <rect x="20" y="52" width="430" height="46" rx="8" fill="#eff6ff" stroke="#93c5fd"/><text x="34" y="81" font-size="14">การ์ดจอ  Vexa 5700 · แนะนำ 750W</text>
+    <rect x="20" y="108" width="430" height="46" rx="8" fill="#fff7ed" stroke="#fb923c" stroke-width="2"/><text x="34" y="137" font-size="14">พาวเวอร์  550W Bronze  (ยังอยู่)</text>
+    <rect x="20" y="166" width="430" height="70" rx="8" fill="#fef3c7" stroke="#f59e0b"/>
+    <text x="34" y="190" font-size="14" font-weight="700" fill="#92400e">⚠ พาวเวอร์อาจไม่พอ: 550W &lt; ที่แนะนำ 750W</text>
+    <rect x="34" y="200" width="190" height="28" rx="6" fill="#f59e0b"/><text x="129" y="219" font-size="13" text-anchor="middle" fill="#fff">เปลี่ยนเป็น 750W Gold</text>
+    <rect x="236" y="200" width="200" height="28" rx="6" fill="#fff" stroke="#f59e0b"/><text x="336" y="219" font-size="13" text-anchor="middle" fill="#92400e">ใช้ตัวเดิม (รับทราบแล้ว)</text>
+    <text x="20" y="262" font-size="13" fill="#6b7280">ราคารวมส่วนนี้ ฿25,980 · สั่งต่อได้ ไม่ถูกบล็อก</text>
+  </g>
+</svg>

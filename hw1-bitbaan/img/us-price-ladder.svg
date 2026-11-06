@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="520" viewBox="0 0 1100 520" font-family="Sukhumvit Set, Tahoma, 'Noto Sans Thai', sans-serif">
+  <rect width="1100" height="520" fill="#f7f5f0"/>
+  <text x="24" y="34" font-size="20" font-weight="700" fill="#1f2a37">US-24 · ใบสรุปราคาทีละขั้น: คุณโอ๊ต (Silver) ศุกร์ 13 พ.ย. 12:30 · CPU-N5 + MB-B6</text>
+  <text x="24" y="56" font-size="13" fill="#5b6470">ลำดับนี้เป็นสมมติฐานของทีม (Q1) · ทุกขั้นที่ลดเป็น % ปัดส่วนลดลงเป็นบาทเต็ม (Q2) · ถ้าร้านตอบลำดับอื่น ยอดสุดท้ายเปลี่ยน</text>
+
+  <!-- bars: scale 1 baht = 0.06 px  (10,880 -> 652px) -->
+  <g font-size="14">
+    <g transform="translate(24,82)">
+      <text y="22" font-weight="700">ราคาป้าย</text><text y="40" font-size="12" fill="#6b7280">6,290 + 4,590</text>
+      <rect x="230" y="4" width="652" height="36" rx="4" fill="#9ca3af"/><text x="1050" y="28" text-anchor="end" font-weight="700">฿10,880</text></g>
+    <g transform="translate(24,134)">
+      <text y="22" font-weight="700" fill="#b91c1c">① Flash sale −10%</text><text y="40" font-size="12" fill="#6b7280">เฉพาะ MB-B6 ป้ายแดง: 4,590 × 10%</text>
+      <rect x="854" y="4" width="28" height="36" rx="4" fill="#ef4444"/><rect x="230" y="4" width="624" height="36" rx="4" fill="#e5e7eb"/><text x="1050" y="28" text-anchor="end" fill="#b91c1c">−฿459 → ฿10,421</text></g>
+    <g transform="translate(24,186)">
+      <text y="22" font-weight="700" fill="#c2410c">② ชุดประกอบ CPU + บอร์ด</text><text y="40" font-size="12" fill="#6b7280">ลดคงที่</text>
+      <rect x="824" y="4" width="30" height="36" rx="4" fill="#fb923c"/><rect x="230" y="4" width="594" height="36" rx="4" fill="#e5e7eb"/><text x="1050" y="28" text-anchor="end" fill="#c2410c">−฿500 → ฿9,921</text></g>
+    <g transform="translate(24,238)">
+      <text y="22" font-weight="700" fill="#0f766e">③ สมาชิก Silver 3%</text><text y="40" font-size="12" fill="#6b7280">9,921 × 3% = 297.63 → ปัดลง 297</text>
+      <rect x="806" y="4" width="18" height="36" rx="4" fill="#14b8a6"/><rect x="230" y="4" width="576" height="36" rx="4" fill="#e5e7eb"/><text x="1050" y="28" text-anchor="end" fill="#0f766e">−฿297 → ฿9,624</text></g>
+    <g transform="translate(24,290)">
+      <text y="22" font-weight="700" fill="#7c3aed">④ คูปอง</text><text y="40" font-size="12" fill="#6b7280">ไม่ได้ใส่โค้ด</text>
+      <rect x="230" y="4" width="576" height="36" rx="4" fill="#e5e7eb"/><text x="1050" y="28" text-anchor="end" fill="#7c3aed">฿0 → ฿9,624</text></g>
+    <g transform="translate(24,342)">
+      <text y="22" font-weight="700" fill="#1d4ed8">⑤ ค่าส่งปกติ</text><text y="40" font-size="12" fill="#6b7280">฿9,624 ≥ ฿3,000 จึงส่งฟรี</text>
+      <rect x="230" y="4" width="576" height="36" rx="4" fill="#e5e7eb"/><text x="1050" y="28" text-anchor="end" fill="#1d4ed8">+฿0</text></g>
+    <line x1="24" y1="396" x2="1076" y2="396" stroke="#1f2a37" stroke-width="2"/>
+    <g transform="translate(24,404)">
+      <text y="28" font-size="18" font-weight="800">ยอดชำระ</text>
+      <rect x="230" y="6" width="576" height="40" rx="4" fill="#1f2a37"/><text x="1050" y="32" text-anchor="end" font-size="20" font-weight="800">฿9,624.00</text></g>
+    <g transform="translate(24,470)" font-size="13" fill="#374151">
+      <text y="16">ใบกำกับภาษี (US-41): VAT = 9,624 × 7 ÷ 107 = 629.607… → <tspan font-weight="700">฿629.61</tspan> · ก่อน VAT <tspan font-weight="700">฿8,994.39</tspan> · รวมกลับได้ ฿9,624.00 พอดี</text>
+      <text y="38" fill="#b91c1c">ถ้าลดสมาชิกก่อนชุดประกอบ: 10,421 − 312 − 500 = ฿9,609 (ต่าง ฿15) · ลำดับต่างกัน ยอดต่างกัน ร้านต้องยืนยันก่อนเขียนเว็บ (Q1)</text>
+    </g>
+  </g>
+</svg>

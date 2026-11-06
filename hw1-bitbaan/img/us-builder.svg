@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="640" viewBox="0 0 1100 640" font-family="Sukhumvit Set, Tahoma, 'Noto Sans Thai', sans-serif">
+  <rect width="1100" height="640" fill="#eef1f5"/>
+  <text x="24" y="34" font-size="20" font-weight="700" fill="#1f2a37">ภาพร่างหน้าจัดสเปก (US-05 ถึง US-11, US-15) · คุณบีม งบ ฿35,000</text>
+  <text x="24" y="56" font-size="13" fill="#5b6470">ภาพร่างเพื่อคุยกับร้าน ไม่ใช่หน้าจอจริง · ตัวเลขมาจาก INTERVIEW ข้อ 6.1</text>
+
+  <!-- browser frame -->
+  <rect x="24" y="72" width="1052" height="548" rx="12" fill="#fff" stroke="#c7ced8"/>
+  <rect x="24" y="72" width="1052" height="36" rx="12" fill="#e5e9ef"/>
+  <circle cx="46" cy="90" r="6" fill="#f87171"/><circle cx="66" cy="90" r="6" fill="#fbbf24"/><circle cx="86" cy="90" r="6" fill="#34d399"/>
+  <rect x="110" y="80" width="420" height="20" rx="10" fill="#fff"/><text x="122" y="95" font-size="12" fill="#6b7280">bitbaan.test/builder</text>
+
+  <!-- left: category list -->
+  <g font-size="14">
+    <text x="48" y="142" font-size="16" font-weight="700" fill="#1f2a37">เลือกทีละหมวด</text>
+    <g transform="translate(48,156)">
+      <rect width="600" height="48" rx="8" fill="#f0fdf4" stroke="#86efac"/><text x="14" y="30" font-weight="700">CPU</text><text x="110" y="30">CPU Nexa 5 · NX-1 · 65W</text><text x="520" y="30" font-weight="700">฿6,290</text></g>
+    <g transform="translate(48,212)">
+      <rect width="600" height="48" rx="8" fill="#f0fdf4" stroke="#86efac"/><text x="14" y="30" font-weight="700">เมนบอร์ด</text><text x="110" y="30">B6-Lite · NX-1 · DDR4 · mATX</text><text x="520" y="30" font-weight="700">฿4,590</text></g>
+    <!-- RAM dropdown open with blocked option -->
+    <g transform="translate(48,268)">
+      <rect width="600" height="130" rx="8" fill="#fff" stroke="#93c5fd" stroke-width="2"/><text x="14" y="30" font-weight="700">แรม</text><text x="110" y="30" fill="#1d4ed8">▾ เลือกแรม</text>
+      <rect x="100" y="44" width="486" height="34" rx="6" fill="#eff6ff"/><text x="112" y="66">DDR4 16GB (2×8)</text><text x="500" y="66">฿1,290</text>
+      <rect x="100" y="84" width="486" height="34" rx="6" fill="#f3f4f6"/><text x="112" y="106" fill="#9ca3af" text-decoration="line-through">DDR5 16GB (2×8)</text>
+      <text x="300" y="106" font-size="12" fill="#b91c1c">🚫 ใส่ไม่ได้: บอร์ดนี้รับ DDR4</text></g>
+    <g transform="translate(48,406)">
+      <rect width="600" height="48" rx="8" fill="#f0fdf4" stroke="#86efac"/><text x="14" y="30" font-weight="700">การ์ดจอ</text><text x="110" y="30">Vexa 4600 · 220W · แนะนำ 550W · 240 mm</text><text x="510" y="30" font-weight="700">฿11,490</text></g>
+    <g transform="translate(48,462)">
+      <rect width="600" height="48" rx="8" fill="#fff" stroke="#e5e7eb"/><text x="14" y="30" font-weight="700" fill="#6b7280">SSD · พาวเวอร์</text><text x="160" y="30" fill="#6b7280">ยังไม่ได้เลือก</text></g>
+    <g transform="translate(48,518)">
+      <rect width="600" height="48" rx="8" fill="#fff7ed" stroke="#fdba74"/><text x="14" y="30" font-weight="700">เคส</text><text x="110" y="30">Airflow M · mATX · การ์ดจอ ≤ 300 mm</text><text x="520" y="30" font-weight="700">฿1,590</text></g>
+  </g>
+
+  <!-- right: summary panel -->
+  <g transform="translate(676,128)">
+    <rect width="376" height="470" rx="12" fill="#f9fafb" stroke="#d1d5db"/>
+    <text x="20" y="34" font-size="16" font-weight="700" fill="#1f2a37">สรุปสเปก</text>
+    <text x="20" y="66" font-size="14" fill="#374151">ราคารวม (4 ชิ้น)</text><text x="356" y="66" font-size="16" font-weight="700" text-anchor="end">฿23,960</text>
+    <text x="20" y="96" font-size="14" fill="#374151">งบที่ตั้งไว้</text><text x="356" y="96" font-size="14" text-anchor="end">฿35,000</text>
+    <rect x="20" y="110" width="336" height="14" rx="7" fill="#e5e7eb"/><rect x="20" y="110" width="230" height="14" rx="7" fill="#16a34a"/>
+    <text x="20" y="146" font-size="14" fill="#15803d" font-weight="700">เหลืองบ ฿11,040</text>
+
+    <rect x="20" y="168" width="336" height="76" rx="8" fill="#fef3c7" stroke="#f59e0b"/>
+    <text x="34" y="194" font-size="14" font-weight="700" fill="#92400e">⚠ ยังไม่ได้เลือกพาวเวอร์</text>
+    <text x="34" y="216" font-size="13" fill="#92400e">การ์ดจอนี้แนะนำพาวเวอร์อย่างน้อย 550W</text>
+    <text x="34" y="234" font-size="12" fill="#92400e">(เตือนเท่านั้น ไม่ห้ามสั่ง · K5)</text>
+
+    <rect x="20" y="258" width="336" height="58" rx="8" fill="#ecfdf5" stroke="#34d399"/>
+    <text x="34" y="282" font-size="14" font-weight="700" fill="#065f46">✓ เข้ากันได้ทุกชิ้นที่เลือก</text>
+    <text x="34" y="302" font-size="12" fill="#065f46">socket NX-1 · DDR4 · mATX · 240 ≤ 300 mm</text>
+
+    <text x="20" y="346" font-size="14" fill="#374151">ค่าประกอบ</text><text x="356" y="346" font-size="14" text-anchor="end">฿500</text>
+    <text x="20" y="368" font-size="12" fill="#6b7280">เลือกครบ 7 หมวดจะประกอบให้ฟรี (ยังขาด แรม SSD พาวเวอร์)</text>
+
+    <rect x="20" y="392" width="160" height="44" rx="8" fill="#fff" stroke="#1d4ed8"/><text x="100" y="420" font-size="14" text-anchor="middle" fill="#1d4ed8">🔗 บันทึก + แชร์</text>
+    <rect x="196" y="392" width="160" height="44" rx="8" fill="#1d4ed8"/><text x="276" y="420" font-size="14" text-anchor="middle" fill="#fff">ใส่ตะกร้าทั้งชุด</text>
+  </g>
+</svg>

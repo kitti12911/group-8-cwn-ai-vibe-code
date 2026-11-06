@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="470" viewBox="0 0 1200 470" font-family="Sukhumvit Set, Tahoma, 'Noto Sans Thai', sans-serif">
+  <rect width="1200" height="470" fill="#f7f5f0"/>
+  <text x="30" y="42" font-size="24" font-weight="700" fill="#1f2a37">คนในบันทึกสัมภาษณ์ · บิตบ้าน คอมพิวเตอร์</text>
+  <text x="30" y="68" font-size="14" fill="#5b6470">5 คน 5 มุมมอง · story ทุกข้อในไฟล์นี้อ้างกลับมาที่คนใดคนหนึ่งในภาพนี้</text>
+
+  <!-- card template: x offset per card -->
+  <g transform="translate(30,90)">
+    <rect width="216" height="360" rx="14" fill="#fff" stroke="#d8d2c4"/>
+    <rect width="216" height="8" rx="4" fill="#c2410c"/>
+    <circle cx="108" cy="64" r="36" fill="#fde4d3"/><circle cx="108" cy="54" r="14" fill="#c2410c"/><path d="M82 92 q26 -26 52 0" fill="#c2410c"/>
+    <text x="108" y="128" font-size="19" font-weight="700" text-anchor="middle" fill="#1f2a37">คุณเก่ง</text>
+    <text x="108" y="150" font-size="13" text-anchor="middle" fill="#c2410c">เจ้าของร้าน · ผู้ตัดสินกฎ</text>
+    <text x="16" y="184" font-size="13" fill="#374151" font-style="italic">"อยากมีเว็บให้ลูกค้า</text>
+    <text x="16" y="202" font-size="13" fill="#374151" font-style="italic">เลือก สั่ง จ่ายเองได้"</text>
+    <text x="16" y="236" font-size="13" font-weight="700" fill="#1f2a37">อยากได้</text>
+    <text x="16" y="258" font-size="13" fill="#374151">• กันของ 30 นาที</text>
+    <text x="16" y="278" font-size="13" fill="#374151">• การ์ดจอคนละ 1 ใบ</text>
+    <text x="16" y="298" font-size="13" fill="#374151">• ห้ามขายซ้ำใบเดียวกัน</text>
+    <text x="16" y="318" font-size="13" fill="#374151">• หน้าจัดสเปกที่ห้ามเลือกผิด</text>
+    <text x="16" y="344" font-size="12" fill="#9ca3af">INTERVIEW บ.7–66</text>
+  </g>
+
+  <g transform="translate(262,90)">
+    <rect width="216" height="360" rx="14" fill="#fff" stroke="#d8d2c4"/>
+    <rect width="216" height="8" rx="4" fill="#7c3aed"/>
+    <circle cx="108" cy="64" r="36" fill="#ede4fd"/><circle cx="108" cy="54" r="14" fill="#7c3aed"/><path d="M82 92 q26 -26 52 0" fill="#7c3aed"/>
+    <text x="108" y="128" font-size="19" font-weight="700" text-anchor="middle" fill="#1f2a37">คุณมิ้นท์</text>
+    <text x="108" y="150" font-size="13" text-anchor="middle" fill="#7c3aed">พนักงานหน้าร้าน + แอดมินเพจ</text>
+    <text x="16" y="184" font-size="13" fill="#374151" font-style="italic">"หนูไม่ให้ใช้ซ้อนนะคะ</text>
+    <text x="16" y="202" font-size="13" fill="#374151" font-style="italic">เจ๊ไม่เคยบอกว่าซ้อนได้"</text>
+    <text x="16" y="236" font-size="13" font-weight="700" fill="#1f2a37">ทำด้วยมือทุกวัน</text>
+    <text x="16" y="258" font-size="13" fill="#374151">• โพสต์อิทกันของถึงร้านปิด</text>
+    <text x="16" y="278" font-size="13" fill="#374151">• ปัดเศษ "ตามความรู้สึก"</text>
+    <text x="16" y="298" font-size="13" fill="#374151">• พาวเวอร์ +100W เผื่อเสมอ</text>
+    <text x="16" y="318" font-size="13" fill="#b91c1c">⚠ พูดขัดกับคุณเก่ง 6 เรื่อง</text>
+    <text x="16" y="344" font-size="12" fill="#9ca3af">INTERVIEW บ.68–79</text>
+  </g>
+
+  <g transform="translate(494,90)">
+    <rect width="216" height="360" rx="14" fill="#fff" stroke="#d8d2c4"/>
+    <rect width="216" height="8" rx="4" fill="#0f766e"/>
+    <circle cx="108" cy="64" r="36" fill="#d5f2ee"/><circle cx="108" cy="54" r="14" fill="#0f766e"/><path d="M82 92 q26 -26 52 0" fill="#0f766e"/>
+    <text x="108" y="128" font-size="19" font-weight="700" text-anchor="middle" fill="#1f2a37">คุณโอ๊ต (C3)</text>
+    <text x="108" y="150" font-size="13" text-anchor="middle" fill="#0f766e">สายเกม · Silver ฿20,000 พอดี</text>
+    <text x="16" y="184" font-size="13" fill="#374151" font-style="italic">"ผมเปิดสองแท็บ กดพร้อมกัน</text>
+    <text x="16" y="202" font-size="13" fill="#374151" font-style="italic">บางทีได้สองใบ"</text>
+    <text x="16" y="236" font-size="13" font-weight="700" fill="#1f2a37">อยากได้</text>
+    <text x="16" y="258" font-size="13" fill="#374151">• แย่งการ์ดจอล็อตใหม่ให้ทัน</text>
+    <text x="16" y="278" font-size="13" fill="#374151">• ราคา flash ถ้ากดทันเวลา</text>
+    <text x="16" y="298" font-size="13" fill="#374151">• เห็นนับถอยหลังตอนจ่าย</text>
+    <text x="16" y="318" font-size="13" fill="#374151">• เงินคืนเร็ว ไม่รอ 5 วัน</text>
+    <text x="16" y="344" font-size="12" fill="#9ca3af">INTERVIEW บ.81–87</text>
+  </g>
+
+  <g transform="translate(726,90)">
+    <rect width="216" height="360" rx="14" fill="#fff" stroke="#d8d2c4"/>
+    <rect width="216" height="8" rx="4" fill="#1d4ed8"/>
+    <circle cx="108" cy="64" r="36" fill="#dbe6fe"/><circle cx="108" cy="54" r="14" fill="#1d4ed8"/><path d="M82 92 q26 -26 52 0" fill="#1d4ed8"/>
+    <text x="108" y="128" font-size="19" font-weight="700" text-anchor="middle" fill="#1f2a37">คุณบีม</text>
+    <text x="108" y="150" font-size="13" text-anchor="middle" fill="#1d4ed8">นักศึกษา · จัดสเปกเครื่องแรก</text>
+    <text x="16" y="184" font-size="13" fill="#374151" font-style="italic">"งบ 35,000 อยากให้เว็บบอก</text>
+    <text x="16" y="202" font-size="13" fill="#374151" font-style="italic">ว่าเหลืองบอีกเท่าไหร่"</text>
+    <text x="16" y="236" font-size="13" font-weight="700" fill="#1f2a37">อยากได้</text>
+    <text x="16" y="258" font-size="13" fill="#374151">• เลือกทีละชิ้น ไม่ซื้อผิด</text>
+    <text x="16" y="278" font-size="13" fill="#374151">• รู้ว่าการ์ดจอใส่เคสได้ไหม</text>
+    <text x="16" y="298" font-size="13" fill="#374151">• ของหมดต้องบอกก่อนจ่าย</text>
+    <text x="16" y="318" font-size="13" fill="#374151">• ส่งลิงก์ให้แม่จ่าย</text>
+    <text x="16" y="344" font-size="12" fill="#9ca3af">INTERVIEW บ.89–95</text>
+  </g>
+
+  <g transform="translate(958,90)">
+    <rect width="216" height="360" rx="14" fill="#fff" stroke="#d8d2c4"/>
+    <rect width="216" height="8" rx="4" fill="#b45309"/>
+    <circle cx="108" cy="64" r="36" fill="#fdecc8"/><circle cx="108" cy="54" r="14" fill="#b45309"/><path d="M82 92 q26 -26 52 0" fill="#b45309"/>
+    <text x="108" y="128" font-size="19" font-weight="700" text-anchor="middle" fill="#1f2a37">คุณจอย (C5)</text>
+    <text x="108" y="150" font-size="13" text-anchor="middle" fill="#b45309">จัดซื้อบริษัท · Business 8%</text>
+    <text x="16" y="184" font-size="13" fill="#374151" font-style="italic">"บัญชีเคยตีกลับเพราะ</text>
+    <text x="16" y="202" font-size="13" fill="#374151" font-style="italic">ต่างกัน 1 สตางค์"</text>
+    <text x="16" y="236" font-size="13" font-weight="700" fill="#1f2a37">อยากได้</text>
+    <text x="16" y="258" font-size="13" fill="#374151">• ใบเสนอราคายืนราคา 7 วัน</text>
+    <text x="16" y="278" font-size="13" fill="#374151">• ใบกำกับภาษีตรงทุกสตางค์</text>
+    <text x="16" y="298" font-size="13" fill="#374151">• สั่งทีละ 10 ชุด</text>
+    <text x="16" y="318" font-size="13" fill="#374151">• แยกส่งหลายสาขา</text>
+    <text x="16" y="344" font-size="12" fill="#9ca3af">INTERVIEW บ.97–103</text>
+  </g>
+</svg>

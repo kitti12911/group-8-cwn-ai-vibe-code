@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="406" viewBox="0 0 1200 406" font-family="Sukhumvit Set, Tahoma, 'Noto Sans Thai', sans-serif">
+  <rect width="1200" height="406" fill="#f7f5f0"/>
+  <text x="30" y="40" font-size="22" font-weight="700" fill="#1f2a37">Story map · เส้นทางลูกค้า 1 ออเดอร์ และ story ที่อยู่ในแต่ละช่วง</text>
+  <text x="30" y="64" font-size="13" fill="#5b6470">สีแดง = จุดที่เสียเงินจริงหรือขายซ้ำได้ถ้าเว็บพลาด (ทดสอบยากและสำคัญที่สุด)</text>
+  <line x1="60" y1="130" x2="1140" y2="130" stroke="#9ca3af" stroke-width="3" stroke-dasharray="2 8" stroke-linecap="round"/>
+
+  <g font-size="15" font-weight="700" text-anchor="middle" fill="#fff">
+    <rect x="30" y="100" width="150" height="60" rx="30" fill="#374151"/><text x="105" y="136">① ดูสินค้า</text>
+    <rect x="200" y="100" width="150" height="60" rx="30" fill="#1d4ed8"/><text x="275" y="136">② จัดสเปก</text>
+    <rect x="370" y="100" width="150" height="60" rx="30" fill="#374151"/><text x="445" y="136">③ ตะกร้า + ราคา</text>
+    <rect x="540" y="100" width="150" height="60" rx="30" fill="#b91c1c"/><text x="615" y="136">④ กันของ 30 นาที</text>
+    <rect x="710" y="100" width="150" height="60" rx="30" fill="#b91c1c"/><text x="785" y="136">⑤ จ่ายเงิน</text>
+    <rect x="880" y="100" width="130" height="60" rx="30" fill="#374151"/><text x="945" y="136">⑥ ส่ง / รับ</text>
+    <rect x="1030" y="100" width="140" height="60" rx="30" fill="#374151"/><text x="1100" y="136">⑦ ยกเลิก / คืน</text>
+  </g>
+
+  <g font-size="13" fill="#1f2a37">
+    <g transform="translate(30,180)"><rect width="150" height="206" rx="10" fill="#fff" stroke="#d8d2c4"/>
+      <text x="10" y="26">US-01 หมวด + สต็อก</text><text x="10" y="50">US-02 ป้ายแดง</text><text x="10" y="74" fill="#b91c1c">US-03 สต็อกหน้าร้าน</text><text x="10" y="98">US-04 ของเข้าล็อตใหม่</text><text x="10" y="122">US-35 ไม่สมัครก็ซื้อได้</text><text x="10" y="146">US-45 สมัคร / ล็อกอิน</text></g>
+    <g transform="translate(200,180)"><rect width="150" height="206" rx="10" fill="#fff" stroke="#d8d2c4"/>
+      <text x="10" y="26">US-05 เลือกทีละหมวด</text><text x="10" y="50">US-06/07 socket แรม</text><text x="10" y="74">US-08 ขนาดเคส</text><text x="10" y="98">US-09/10 พาวเวอร์</text><text x="10" y="122">US-11 งบเหลือ</text><text x="10" y="146">US-13/14 ลิงก์สเปก</text><text x="10" y="170">US-15 ค่าประกอบ</text></g>
+    <g transform="translate(370,180)"><rect width="150" height="206" rx="10" fill="#fff" stroke="#d8d2c4"/>
+      <text x="10" y="26">US-12 ทั้งชุดลงตะกร้า</text><text x="10" y="50">US-17/18 สมาชิก</text><text x="10" y="74">US-19 flash sale</text><text x="10" y="98">US-20 ชุดประกอบ</text><text x="10" y="122">US-21–23 คูปอง</text><text x="10" y="146" fill="#b91c1c">US-24/25 ลำดับ + ปัดเศษ</text><text x="10" y="170">US-26 ระดับลดตามเวลา</text><text x="10" y="194">US-27/28 ค่าส่ง</text></g>
+    <g transform="translate(540,180)"><rect width="150" height="206" rx="10" fill="#fff" stroke="#f3b4b4"/>
+      <text x="10" y="26" fill="#b91c1c">US-30 กันของ + นับถอยหลัง</text><text x="10" y="50" fill="#b91c1c">US-31 หมดเวลาปล่อยของ</text><text x="10" y="74" fill="#b91c1c">US-32 ชิ้นสุดท้าย 2 คน</text><text x="10" y="98" fill="#b91c1c">US-33 คนละ 1 ใบ</text><text x="10" y="122">US-34 flash 12:58</text></g>
+    <g transform="translate(710,180)"><rect width="150" height="206" rx="10" fill="#fff" stroke="#f3b4b4"/>
+      <text x="10" y="26" fill="#b91c1c">US-36 ยืนยันอัตโนมัติ</text><text x="10" y="50">US-41 ใบกำกับภาษี</text><text x="10" y="74">US-40 ใบเสนอราคา</text><text x="10" y="98">US-42 สั่ง 10 ชุด</text><text x="10" y="122">US-16 ผู้ปกครองจ่าย</text></g>
+    <g transform="translate(880,180)"><rect width="130" height="200" rx="10" fill="#fff" stroke="#d8d2c4"/>
+      <text x="10" y="26">US-27 3 วิธีส่ง</text><text x="10" y="50">US-29 แยกส่ง</text><text x="10" y="74">US-43 หลังร้าน</text><text x="10" y="98">US-44 ส่วนลดพิเศษ</text></g>
+    <g transform="translate(1030,180)"><rect width="140" height="200" rx="10" fill="#fff" stroke="#d8d2c4"/>
+      <text x="10" y="26">US-37 ยกเลิกก่อนแพ็ก</text><text x="10" y="50">US-38 คืนใน 7 วัน</text><text x="10" y="74">US-39 รู้วันเงินคืน</text></g>
+  </g>
+</svg>
