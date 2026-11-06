@@ -86,14 +86,16 @@ export function ClockProvider({ children }: { children: ReactNode }) {
     api
       .bugMode()
       .then((r) => {
-        document.body.dataset.bugMode = String(r?.bugMode ?? 0);
+        // on <html> (course template) and <body> (our tests)
+        document.documentElement.dataset.bugMode = document.body.dataset.bugMode = String(r?.bugMode ?? 0);
         clock.testMode = true;
       })
       .catch(() => {
-        document.body.dataset.bugMode = '0';
+        document.documentElement.dataset.bugMode = document.body.dataset.bugMode = '0';
       })
       .finally(() => {
-        if (alive) void sync();
+        // data-ready="true" once bug mode and the server clock are known — wait for it before clicking
+        if (alive) void Promise.resolve(sync()).finally(() => (document.documentElement.dataset.ready = 'true'));
       });
     const id = window.setInterval(() => void sync(), 15000);
     const onFocus = () => {

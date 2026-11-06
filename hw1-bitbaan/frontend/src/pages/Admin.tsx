@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { api, errorText, isApiError } from '../api';
 import { ErrorMessage, Loading, useTitle } from '../components/common';
 import { baht, dateTimeTH, mmss, statusLabel, STATUS_LABEL, thb } from '../format';
 import { useServerNow } from '../state';
-import type { Order, OrderStatus, StockRow } from '../types';
+import type { LotRow, Order, OrderStatus, StockRow } from '../types';
 
 const NEXT: Partial<Record<OrderStatus, 'PACKED' | 'SHIPPED' | 'DELIVERED'>> = {
   PAID: 'PACKED',
@@ -22,6 +22,10 @@ export function Admin() {
   const [error, setError] = useState<string | null>(null);
   const [forbidden, setForbidden] = useState(false);
   const [busy, setBusy] = useState<string | null>(null);
+  const [lots, setLots] = useState<LotRow[] | null>(null);
+  const [sale, setSale] = useState({ sku: '', qty: '1', customer: '' });
+  const [lot, setLot] = useState({ sku: '', qty: '1', at: '' });
+  const [notice, setNotice] = useState<string | null>(null);
 
   const handle = (e: unknown) => {
     if (isApiError(e, 'FORBIDDEN') || isApiError(e, 'LOGIN_REQUIRED') || (isApiError(e) && (e.status === 403 || e.status === 401))) {
@@ -46,9 +50,18 @@ export function Admin() {
     }
   }, [status, date]);
 
+  const loadLots = useCallback(async () => {
+    try {
+      setLots(await api.adminLots());
+    } catch (e) {
+      handle(e);
+    }
+  }, []);
+
   useEffect(() => {
     void loadStock();
-  }, [loadStock]);
+    void loadLots();
+  }, [loadStock, loadLots]);
   useEffect(() => {
     void loadOrders();
   }, [loadOrders]);
@@ -71,6 +84,29 @@ export function Admin() {
       setStock((rows) => rows?.map((x) => (x.sku === sku ? { ...x, available: r.available } : x)) ?? rows);
       await loadStock();
     });
+
+  // FR-07: in-store sale with quantity and (optional) member code — same stock pool as the web
+  const submitSale = (e: FormEvent) => {
+    e.preventDefault();
+    setNotice(null);
+    void run('sale-form', async () => {
+      const r = await api.storeSale(sale.sku, Number(sale.qty), sale.customer.trim() || undefined);
+      setNotice(`บันทึกขายหน้าร้าน ${r.sku} × ${sale.qty} แล้ว · พร้อมขายเหลือ ${r.available}`);
+      setSale((x) => ({ ...x, qty: '1', customer: '' }));
+      await loadStock();
+    });
+  };
+
+  // FR-06: schedule a new lot; Bangkok time from the form is sent as +07:00
+  const submitLot = (e: FormEvent) => {
+    e.preventDefault();
+    setNotice(null);
+    void run('lot-form', async () => {
+      const l = await api.scheduleLot(lot.sku, Number(lot.qty), `${lot.at}:00+07:00`);
+      setNotice(`ตั้งล็อต ${l.code} แล้ว · เปิดขาย ${dateTimeTH(l.releaseAt)}`);
+      await loadLots();
+    });
+  };
 
   const advance = (o: Order) => {
     const next = NEXT[o.status];
@@ -192,6 +228,67 @@ export function Admin() {
           </div>
         )}
       </section>
+
+      {notice && (
+        <div className="alert alert-ok small" role="status" data-testid="admin-notice">
+          {notice}
+        </div>
+      )}
+
+      <div className="grid-2">
+        <section className="card stack-xs">
+          <h2 className="h3">บันทึกขายหน้าร้าน</h2>
+          <form className="stack-xs" onSubmit={submitSale}>
+            <label className="small" htmlFor="sale-sku">สินค้า</label>
+            <select id="sale-sku" data-testid="store-sale-sku" required value={sale.sku} onChange={(e) => setSale({ ...sale, sku: e.target.value })}>
+              <option value="">เลือกสินค้า</option>
+              {(stock ?? []).map((r) => (
+                <option key={r.sku} value={r.sku}>
+                  {r.sku} · {r.name} (พร้อมขาย {r.available})
+                </option>
+              ))}
+            </select>
+            <label className="small" htmlFor="sale-qty">จำนวน</label>
+            <input id="sale-qty" data-testid="store-sale-qty" type="number" min={1} required value={sale.qty} onChange={(e) => setSale({ ...sale, qty: e.target.value })} />
+            <label className="small" htmlFor="sale-customer">รหัสสมาชิก (ไม่บังคับ · นับยอดสะสม)</label>
+            <input id="sale-customer" data-testid="store-sale-customer" placeholder="เช่น C3" value={sale.customer} onChange={(e) => setSale({ ...sale, customer: e.target.value })} />
+            <button type="submit" className="btn btn-dark self-start" data-testid="store-sale-submit" disabled={busy === 'sale-form'}>
+              บันทึกขาย
+            </button>
+          </form>
+        </section>
+
+        <section className="card stack-xs">
+          <h2 className="h3">ตั้งล็อตใหม่</h2>
+          <form className="stack-xs" onSubmit={submitLot}>
+            <label className="small" htmlFor="lot-sku">สินค้า</label>
+            <select id="lot-sku" data-testid="lot-sku" required value={lot.sku} onChange={(e) => setLot({ ...lot, sku: e.target.value })}>
+              <option value="">เลือกสินค้า</option>
+              {(stock ?? []).map((r) => (
+                <option key={r.sku} value={r.sku}>
+                  {r.sku} · {r.name}
+                </option>
+              ))}
+            </select>
+            <label className="small" htmlFor="lot-qty">จำนวน</label>
+            <input id="lot-qty" data-testid="lot-qty" type="number" min={1} required value={lot.qty} onChange={(e) => setLot({ ...lot, qty: e.target.value })} />
+            <label className="small" htmlFor="lot-at">เปิดขาย (เวลาไทย)</label>
+            <input id="lot-at" data-testid="lot-release-at" type="datetime-local" required value={lot.at} onChange={(e) => setLot({ ...lot, at: e.target.value })} />
+            <button type="submit" className="btn btn-dark self-start" data-testid="lot-submit" disabled={busy === 'lot-form'}>
+              ตั้งล็อต
+            </button>
+          </form>
+          {lots && lots.length > 0 && (
+            <ul className="small" data-testid="lot-list">
+              {lots.map((l) => (
+                <li key={l.code} data-testid={`lot-${l.code}`}>
+                  <span className="mono">{l.code}</span> · {l.sku} × {l.qty} · {dateTimeTH(l.releaseAt)} · {l.released ? 'เปิดขายแล้ว' : 'รอเปิดขาย'}
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      </div>
 
       <section className="card no-pad">
         <div className="card-head row-between wrap-gap">

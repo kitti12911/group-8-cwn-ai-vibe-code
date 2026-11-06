@@ -28,7 +28,7 @@
 <p class="sub">การบ้านข้อ 1 · TC ทุกตัวอ้างกลับไปที่ <code>TEST-PLAN.md</code> · อัปเดตล่าสุด 6 พ.ย. 2026</p>
 
 <div class="cards">
-  <div class="card"><b class="ok">126</b><span>TC ชั้น api + ui ผ่าน (3 เบราว์เซอร์)</span></div>
+  <div class="card"><b class="ok">146</b><span>TC ชั้น api + ui ผ่าน (3 เบราว์เซอร์)</span></div>
   <div class="card"><b class="ok">7</b><span>TC การแย่งของผ่าน (150 รอบ)</span></div>
   <div class="card"><b class="ok">5</b><span>property ผ่าน (4,000 แบบ)</span></div>
   <div class="card"><b class="warn">1</b><span>บั๊กที่เจอจากการสำรวจ ยังไม่แก้</span></div>
@@ -38,7 +38,7 @@
 <div class="wrap">
 <table>
   <tr><th>คำสั่ง</th><th>ครอบ TC</th><th>ผลล่าสุด</th></tr>
-  <tr><td><code>npm test</code></td><td>ทุก TC ชั้น api และ ui (chromium · firefox · webkit)</td><td class="ok">126 ผ่าน · 1m 20s</td></tr>
+  <tr><td><code>npm test</code></td><td>ทุก TC ชั้น api และ ui (chromium · firefox · webkit)</td><td class="ok">146 ผ่าน · 1m 10s</td></tr>
   <tr><td><code>npm run test:race</code></td><td><code>TC-RACE-01</code> ถึง <code>TC-RACE-05</code> · 50 รอบ × N = 2, 5, 10</td><td class="ok">7 ผ่าน · 49s</td></tr>
   <tr><td><code>npm run test:property</code></td><td><code>P2</code>–<code>P6</code> อย่างละ 250–1,000 แบบ · seed 2026</td><td class="ok">5 ผ่าน · 2m 36s</td></tr>
   <tr><td><code>npm run test:oracle</code></td><td><code>P1</code> + ตาราง quote 27 แถว</td><td class="warn">ข้าม — รอ oracle อิสระ</td></tr>
@@ -63,7 +63,7 @@
 <div class="wrap">
 <table>
   <tr><th>รหัส</th><th>เรื่อง</th><th>กฎ</th><th>TC ที่จับได้</th><th>สถานะ</th></tr>
-  <tr><td><code>BUG-EXPLORE-01</code></td><td>ประกอบฟรีทั้งที่ซื้อ CPU 2 ตัว</td><td>BR-21</td><td><code>TC-BUILD-13b</code></td><td class="bad">ยังไม่แก้</td></tr>
+  <tr><td><code>BUG-EXPLORE-01</code></td><td>ประกอบฟรีทั้งที่ซื้อ CPU 2 ตัว</td><td>BR-21</td><td><code>TC-BUILD-13b</code></td><td class="ok">แก้แล้ว 7 พ.ย.</td></tr>
   <tr><td><code>B1</code></td><td>flash sale ยังใช้ได้ที่ 13:00:00</td><td>BR-06</td><td><code>TC-PRICE-01</code> · Q06</td><td class="ok">จับได้ (BUG_MODE=1)</td></tr>
   <tr><td><code>B2</code></td><td>GAMER5 คิดก่อนหักส่วนลดสมาชิก</td><td>BR-18</td><td><code>TC-COUPON-04</code> + 4 TC</td><td class="ok">จับได้ (BUG_MODE=1)</td></tr>
   <tr><td><code>B3</code></td><td>จ่ายได้หลังหมดเวลากันของ</td><td>BR-30</td><td><code>TC-ORDER-06</code> · <code>TC-ORDER-07</code></td><td class="ok">จับได้ (BUG_MODE=1)</td></tr>

@@ -368,3 +368,53 @@ func (s *Store) NextLot(ctx context.Context, sku string) (*Lot, error) {
 	}
 	return &l, err
 }
+
+// AdminLot is one scheduled or released stock lot (FR-06, BR-34).
+type AdminLot struct {
+	Code      string
+	SKU       string
+	Qty       int
+	ReleaseAt time.Time
+	Released  bool
+}
+
+func (s *Store) AdminLots(ctx context.Context) ([]AdminLot, error) {
+	rows, err := s.Pool.Query(ctx, `SELECT code, sku, qty, release_at, released FROM product_lots ORDER BY release_at, id`)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	out := []AdminLot{}
+	for rows.Next() {
+		var l AdminLot
+		if err := rows.Scan(&l.Code, &l.SKU, &l.Qty, &l.ReleaseAt, &l.Released); err != nil {
+			return nil, err
+		}
+		out = append(out, l)
+	}
+	return out, rows.Err()
+}
+
+// ScheduleLot adds a new lot that opens for sale at releaseAt (FR-06). The stock is
+// added by Maintain when the time comes, so before that the product cannot be ordered.
+func (s *Store) ScheduleLot(ctx context.Context, sku string, qty int, releaseAt time.Time) (*AdminLot, error) {
+	sku = strings.ToUpper(strings.TrimSpace(sku))
+	var exists bool
+	if err := s.Pool.QueryRow(ctx, `SELECT EXISTS (SELECT 1 FROM products WHERE sku = $1)`, sku).Scan(&exists); err != nil {
+		return nil, err
+	}
+	if !exists || qty < 1 || qty > 1000 {
+		return nil, E(http.StatusBadRequest, "INVALID_LOT", "ข้อมูลล็อตไม่ถูกต้อง: ต้องมีรหัสสินค้าและจำนวน 1–1,000")
+	}
+	if !releaseAt.After(s.Clock.Now()) {
+		return nil, E(http.StatusBadRequest, "INVALID_LOT", "เวลาเปิดขายต้องอยู่หลังเวลาตอนนี้")
+	}
+	l := AdminLot{SKU: sku, Qty: qty, ReleaseAt: releaseAt}
+	err := s.Pool.QueryRow(ctx, `INSERT INTO product_lots (code, sku, qty, release_at)
+		VALUES ('LOT-' || $1 || '-' || (SELECT count(*) + 1 FROM product_lots WHERE sku = $1), $1, $2, $3)
+		RETURNING code`, sku, qty, releaseAt).Scan(&l.Code)
+	if err != nil {
+		return nil, err
+	}
+	return &l, nil
+}

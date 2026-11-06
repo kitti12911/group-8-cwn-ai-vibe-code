@@ -237,6 +237,20 @@ export function OrderPage() {
                     แกะกล่องแล้ว (หัก 10%)
                   </label>
                 </fieldset>
+                {/* FR-48: show the refund before the customer confirms */}
+                {opened !== null && order.returnPreview && (
+                  <div className="alert alert-ok small" role="status">
+                    ได้เงินคืน{' '}
+                    <span className="mono strong" data-testid="return-preview-refund">
+                      ฿{baht((opened ? order.returnPreview.opened : order.returnPreview.unopened).refund)}
+                    </span>
+                    {' · '}ค่าธรรมเนียม{' '}
+                    <span className="mono" data-testid="return-preview-fee">
+                      ฿{baht((opened ? order.returnPreview.opened : order.returnPreview.unopened).fee)}
+                    </span>
+                    {' · '}ไม่คืนค่าส่ง
+                  </div>
+                )}
                 <button type="submit" className="btn btn-dark self-start" data-testid="return-submit" disabled={busy}>
                   ขอคืนของ
                 </button>
@@ -251,9 +265,9 @@ export function OrderPage() {
             <span className="small muted-2">
               ของเสียจากโรงงาน เคลมตามประกันผู้ผลิต แยกจากการคืนของ ไม่หักค่าธรรมเนียม · นำสินค้าและเลขออเดอร์มาที่ร้าน ชั้น 4 ห้างไอที ปิ่นเกล้า
             </span>
-            <a href="#warranty" className="small">
-              ช่องทางเคลมประกัน
-            </a>
+            <Link to={`/warranty?order=${encodeURIComponent(order.orderNo)}`} className="small" data-testid="warranty-link">
+              ของเสียจากโรงงาน → เคลมประกัน
+            </Link>
           </div>
 
           {(order.refunds?.length ?? 0) > 0 && (

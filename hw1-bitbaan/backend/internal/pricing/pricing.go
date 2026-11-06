@@ -177,7 +177,7 @@ func Compute(in Input) Quote {
 	flash := FlashActive(in.Now, in.BugMode)
 	var cpu, mb int64
 	eligible := map[string]int64{} // coupon category -> amount after flash
-	cats := map[string]bool{}
+	catQty := map[string]int{}
 	for _, l := range in.Lines {
 		unit := l.Product.Price
 		var fp *int64
@@ -193,7 +193,7 @@ func Compute(in Input) Quote {
 		q.G1 += amt
 		eligible[l.Product.Category] += amt
 		if l.Qty > 0 {
-			cats[l.Product.Category] = true
+			catQty[l.Product.Category] += l.Qty
 		}
 		switch l.Product.Category {
 		case "CPU":
@@ -221,12 +221,12 @@ func Compute(in Input) Quote {
 	}
 	q.G4 = q.G3 - q.Coupon.Amount
 
-	// assembly (BR-21)
+	// assembly (BR-21): free only for a full set — all 7 builder categories, exactly 1 piece each
 	if in.Assembly {
 		q.AssemblyFee = 500
 		all := true
 		for _, c := range BuilderCats {
-			if !cats[c] {
+			if catQty[c] != 1 {
 				all = false
 			}
 		}

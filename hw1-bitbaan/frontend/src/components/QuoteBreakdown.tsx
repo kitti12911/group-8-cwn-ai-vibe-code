@@ -34,28 +34,38 @@ export function QuoteBreakdown({ quote, showLines = true }: { quote: Quote; show
 
       <div className="ladder-rows">
         <Row label="ราคาป้าย (รวม VAT)" testid="quote-list-total" value={baht(quote.listTotal)} />
-        <Row label="ลด flash sale (ป้ายแดง −10%)" testid="quote-flash" value={discount(quote.flashDiscount)} good={quote.flashDiscount > 0} />
-        <Sub label="หลัง flash sale" value={quote.g1} />
-        <Row
-          label={`ส่วนลดชุดประกอบ CPU + เมนบอร์ด${quote.bundles ? ` × ${quote.bundles}` : ''}`}
-          testid="quote-bundle"
-          value={discount(quote.bundleDiscount)}
-          good={quote.bundleDiscount > 0}
-        />
-        <Sub label="หลังส่วนลดชุดประกอบ" value={quote.g2} />
-        <Row
-          label={quote.tier ? `สมาชิก ${tierLabel(quote.tier)} ${quote.memberRate}%` : 'ส่วนลดสมาชิก (ไม่ได้เข้าสู่ระบบ)'}
-          testid="quote-member"
-          value={discount(quote.memberDiscount)}
-          good={quote.memberDiscount > 0}
-        />
-        <Sub label="หลังส่วนลดสมาชิก" value={quote.g3} />
-        <Row
-          label={c.code ? `คูปอง ${c.code}${c.status === 'REJECTED' ? ' (ใช้ไม่ได้)' : ''}` : 'คูปอง'}
-          testid="quote-coupon"
-          value={discount(c.amount)}
-          good={c.amount > 0}
-        />
+        {/* FR-25: discount lines that are 0 are hidden; the shown lines still add up to the total */}
+        {quote.flashDiscount > 0 && (
+          <>
+            <Row label="ลด flash sale (ป้ายแดง −10%)" testid="quote-flash" value={discount(quote.flashDiscount)} good />
+            <Sub label="หลัง flash sale" value={quote.g1} />
+          </>
+        )}
+        {quote.bundleDiscount > 0 && (
+          <>
+            <Row
+              label={`ส่วนลดชุดประกอบ CPU + เมนบอร์ด${quote.bundles ? ` × ${quote.bundles}` : ''}`}
+              testid="quote-bundle"
+              value={discount(quote.bundleDiscount)}
+              good
+            />
+            <Sub label="หลังส่วนลดชุดประกอบ" value={quote.g2} />
+          </>
+        )}
+        {quote.memberDiscount > 0 && (
+          <>
+            <Row
+              label={`สมาชิก ${tierLabel(quote.tier)} ${quote.memberRate}%`}
+              testid="quote-member"
+              value={discount(quote.memberDiscount)}
+              good
+            />
+            <Sub label="หลังส่วนลดสมาชิก" value={quote.g3} />
+          </>
+        )}
+        {c.amount > 0 && (
+          <Row label={`คูปอง ${c.code ?? ''}`} testid="quote-coupon" value={discount(c.amount)} good />
+        )}
         <Sub label="ยอดสินค้าหลังส่วนลดทั้งหมด" value={quote.g4} />
         <Row label="ค่าประกอบ" testid="quote-assembly" value={baht(quote.assemblyFee)} />
         <Row label="ค่าส่ง" testid="quote-shipping" value={baht(quote.shippingFee)} />

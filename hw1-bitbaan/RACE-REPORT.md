@@ -55,7 +55,7 @@ const results = await Promise.all(            // ← ยิงพร้อมก
 SELECT sku, on_hand, available FROM products WHERE sku = 'GPU-V57';
 ```
 
-```
+```text
    sku   | on_hand | available
 ---------+---------+-----------
  GPU-V57 |       1 |        -9       ← ขายเกินไป 9 ใบ
@@ -67,7 +67,7 @@ FROM orders o JOIN order_items oi ON oi.order_id = o.id
 WHERE oi.sku = 'GPU-V57' ORDER BY o.order_no;
 ```
 
-```
+```text
     order_no    | buyer_name |    buyer_key     | qty
 ----------------+------------+------------------+-----
  BB-261113-0002 | ผู้ซื้อ 8   | phone:0820000008 |   1

@@ -47,7 +47,12 @@ export function SavedBuild() {
   const addAll = () => {
     setCart((c) => {
       const next = c.items.map((i) => ({ ...i }));
-      for (const it of items) if (!next.some((i) => i.sku === it.sku)) next.push({ sku: it.sku, qty: 1 });
+      // FR-22: every piece goes in — a SKU already in the cart gets +1
+      for (const it of items) {
+        const line = next.find((i) => i.sku === it.sku);
+        if (line) line.qty += 1;
+        else next.push({ sku: it.sku, qty: 1 });
+      }
       return { ...c, items: next, assembly: !!build.assembly };
     });
     navigate('/cart');

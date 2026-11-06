@@ -179,6 +179,16 @@ func (srv *Server) orderJSON(o *store.Order) map[string]any {
 		refunds = append(refunds, map[string]any{"id": r.ID, "kind": r.Kind, "amount": satang(r.Amount), "fee": satang(r.Fee),
 			"status": r.Status, "requestedAt": iso(r.RequestedAt), "refundedAt": isoP(r.RefundedAt)})
 	}
+	// FR-48: the customer sees the refund for both choices before confirming
+	var preview any
+	if o.CanReturn {
+		ur, uf := store.ReturnRefund(o.Quote.G4, false)
+		or, of := store.ReturnRefund(o.Quote.G4, true)
+		preview = map[string]any{
+			"unopened": map[string]any{"refund": satang(ur), "fee": satang(uf)},
+			"opened":   map[string]any{"refund": satang(or), "fee": satang(of)},
+		}
+	}
 	var addr any
 	if o.AddressLine != nil {
 		addr = map[string]any{"line": *o.AddressLine, "province": o.Province}
@@ -189,7 +199,7 @@ func (srv *Server) orderJSON(o *store.Order) map[string]any {
 		"cancelledAt": isoP(o.CancelledAt), "returnedAt": isoP(o.ReturnedAt), "expiredAt": isoP(o.ExpiredAt),
 		"buyer":    map[string]any{"code": o.BuyerCode, "name": o.Name, "phone": o.Phone, "email": o.Email},
 		"shipping": o.Shipping, "address": addr, "quote": quoteJSON(o.Quote),
-		"canCancel": o.CanCancel, "canReturn": o.CanReturn, "returnUntil": isoP(o.ReturnUntil), "refunds": refunds,
+		"canCancel": o.CanCancel, "canReturn": o.CanReturn, "returnUntil": isoP(o.ReturnUntil), "returnPreview": preview, "refunds": refunds,
 	}
 }
 
@@ -651,6 +661,42 @@ func (srv *Server) routes() {
 			return nil, err
 		}
 		return map[string]any{"sku": strings.ToUpper(in.SKU), "available": left}, nil
+	}))
+	m.HandleFunc("GET /api/admin/lots", srv.h(func(w http.ResponseWriter, r *http.Request) (any, error) {
+		if _, err := srv.staff(r); err != nil {
+			return nil, err
+		}
+		ls, err := srv.S.AdminLots(r.Context())
+		if err != nil {
+			return nil, err
+		}
+		out := []map[string]any{}
+		for _, l := range ls {
+			out = append(out, map[string]any{"code": l.Code, "sku": l.SKU, "qty": l.Qty, "releaseAt": iso(l.ReleaseAt), "released": l.Released})
+		}
+		return out, nil
+	}))
+	m.HandleFunc("POST /api/admin/lots", srv.h(func(w http.ResponseWriter, r *http.Request) (any, error) {
+		if _, err := srv.staff(r); err != nil {
+			return nil, err
+		}
+		var in struct {
+			SKU       string `json:"sku"`
+			Qty       int    `json:"qty"`
+			ReleaseAt string `json:"releaseAt"`
+		}
+		if err := decode(r, &in); err != nil {
+			return nil, err
+		}
+		at, err := time.Parse(time.RFC3339, in.ReleaseAt)
+		if err != nil {
+			return nil, store.E(http.StatusBadRequest, "INVALID_LOT", "เวลาเปิดขายต้องเป็นรูปแบบ ISO 8601 เช่น 2026-11-14T10:00:00+07:00")
+		}
+		l, err := srv.S.ScheduleLot(r.Context(), in.SKU, in.Qty, at)
+		if err != nil {
+			return nil, err
+		}
+		return created{map[string]any{"code": l.Code, "sku": l.SKU, "qty": l.Qty, "releaseAt": iso(l.ReleaseAt), "released": false}}, nil
 	}))
 	m.HandleFunc("GET /api/admin/orders", srv.h(func(w http.ResponseWriter, r *http.Request) (any, error) {
 		if _, err := srv.staff(r); err != nil {

@@ -29,6 +29,9 @@ export function CartPage() {
   const [orderError, setOrderError] = useState<ApiError | Error | null>(null);
   const [creatingQuote, setCreatingQuote] = useState(false);
   const seq = useRef(0);
+  // FR-30: remember the last price of the same cart so a silent re-price (flash start/end, login) is shown
+  const lastPriced = useRef<{ key: string; total: number } | null>(null);
+  const [priceChange, setPriceChange] = useState<{ from: number; to: number } | null>(null);
 
   useEffect(() => setCouponInput(cart.coupon ?? ''), [cart.coupon]);
 
@@ -53,6 +56,11 @@ export function CartPage() {
       .quote(input)
       .then((q) => {
         if (id !== seq.current) return;
+        const key = JSON.stringify(input);
+        const prev = lastPriced.current;
+        if (prev && prev.key === key && prev.total !== q.total) setPriceChange({ from: prev.total, to: q.total });
+        else if (!prev || prev.key !== key) setPriceChange(null);
+        lastPriced.current = { key, total: q.total };
         setQuote(q);
         setQuoteError(null);
       })
@@ -302,6 +310,11 @@ export function CartPage() {
 
         <aside className="card summary stack" aria-label="สรุปยอด">
           <h2 className="h3">สรุปยอด</h2>
+          {priceChange && (
+            <div className="alert alert-warn small" role="status" data-testid="price-changed">
+              ราคาเปลี่ยนแล้ว: ยอดชำระจาก ฿{baht(priceChange.from)} เป็น ฿{baht(priceChange.to)} · ตรวจราคาใหม่ก่อนกดสั่ง
+            </div>
+          )}
           {quote ? <QuoteBreakdown quote={quote} /> : !quoteError && <Loading text="กำลังคิดราคา…" />}
           <p className="small muted">คิดส่วนลดตามลำดับ flash sale → ชุดประกอบ → สมาชิก → คูปอง ทุกยอดตรงกับใบกำกับภาษี</p>
 

@@ -24,7 +24,7 @@ export function ProductDetail() {
   const { sku = '' } = useParams();
   const navigate = useNavigate();
   const { me } = useAuth();
-  const { flashActive } = useClock();
+  const { flash, flashActive } = useClock();
   const cart = useCart();
   const [p, setP] = useState<Product | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -123,7 +123,11 @@ export function ProductDetail() {
               <span className={`mono ${sale ? 'price-md muted strike' : 'price-xl'}`} data-testid="product-price">
                 {thb(p.price)}
               </span>
-              {sale && <span className="badge-red static">Flash sale −10%</span>}
+              {sale && (
+                <span className="badge-red static" data-testid="product-flash-badge">
+                  Flash sale ถึง {flash?.endsAt ? timeHM(flash.endsAt) : '13:00'}
+                </span>
+              )}
             </div>
             <span className="muted">
               รวม VAT แล้ว

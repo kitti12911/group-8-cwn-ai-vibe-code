@@ -39,7 +39,7 @@ docker compose up -d --build        # http://localhost:3000
 ```bash
 cd backend && go test ./internal/...               # ชั้น unit · ตาราง quote 27 แถว + ความเข้ากันได้ทุกคู่
 cd e2e && npm ci && npx playwright install         # ติดตั้งครั้งเดียว
-cd e2e && npm test                                 # 126 TC · api + ui 3 เบราว์เซอร์ (≈ 1 นาที 20 วินาที)
+cd e2e && npm test                                 # 146 test · api + ui 3 เบราว์เซอร์ (≈ 1 นาที 10 วินาที)
 cd e2e && npm run test:race                        # ขั้น 2 · 50 รอบ × N = 2, 5, 10 (≈ 50 วินาที)
 cd e2e && npm run test:property -- --seed 2026     # ขั้น 3 · property 4,000 แบบ (≈ 2 นาที 40 วินาที)
 node mutation/run.mjs                              # ขั้น 4 · mutation testing ของโมดูลกฎ
@@ -87,7 +87,7 @@ docker compose up -d backend                                          # กล�
 | `prompts/` | พรอมต์ที่ใช้ เรียงตามลำดับ |
 | `docker-compose.yml` | 3 container ใน network `bitbaan-net` |
 | `QUESTIONS-TO-OWNER.md` | ขั้น 1 · 51 คำถามแบบปิดถึงร้าน พร้อมสมมติฐานและ TC ที่กระทบ |
-| `TEST-PLAN.md` | 105 TC ครอบ FR 59 · BR 40 · NFR 16 · ค่าขอบ E01–E141 |
+| `TEST-PLAN.md` | 114 TC ครอบ FR 59 · BR 40 · NFR 16 · ค่าขอบ E01–E141 (§3.13 เพิ่ม 9 TC จากช่องว่างใน `SPEC.md`) |
 | `EXPLORATION.md` · `PLAN-REVIEW.md` · `BUILD-PROMPT.md` | บันทึกการสำรวจ · ทบทวนแผน · ข้อกำหนดการสร้างเว็บ |
 | `e2e/` | Playwright · `tests/` ตามแผน · `race/` ขั้น 2 · `property/` ขั้น 3 · `index.html` สรุปผล · `triage.json` |
 | `mutation/` | ตัวรัน mutation testing ของโมดูลกฎ (ขั้น 4) |

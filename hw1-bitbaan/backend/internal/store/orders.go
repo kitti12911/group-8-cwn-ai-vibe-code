@@ -141,6 +141,14 @@ type Order struct {
 	ReturnUntil                                                                 *time.Time
 }
 
+// ReturnRefund: opened box pays a fee of floor(10% of goods paid); shipping is never refunded (BR-38).
+func ReturnRefund(goods int64, opened bool) (refund, fee int64) {
+	if opened {
+		fee = goods / 10
+	}
+	return goods - fee, fee
+}
+
 // ReturnDeadline: 23:59:59 of the 7th day after delivery (BR-37).
 func ReturnDeadline(delivered time.Time) time.Time {
 	d := delivered.In(clock.TZ)
@@ -560,11 +568,7 @@ func (s *Store) Return(ctx context.Context, no string, opened bool) (*Order, int
 	if now.After(ReturnDeadline(*deliveredAt)) {
 		return nil, 0, 0, E(http.StatusConflict, "RETURN_WINDOW_CLOSED", "เกิน 7 วันหลังได้รับสินค้า คืนของไม่ได้")
 	}
-	var fee int64
-	if opened {
-		fee = goods / 10
-	}
-	refund := goods - fee
+	refund, fee := ReturnRefund(goods, opened)
 	if _, err := tx.Exec(ctx, `INSERT INTO refunds (order_id, kind, amount, fee, requested_at) VALUES ($1, 'RETURN', $2, $3, $4)`, id, refund, fee, now); err != nil {
 		return nil, 0, 0, err
 	}

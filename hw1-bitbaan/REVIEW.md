@@ -15,7 +15,8 @@
 | --- | --- | --- |
 | `docker compose up -d --build` | 3 container healthy · `/api/health` ตอบ | ~1 นาที |
 | `cd backend && go test ./internal/...` | ผ่านทั้ง `pricing` และ `compat` | 1 วินาที |
-| `cd e2e && npm test` | **127 ผ่าน** (api 97 + ui 10 × 3 เบราว์เซอร์) | 1 นาที 54 วินาที |
+| `cd e2e && npm test` | **146 ผ่าน** (api 101 + ui 15 × 3 เบราว์เซอร์) | 1 นาที 10 วินาที |
+| `BUG_MODE=1` · `--project=api` | แดง 9 ข้อเท่าเดิม (ตรง `BUG-HUNT.md`) | 22 วินาที |
 | `cd e2e && npm run test:race` | **7 ผ่าน** · 150 รอบ ผู้ชนะ 1 คนทุกรอบ | 1 นาที 12 วินาที |
 | `cd e2e && npm run test:property` | **5 ผ่าน** · 4,000 แบบ · seed 2026 | 2 นาที 36 วินาที |
 | `node mutation/run.mjs` | 184 mutant · score 78.8% | ~8 นาที |
@@ -38,7 +39,8 @@
 | --- | --- |
 | `TEST-PLAN.md` | 105 TC · 12 พื้นที่ · ตารางความครบ BR/FR/NFR/ค่าขอบ · ตาราง "สมมติฐาน → TC ที่ต้องแก้" |
 | `QUESTIONS-TO-OWNER.md` | 51 คำถามแบบปิด (ขัดกัน 9 · ขัดกับระบบ 5 · ไม่ครบ 37) + ลำดับ 8 ข้อที่ขอให้ตอบก่อน |
-| `EXPLORATION.md` | 6 charter · **พบบั๊กจริง 1 ตัวนอกโหมดบั๊ก** (`BUG-EXPLORE-01`) |
+| `EXPLORATION.md` | 6 charter · **พบบั๊กจริง 1 ตัวนอกโหมดบั๊ก** (`BUG-EXPLORE-01` · แก้แล้ว 7 พ.ย.) |
+| `SPEC.md` · `ASSETS.md` | LAB 6 · คำอ้างของ AI · เจอ 10 จุดที่เว็บทำไม่ครบ **แก้ครบแล้ว** + TC ใหม่ 9 ข้อ (`TEST-PLAN.md` §3.13) |
 | `e2e/` | Playwright: `tests/` 97 test · `race/` · `property/` · `index.html` · `triage.json` · `lib/data.ts` เก็บตาราง quote 27 แถว |
 | `RACE-REPORT.md` · `PROPERTY-REPORT.md` · `MUTATION-REPORT.md` · `BUG-HUNT.md` | รายงานขั้น 2 · 3 · 4 · 5 |
 | `mutation/run.mjs` | ตัวรัน mutation เขียนเอง (Stryker ใช้กับ Go ไม่ได้ · gremlins พังกับ Go 1.27) |
@@ -54,7 +56,7 @@
 | 2 | ไล่เก็บพรอมต์ย้อนหลังใส่ `prompts/` ให้ครบทุกตัว | กันโดน −3 | 1 ชม. |
 | 3 | `TC-RACE-02` 2 browser context + อัด GIF/MP4 ลง `e2e/test-report/` | B เต็ม · บท 02 ให้คะแนนหลักฐาน | 1 ชม. |
 | 4 | mutation รอบ 4 — เพิ่ม 6 TC ใน `compat` ตาม `MUTATION-REPORT.md` ข้อ 6 | D เต็ม · score น่าจะแตะ ~87% | 1 ชม. |
-| 5 | ตัดสิน `BUG-EXPLORE-01` — แก้โค้ดให้ตรงสัญญา หรือถามร้านว่า "หมวดละ 1 ชิ้น" หมายถึงอะไรแน่ | ปิดบั๊กที่ค้างอยู่ | 30 น. |
+| 5 | ~~ตัดสิน `BUG-EXPLORE-01`~~ | ✅ แก้โค้ดตาม BR-21 แล้ว (7 พ.ย.) | — |
 | 6 | ขั้น 5 แลกบั๊กกับทีมคู่ | E 5 คะแนน | รอผู้สอน |
 
 ## 6. ต้องเคลียร์กับผู้สอน
@@ -67,7 +69,6 @@
 
 ## 7. จุดเล็กที่ยังค้าง
 
-- `BUG-EXPLORE-01` — ประกอบฟรีทั้งที่ซื้อ CPU 2 ตัว (`TC-BUILD-13b` เขียนไว้แล้วแบบ `test.fail()`)
 - `CONSISTENCY.md` ข้อ 6 ยังเขียน "ตาราง quote 38 แถว" ของจริงมี 27 แถว
 - **ฟรีซ `INTERVIEW.md`** — ถูกแก้ไปแล้ว 2 commit · ตอนนี้ K/S/Q และหน้าออกแบบอ้างเลขย่อหน้าไว้หมดแล้ว
 - `.claude/settings.local.json` เปิด MCP ที่ไม่มีใน `.mcp.json` ของ repo → ไม่มีผล ลบได้

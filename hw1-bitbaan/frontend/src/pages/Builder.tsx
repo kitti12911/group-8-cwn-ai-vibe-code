@@ -132,7 +132,10 @@ export function Builder() {
       const items = c.items.map((i) => ({ ...i }));
       for (const cat of selected) {
         const sku = parts[cat]!;
-        if (!items.some((i) => i.sku === sku)) items.push({ sku, qty: 1 });
+        // FR-16: every piece goes in — a SKU already in the cart gets +1
+        const line = items.find((i) => i.sku === sku);
+        if (line) line.qty += 1;
+        else items.push({ sku, qty: 1 });
       }
       return { ...c, items, assembly };
     });

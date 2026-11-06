@@ -13,6 +13,7 @@ import { ProductDetail } from './pages/ProductDetail';
 import { Products } from './pages/Products';
 import { QuotePage } from './pages/QuotePage';
 import { SavedBuild } from './pages/SavedBuild';
+import { Warranty } from './pages/Warranty';
 import { AuthProvider, ClockProvider } from './state';
 
 function NotFound() {
@@ -44,6 +45,7 @@ export function App() {
               <Route path="account" element={<Account />} />
               <Route path="quotes/:no" element={<QuotePage />} />
               <Route path="admin" element={<Admin />} />
+              <Route path="warranty" element={<Warranty />} />
               <Route path="*" element={<NotFound />} />
             </Route>
           </Routes>
