@@ -37,8 +37,35 @@ docker compose up -d --build        # http://localhost:3000
 ## test
 
 ```bash
-cd backend && go test ./internal/...      # ตาราง quote 28 แถวจาก TEST-DATA.md + ความเข้ากันได้ทุกคู่
-./tools/render-diagrams.sh                # render แผนภาพใน DESIGN.md เป็น design/*.png
+cd backend && go test ./internal/...               # ชั้น unit · ตาราง quote 27 แถว + ความเข้ากันได้ทุกคู่
+cd e2e && npm ci && npx playwright install         # ติดตั้งครั้งเดียว
+cd e2e && npm test                                 # 126 TC · api + ui 3 เบราว์เซอร์ (≈ 1 นาที 20 วินาที)
+cd e2e && npm run test:race                        # ขั้น 2 · 50 รอบ × N = 2, 5, 10 (≈ 50 วินาที)
+cd e2e && npm run test:property -- --seed 2026     # ขั้น 3 · property 4,000 แบบ (≈ 2 นาที 40 วินาที)
+node mutation/run.mjs                              # ขั้น 4 · mutation testing ของโมดูลกฎ
+./tools/render-diagrams.sh                         # render แผนภาพใน DESIGN.md เป็น design/*.png
+```
+
+เปิด `e2e/index.html` เพื่อดูสรุปผลทั้งหมดในหน้าเดียว · รายงาน Playwright อยู่ที่ `e2e/test-report/html/index.html` หลังรัน
+
+### คำสั่งตามแม่แบบของผู้สอน ↔ ของร้านนี้
+
+แม่แบบการบ้านสมมติว่าโปรเจกต์แยกเป็น `db/` + `web/` แต่ร้านนี้ใช้ `backend/` + `frontend/` ใน compose เดียว ตารางนี้คือคู่ที่ตรงกัน
+
+| คำสั่งในแม่แบบ | คำสั่งของร้านนี้ |
+| --- | --- |
+| `docker compose -f db/compose.yml up -d && docker compose -f web/compose.yml up -d` | `docker compose up -d --build` (ยกทั้ง db · backend · frontend) |
+| `cd e2e && npm ci && npx playwright test` | เหมือนกัน (`npm test`) |
+| `cd e2e && npm run test:race` | เหมือนกัน |
+| `cd e2e && npm run test:property -- --seed 2026` | เหมือนกัน |
+| `cd web && npm run mutation` | `node mutation/run.mjs` — โมดูลกฎเป็น Go จึงใช้ Stryker ไม่ได้ ดูเหตุผลใน `MUTATION-REPORT.md` |
+
+### รันกับโหมดบั๊ก
+
+```bash
+BUG_MODE=1 docker compose up -d --build backend
+cd e2e && EXPECT_BUG_MODE=1 npx playwright test tests --project=api   # ควรแดง 9 ข้อ ดู BUG-HUNT.md
+docker compose up -d backend                                          # กลับเป็นโหมดปกติ
 ```
 
 ## ไฟล์
@@ -58,3 +85,10 @@ cd backend && go test ./internal/...      # ตาราง quote 28 แถว�
 | `backend/BUGS.md` | ⛔ เฉลย `BUG_MODE=1` ห้ามเปิดจนจบขั้น 5 |
 | `prompts/` | พรอมต์ที่ใช้ เรียงตามลำดับ |
 | `docker-compose.yml` | 3 container ใน network `bitbaan-net` |
+| `QUESTIONS-TO-OWNER.md` | ขั้น 1 · 51 คำถามแบบปิดถึงร้าน พร้อมสมมติฐานและ TC ที่กระทบ |
+| `TEST-PLAN.md` | 105 TC ครอบ FR 59 · BR 40 · NFR 16 · ค่าขอบ E01–E141 |
+| `EXPLORATION.md` · `PLAN-REVIEW.md` · `BUILD-PROMPT.md` | บันทึกการสำรวจ · ทบทวนแผน · ข้อกำหนดการสร้างเว็บ |
+| `e2e/` | Playwright · `tests/` ตามแผน · `race/` ขั้น 2 · `property/` ขั้น 3 · `index.html` สรุปผล · `triage.json` |
+| `mutation/` | ตัวรัน mutation testing ของโมดูลกฎ (ขั้น 4) |
+| `RACE-REPORT.md` · `PROPERTY-REPORT.md` · `MUTATION-REPORT.md` · `BUG-HUNT.md` | รายงานขั้น 2 · 3 · 4 · 5 |
+| `REVIEW.md` | สรุปสถานะงานให้ทีม และสิ่งที่ยังเหลือ |
