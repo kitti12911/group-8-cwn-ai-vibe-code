@@ -113,7 +113,7 @@ Quote = {
   "bundles": 1, "bundleDiscount": 50000, "g2": 992100,
   "tier": "SILVER", "memberRate": 3, "memberDiscount": 29700, "g3": 962400,
   "coupon": { "code": "GAMER5" | null, "status": "APPLIED" | "REJECTED" | "NONE", "reason": "<ไทย>" | null, "amount": 0 },
-  "g4": 962400, "assemblyFee": 0, "assemblyAvailable": true, "shippingFee": 0,   // assemblyAvailable = ตะกร้ามี CPU + เมนบอร์ด (BR-21)
+  "g4": 962400, "assemblyFee": 0, "shippingFee": 0,
   "total": 962400, "vat": 62961, "preVat": 899439
 }
 ```

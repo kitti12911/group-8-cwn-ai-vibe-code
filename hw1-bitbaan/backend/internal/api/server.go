@@ -176,7 +176,7 @@ func quoteJSON(q pricing.Quote) map[string]any {
 		"bundles": q.Bundles, "bundleDiscount": satang(q.BundleDiscount), "g2": satang(q.G2),
 		"tier": tier, "memberRate": q.MemberRate, "memberDiscount": satang(q.MemberDiscount), "g3": satang(q.G3),
 		"coupon": map[string]any{"code": q.Coupon.Code, "status": q.Coupon.Status, "reason": q.Coupon.Reason, "amount": satang(q.Coupon.Amount)},
-		"g4":     satang(q.G4), "assemblyFee": satang(q.AssemblyFee), "assemblyAvailable": q.AssemblyAvailable, "shippingFee": satang(q.ShippingFee),
+		"g4":     satang(q.G4), "assemblyFee": satang(q.AssemblyFee), "shippingFee": satang(q.ShippingFee),
 		"total": satang(q.Total), "vat": q.VATSatang, "preVat": q.PreVATSatang,
 	}
 }

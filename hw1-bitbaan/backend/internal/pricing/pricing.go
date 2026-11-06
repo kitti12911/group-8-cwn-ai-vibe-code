@@ -123,12 +123,10 @@ type Quote struct {
 	Coupon         CouponResult
 	G4             int64
 	AssemblyFee    int64
-	// AssemblyAvailable: the cart is a PC spec (CPU + motherboard), so "ให้ร้านประกอบ" can apply (BR-21)
-	AssemblyAvailable bool
-	ShippingFee       int64
-	Total             int64
-	VATSatang         int64
-	PreVATSatang      int64
+	ShippingFee    int64
+	Total          int64
+	VATSatang      int64
+	PreVATSatang   int64
 }
 
 // FlashActive: every Friday 12:00:00 to before 13:00:00 (BR-06, BR-07, A-16).
@@ -225,11 +223,10 @@ func Compute(in Input) Quote {
 	}
 	q.G4 = q.G3 - q.Coupon.Amount
 
-	// assembly (BR-21): offered only for a PC spec — the cart must have a CPU and a motherboard
-	// (single parts from the product page can't be assembled · LAB 9 R41). Free only for a full set:
-	// all 7 builder categories, exactly 1 piece each.
-	q.AssemblyAvailable = cpu > 0 && mb > 0
-	if in.Assembly && q.AssemblyAvailable {
+	// assembly (BR-21): ฿500 when asked for · free only for a full set — all 7 builder categories, exactly 1 piece each.
+	// "only for builder specs" is enforced by the cart UI (the option shows only for carts from the builder);
+	// the server can't tell where a cart came from (LAB 9 R41 · QUESTIONS-TO-OWNER E11).
+	if in.Assembly {
 		q.AssemblyFee = 500
 		all := true
 		for _, c := range BuilderCats {

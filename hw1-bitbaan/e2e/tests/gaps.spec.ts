@@ -129,13 +129,3 @@ test('TC-BUILD-20 · งบ 0 · ติดลบ · มีเศษสตาง�
   }
   expect((await api.post('/api/builder/evaluate', { data: { parts, budget: 100 } })).status(), '฿1 ใช้ได้').toBe(200);
 });
-
-test('TC-BUILD-23 · ส่ง assembly มากับชิ้นเดี่ยวที่ไม่ใช่สเปกเครื่อง ต้องไม่คิดค่าประกอบ — BR-21 · LAB 9 R41', async () => {
-  const single = await (await api.post('/api/quote', { data: { items: [{ sku: 'RAM-16', qty: 1 }], shipping: 'pickup', assembly: true } })).json();
-  expect(single.assemblyAvailable).toBe(false);
-  expect(single.assemblyFee, 'RAM ชิ้นเดียว ประกอบไม่ได้').toBe(0);
-  const six = [{ sku: 'CPU-N5', qty: 1 }, { sku: 'MB-B6', qty: 1 }, { sku: 'RAM-D4', qty: 1 }, { sku: 'SSD-1T', qty: 1 }, { sku: 'PSU-550', qty: 1 }, { sku: 'CASE-M', qty: 1 }];
-  const spec = await (await api.post('/api/quote', { data: { items: six, shipping: 'pickup', assembly: true } })).json();
-  expect(spec.assemblyAvailable).toBe(true);
-  expect(spec.assemblyFee, 'สเปก 6 หมวด + ประกอบ = ฿500 (E64)').toBe(baht(500));
-});
