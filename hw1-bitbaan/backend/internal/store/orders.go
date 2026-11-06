@@ -157,6 +157,14 @@ func digits(s string) string {
 	return b.String()
 }
 
+// limitFor is how many pieces of a limited model one buyer may put in a single order (BR-31).
+func (s *Store) limitFor(perBuyerLimit int) int {
+	if s.BugMode == 2 {
+		return perBuyerLimit + 1 // BUG_MODE=2: see BUGS2.md #4
+	}
+	return perBuyerLimit
+}
+
 // PlaceOrder creates a PENDING order and holds every item in one transaction (FR-36).
 // fixed != nil means the prices come from a saved quotation (FR-52).
 func (s *Store) PlaceOrder(ctx context.Context, u *User, in OrderInput, fixed *pricing.Quote, quoteID *string) (*Order, error) {
@@ -191,7 +199,7 @@ func (s *Store) PlaceOrder(ctx context.Context, u *User, in OrderInput, fixed *p
 	}
 	// per-buyer limit inside one order (BR-31)
 	for _, l := range ls {
-		if it, _ := catalog.BySKU(l.Product.SKU); it.PerBuyerLimit != nil && l.Qty > *it.PerBuyerLimit {
+		if it, _ := catalog.BySKU(l.Product.SKU); it.PerBuyerLimit != nil && l.Qty > s.limitFor(*it.PerBuyerLimit) {
 			return nil, &AppError{Status: http.StatusConflict, Code: "LIMIT_REACHED", Message: "รุ่นนี้จำกัดคนละ 1 ใบ", Extra: map[string]any{"sku": l.Product.SKU}}
 		}
 	}
@@ -327,7 +335,7 @@ func (s *Store) scanOrder(ctx context.Context, row pgx.Row) (*Order, error) {
 		o.Refunds = append(o.Refunds, r)
 	}
 	now := s.Clock.Now()
-	o.CanCancel = o.Status == "PENDING" || o.Status == "PAID"
+	o.CanCancel = s.cancellable(o.Status)
 	if o.DeliveredAt != nil {
 		d := ReturnDeadline(*o.DeliveredAt)
 		o.ReturnUntil = &d
@@ -504,6 +512,14 @@ func (s *Store) Invoice(ctx context.Context, no string) (*Invoice, error) {
 	return &inv, err
 }
 
+// cancellable: the buyer may cancel while the shop has not packed yet (BR-36).
+func (s *Store) cancellable(status string) bool {
+	if s.BugMode == 2 && status == "PACKED" {
+		return true // BUG_MODE=2: see BUGS2.md #3
+	}
+	return status == "PENDING" || status == "PAID"
+}
+
 // Cancel before packing; paid orders refund everything including shipping (BR-36, A-24).
 func (s *Store) Cancel(ctx context.Context, no string) (*Order, int64, error) {
 	now := s.Clock.Now()
@@ -516,11 +532,14 @@ func (s *Store) Cancel(ctx context.Context, no string) (*Order, int64, error) {
 	if err != nil {
 		return nil, 0, err
 	}
-	if status != "PENDING" && status != "PAID" {
+	if !s.cancellable(status) {
 		return nil, 0, E(http.StatusConflict, "CANNOT_CANCEL", "ร้านแพ็กของแล้ว ยกเลิกไม่ได้ กรุณาใช้การคืนของเมื่อได้รับสินค้า")
 	}
 	var refund int64
-	if status == "PAID" {
+	// เงินออกเฉพาะออเดอร์ที่จ่ายแล้ว · PENDING ยังไม่มีเงินเข้ามา
+	// สาขา PACKED เปิดโดย cancellable() เฉพาะ BugMode 2 จึงต้อง gate ให้ตรงกัน ไม่ใช้ `status != "PENDING"`
+	// เพื่อให้ทุกความต่างเชิงพฤติกรรมอยู่หลัง BugMode == 2 ทั้งหมด ไม่มีข้อยกเว้น
+	if status == "PAID" || (s.BugMode == 2 && status == "PACKED") { // BUG_MODE=2: see BUGS2.md #3
 		refund = total
 		if _, err := tx.Exec(ctx, `INSERT INTO refunds (order_id, kind, amount, fee, requested_at) VALUES ($1, 'CANCEL', $2, 0, $3)`, id, refund, now); err != nil {
 			return nil, 0, err
@@ -876,6 +895,14 @@ func (s *Store) StoreSale(ctx context.Context, staff *User, sku string, qty int,
 
 var nextStatus = map[string]string{"PAID": "PACKED", "PACKED": "SHIPPED", "SHIPPED": "DELIVERED"}
 
+// allowedNext reports whether `to` is exactly one step after `status`; skipping a step is refused (FR-44).
+func (s *Store) allowedNext(status, to string) bool {
+	if s.BugMode == 2 && status == "PAID" && to == "SHIPPED" {
+		return true // BUG_MODE=2: see BUGS2.md #5
+	}
+	return nextStatus[status] == to
+}
+
 // SetStatus moves an order one step forward only; staff can never mark an order PAID (FR-44, FR-55).
 func (s *Store) SetStatus(ctx context.Context, no, to string) (*Order, error) {
 	now := s.Clock.Now()
@@ -888,7 +915,7 @@ func (s *Store) SetStatus(ctx context.Context, no, to string) (*Order, error) {
 	if err != nil {
 		return nil, err
 	}
-	if nextStatus[status] != to {
+	if !s.allowedNext(status, to) {
 		return nil, E(http.StatusConflict, "INVALID_TRANSITION", "เปลี่ยนสถานะจาก "+status+" เป็น "+to+" ไม่ได้")
 	}
 	col := map[string]string{"PACKED": "packed_at", "SHIPPED": "shipped_at", "DELIVERED": "delivered_at"}[to]

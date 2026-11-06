@@ -306,7 +306,7 @@ func (s *Store) TierOf(ctx context.Context, u *User, now time.Time) (pricing.Tie
 	if err != nil {
 		return "", 0, err
 	}
-	return pricing.TierFor(spend, u.IsBusiness), spend, nil
+	return pricing.TierForMode(spend, u.IsBusiness, s.BugMode), spend, nil
 }
 
 // FirstOrder: no paid order that was not cancelled (BR-16).

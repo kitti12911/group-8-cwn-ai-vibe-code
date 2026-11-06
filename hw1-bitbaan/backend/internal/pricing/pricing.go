@@ -62,13 +62,20 @@ func (t Tier) Rate() int64 {
 }
 
 // TierFor maps 12-month spend to a tier (BR-01, BR-02). Business is decided by the account, not spend.
-func TierFor(spend12m int64, business bool) Tier {
+func TierFor(spend12m int64, business bool) Tier { return TierForMode(spend12m, business, 0) }
+
+// TierForMode is TierFor with the bug switch of the caller (API-CONTRACT 6).
+func TierForMode(spend12m int64, business bool, bugMode int) Tier {
+	silverMin := int64(20000) // BR-01: "ตั้งแต่ ฿20,000"
+	if bugMode == 2 {
+		silverMin = 20001 // BUG_MODE=2: see BUGS2.md #1
+	}
 	switch {
 	case business:
 		return TierBusiness
 	case spend12m >= 100000:
 		return TierGold
-	case spend12m >= 20000:
+	case spend12m >= silverMin:
 		return TierSilver
 	}
 	return TierGeneral
@@ -239,6 +246,9 @@ func Compute(in Input) Quote {
 	switch in.Shipping {
 	case "express":
 		q.ShippingFee = 150
+		if in.BugMode == 2 && q.G4 >= 3000 {
+			q.ShippingFee = 0 // BUG_MODE=2: see BUGS2.md #2
+		}
 	case "pickup":
 		q.ShippingFee = 0
 	default:
