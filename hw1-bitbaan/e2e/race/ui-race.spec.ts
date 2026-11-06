@@ -96,6 +96,48 @@ async function sideBySideShot(browser: Browser, panes: { page: Page; caption: st
   await test.info().attach(name, { path: dest, contentType: 'image/png' });
 }
 
+/**
+ * จับภาพสองจอเป็นชุดเฟรมตลอดช่วงแย่งของ เพื่อเอาไปต่อเป็น GIF ด้วย `npm run race:gif`
+ *
+ * ทำไมไม่ตัดจากวิดีโอ: ffmpeg ที่ Playwright แถมมาถอด gif muxer ออก (ดูคอมเมนต์ `sideBySideShot`)
+ * จับเป็น PNG ทีละเฟรมแล้ว encode เองด้วย JS ล้วน (`gifenc`) จึงไม่ต้องพึ่ง ffmpeg เลย
+ * เฟรมที่ screenshot ไม่ทัน (หน้ากำลังเปลี่ยน) ถูกข้ามไปเฉย ๆ ไม่ทำให้ test ล้ม
+ */
+function startFrames(panes: { page: Page; side: 'A' | 'B' }[], everyMs = 120) {
+  const dir = path.join(test.info().project.outputDir, 'frames');
+  fs.mkdirSync(dir, { recursive: true });
+  for (const f of fs.readdirSync(dir)) fs.rmSync(path.join(dir, f), { force: true });
+
+  const jobs: Promise<unknown>[] = [];
+  let n = 0;
+  let stopped = false;
+
+  const tick = () => {
+    if (stopped) return;
+    const idx = String(n++).padStart(3, '0');
+    for (const p of panes) {
+      jobs.push(
+        p.page
+          .screenshot({ timeout: 2_000 })
+          .then((buf) => fs.promises.writeFile(path.join(dir, `${idx}-${p.side}.png`), buf))
+          .catch(() => undefined),
+      );
+    }
+  };
+
+  const timer = setInterval(tick, everyMs);
+  tick();
+
+  return async () => {
+    stopped = true;
+    clearInterval(timer);
+    await Promise.allSettled(jobs);
+    const kept = fs.readdirSync(dir).length;
+    console.log(`[TC-RACE-02] เก็บเฟรมได้ ${kept} ไฟล์ใน ${dir} · ต่อเป็น GIF ด้วย npm run race:gif`);
+    return dir;
+  };
+}
+
 type Outcome = 'WIN' | 'LOSE' | 'PENDING';
 
 /** อ่านว่าหน้าต่างนี้จบยัง — ชนะ (ไปหน้าจ่ายเงิน) หรือแพ้ (ขึ้นกล่อง error) */
@@ -186,10 +228,20 @@ test('TC-RACE-02 · สองเครื่องแย่ง GPU-V57 ใบส
     const btnB = await armPlaceOrder(pageB);
 
     // ─── ยิงพร้อมกัน ───
+    // อัดเฟรมตั้งแต่ก่อนกด เพื่อให้ GIF เห็นจังหวะ "ทั้งคู่ยังกดได้" ก่อนจะรู้ผล
+    const stopFrames = startFrames([
+      { page: pageA, side: 'A' },
+      { page: pageB, side: 'B' },
+    ]);
+    await pageA.waitForTimeout(500);
+
     const gap = await clickTogether(btnA, btnB);
 
     const [resA, resB] = await Promise.all([settle(pageA, 'หน้าต่าง A'), settle(pageB, 'หน้าต่าง B')]);
     console.log(`[TC-RACE-02] สองการกดห่างกัน ${gap}ms · A=${resA} · B=${resB}`);
+
+    await pageA.waitForTimeout(700); // เฟรมหลังรู้ผล ให้ GIF ค้างภาพผลลัพธ์ไว้ให้อ่านทัน
+    await stopFrames();
 
     expect([resA, resB].filter((r) => r === 'WIN'), 'ต้องมีผู้ชนะพอดี 1 หน้าต่าง ไม่ใช่สองหรือศูนย์').toHaveLength(1);
 

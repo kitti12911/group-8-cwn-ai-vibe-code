@@ -8,7 +8,7 @@
     "test:ui": "playwright test tests --project=chromium-ui --project=firefox-ui --project=webkit-ui",
     "test:race": "playwright test race --project=api --workers=1",
     "test:race:ui": "playwright test race/ui-race.spec.ts --project=race-ui --workers=1",
-    "race:gif": "node -e \"const f=require('fs'),p=require('path'),c=require('child_process');const dir=p.join(process.cwd(),'test-report','race-ui');const a=p.join(dir,'race-ui-A.webm'),b=p.join(dir,'race-ui-B.webm');if(!f.existsSync(a)||!f.existsSync(b)){console.error('[race:gif] FAILED: no recordings in '+dir+' - run this from the e2e folder after: npm run test:race:ui');process.exit(1);}const cands=[process.env.FFMPEG,'ffmpeg'];for(const r of [process.env.PLAYWRIGHT_BROWSERS_PATH,p.join(process.env.LOCALAPPDATA||'','ms-playwright'),p.join(process.env.USERPROFILE||process.env.HOME||'','.cache','ms-playwright'),p.join(process.cwd(),'node_modules','playwright-core','.local-browsers')]){try{for(const d of f.readdirSync(r)){if(d.indexOf('ffmpeg')!==0)continue;for(const n of ['ffmpeg-win64.exe','ffmpeg-linux','ffmpeg-mac-x64','ffmpeg-mac-arm64']){const q=p.join(r,d,n);if(f.existsSync(q))cands.push(q);}}}catch(e){}}let ff='';const seen=[];for(const q of cands.filter(Boolean)){const m=c.spawnSync(q,['-hide_banner','-muxers'],{encoding:'utf8'});if(m.status!==0)continue;seen.push(q);if(String(m.stdout).indexOf(' gif ')===-1)continue;const g=c.spawnSync(q,['-hide_banner','-filters'],{encoding:'utf8'});if(String(g.stdout).indexOf('hstack')===-1)continue;ff=q;break;}if(!ff){console.error('[race:gif] FAILED: found no ffmpeg that can write a GIF. tried: '+(seen.join(' , ')||'none'));console.error('[race:gif] the ffmpeg Playwright bundles is a stripped build (--disable-everything: filters pad/crop/scale only, muxers webm/image2) so it CANNOT encode a GIF or stack two videos.');console.error('[race:gif] fix: install a full ffmpeg (winget install Gyan.FFmpeg) or point FFMPEG at one (set FFMPEG=D:/tools/ffmpeg.exe), then rerun npm run race:gif');console.error('[race:gif] the two .webm recordings are already valid evidence on their own: '+a+' , '+b);process.exit(1);}const out=p.join(dir,'race-ui.gif');const fc='[0:v]fps=8,scale=520:-2:flags=lanczos,pad=iw+6:ih:0:0:gray[a];[1:v]fps=8,scale=520:-2:flags=lanczos[b];[a][b]hstack=inputs=2,split[x][y];[x]palettegen=stats_mode=diff[pl];[y][pl]paletteuse=dither=bayer';const r=c.spawnSync(ff,['-y','-loglevel','error','-i',a,'-i',b,'-filter_complex',fc,out],{stdio:'inherit'});if(r.status!==0){console.error('[race:gif] FAILED: '+ff+' exited '+r.status);process.exit(1);}console.log('[race:gif] wrote '+out+' (left = window A, right = window B)');\"",
+    "race:gif": "node race/make-gif.mjs",
     "test:property": "playwright test property --project=api --workers=1",
     "test:oracle": "playwright test property/oracle --project=api",
     "test:thrice": "playwright test tests && playwright test tests && playwright test tests",
@@ -18,6 +18,8 @@
     "@playwright/test": "^1.49.1",
     "@types/node": "^22.10.2",
     "fast-check": "^3.23.2",
+    "gifenc": "^1.0.3",
+    "pngjs": "^7.0.0",
     "typescript": "^5.7.2"
   }
 }
