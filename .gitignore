@@ -1,0 +1,7 @@
+# TA answer key: must never be committed (teammates would see step-1 answers)
+_ta-only/
+
+# OS / tooling
+.DS_Store
+.playwright-mcp/
+node_modules/

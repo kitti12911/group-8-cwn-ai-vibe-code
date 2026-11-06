@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "playwright": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@playwright/mcp@latest",
+        "--extension",
+        "--executable-path",
+        "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+      ]
+    }
+  }
+}

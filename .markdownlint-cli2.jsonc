@@ -1,0 +1,9 @@
+{
+  // Lint config for this repo (markdownlint-cli2)
+  "config": {
+    "default": true,
+    // Thai prose has no word spaces to wrap on; fixed-width line limits hurt readability
+    "MD013": false
+  },
+  "ignores": ["_ta-only/**", "**/node_modules/**"]
+}
