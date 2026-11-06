@@ -136,7 +136,7 @@ export const api = {
   ) => request<PlacedOrder>('POST', `/quotes/${enc(no)}/order`, body),
 
   // account
-  register: (body: { email: string; password: string; name: string; phone: string; company?: string; taxId?: string }) =>
+  register: (body: { email: string; password: string; name: string; phone: string; company?: string; taxId?: string; business?: boolean }) =>
     request<Me>('POST', '/auth/register', body),
   login: (email: string, password: string) => request<Me>('POST', '/auth/login', { email, password }),
   logout: () => request<{ ok: boolean }>('POST', '/auth/logout'),

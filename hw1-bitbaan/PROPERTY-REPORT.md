@@ -59,7 +59,7 @@ const arbCase = fc.record({
 | ชุดตรวจ oracle ก่อนใช้งาน | ตาราง quote 27 แถวใน `lib/data.ts` → `npm run test:oracle` |
 | พรอมต์สำหรับเซสชันใหม่ | `prompts/05-oracle-independent.txt` |
 
-**ขั้นตอนที่เหลือ:** เปิด Claude Code เซสชันใหม่ที่เห็นแค่เอกสาร → วางพรอมต์ → เอาไฟล์ที่ได้มาวางทับ → `npm run test:oracle` ต้องผ่าน 27/27 → ตั้ง `ORACLE_READY = true` → `npm run test:property -- --seed 2026`
+**ขั้นตอนที่เหลือ:** เปิด Claude Code เซสชันใหม่ที่เห็นแค่เอกสาร → วางพรอมต์ → เอาไฟล์ที่ได้มาวางทับ → `npm run test:oracle` ต้องผ่าน 27/27 → ตั้ง `ORACLE_READY = true` → `SEED=2026 npm run test:property`
 
 เมื่อ P1 มีข้อที่ไม่ตรง ให้ทำตามนี้ก่อนแก้โค้ดใด ๆ
 

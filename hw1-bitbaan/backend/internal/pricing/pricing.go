@@ -85,6 +85,8 @@ type Input struct {
 	Assembly   bool
 	Now        time.Time
 	BugMode    int
+	// FirstCouponHeld: the account's first-order coupon is already held by a PENDING order (BR-17)
+	FirstCouponHeld bool
 }
 
 type QuoteLine struct {
@@ -121,10 +123,12 @@ type Quote struct {
 	Coupon         CouponResult
 	G4             int64
 	AssemblyFee    int64
-	ShippingFee    int64
-	Total          int64
-	VATSatang      int64
-	PreVATSatang   int64
+	// AssemblyAvailable: the cart is a PC spec (CPU + motherboard), so "ให้ร้านประกอบ" can apply (BR-21)
+	AssemblyAvailable bool
+	ShippingFee       int64
+	Total             int64
+	VATSatang         int64
+	PreVATSatang      int64
 }
 
 // FlashActive: every Friday 12:00:00 to before 13:00:00 (BR-06, BR-07, A-16).
@@ -221,8 +225,11 @@ func Compute(in Input) Quote {
 	}
 	q.G4 = q.G3 - q.Coupon.Amount
 
-	// assembly (BR-21): free only for a full set — all 7 builder categories, exactly 1 piece each
-	if in.Assembly {
+	// assembly (BR-21): offered only for a PC spec — the cart must have a CPU and a motherboard
+	// (single parts from the product page can't be assembled · LAB 9 R41). Free only for a full set:
+	// all 7 builder categories, exactly 1 piece each.
+	q.AssemblyAvailable = cpu > 0 && mb > 0
+	if in.Assembly && q.AssemblyAvailable {
 		q.AssemblyFee = 500
 		all := true
 		for _, c := range BuilderCats {
@@ -311,6 +318,9 @@ func applyCoupon(in Input, q Quote, eligible map[string]int64) CouponResult {
 	}
 	if c.FirstOrderOnly && !in.FirstOrder {
 		return reject("โค้ดนี้ใช้ได้กับออเดอร์แรกเท่านั้น")
+	}
+	if c.FirstOrderOnly && in.FirstCouponHeld {
+		return reject("โค้ดนี้ใช้กับออเดอร์ที่รอชำระอยู่แล้ว · ยกเลิกออเดอร์นั้นก่อน หรือชำระให้เสร็จ")
 	}
 	var amount int64
 	if len(c.Categories) > 0 {

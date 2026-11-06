@@ -1,0 +1,8 @@
+[7 พ.ย. 2026 · LAB 12 หลักฐาน · ทำในเซสชันหลัก]
+
+- e2e/lib/see.ts: ก่อนตรวจ ตีกรอบแดงรอบ element ที่ตรวจ (เฉพาะ EVIDENCE=1)
+- playwright.config.ts: EVIDENCE=1 → project "evidence" (Chromium · video on · slowMo 120)
+- race/ui-race.ui.spec.ts: TC-RACE-02 · 2 browser context กด place-order พร้อมกันกับ GPU-V57 ชิ้นสุดท้าย
+- scripts/make-gifs.mjs: วิดีโอ → GIF 1 ไฟล์ต่อ TC · เล่น ≤ 6.5 วินาที + ค้างภาพท้าย 3 วินาที · TC-RACE-02 วาง 2 หน้าต่างคู่กัน ·
+  เขียนรายการ GIF ลง e2e/index.html
+- รัน: cd e2e && npm run evidence (ต้องมี ffmpeg)

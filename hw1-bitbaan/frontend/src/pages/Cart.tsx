@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ApiError, api, errorText, isApiError, type PlaceOrderInput } from '../api';
 import { clearCart, removeFromCart, saveGuestPhone, setCart, setQty, useCart } from '../cart';
 import { ErrorMessage, Loading, Ph, useTitle } from '../components/common';
@@ -13,6 +13,7 @@ import type { OrderInput, Quote } from '../types';
 export function CartPage() {
   useTitle('ตะกร้า');
   const navigate = useNavigate();
+  const capped = ((useLocation().state as { capped?: string[] } | null)?.capped ?? []) as string[];
   const cart = useCart();
   const { me, loading: meLoading } = useAuth();
   const { flashActive } = useClock();
@@ -28,6 +29,7 @@ export function CartPage() {
   const [placing, setPlacing] = useState(false);
   const [orderError, setOrderError] = useState<ApiError | Error | null>(null);
   const [creatingQuote, setCreatingQuote] = useState(false);
+  const [couponHint, setCouponHint] = useState<string | null>(null);
   const seq = useRef(0);
   // FR-30: remember the last price of the same cart so a silent re-price (flash start/end, login) is shown
   const lastPriced = useRef<{ key: string; total: number } | null>(null);
@@ -77,7 +79,9 @@ export function CartPage() {
 
   const applyCoupon = () => {
     const code = couponInput.trim().toUpperCase();
+    setCouponHint(null);
     if (!code) {
+      if (!cart.coupon) setCouponHint('กรุณาใส่โค้ดก่อนกด "ใช้โค้ด"');
       setCart((c) => ({ ...c, coupon: undefined }));
       return;
     }
@@ -126,6 +130,11 @@ export function CartPage() {
   const outSku = isApiError(orderError, 'OUT_OF_STOCK') ? String(orderError.data.sku ?? '') : '';
   const outName = outSku ? bySku.get(outSku)?.name ?? lineBySku.get(outSku)?.name ?? outSku : '';
   const count = cart.items.reduce((n, i) => n + i.qty, 0);
+  // FR-23 · C5 exploration: a line above stock or the per-buyer limit blocks the order button
+  const overLimit = cart.items.some((i) => {
+    const p = bySku.get(i.sku);
+    return !!p && p.available > 0 && i.qty > maxQty(p);
+  });
   const c = quote?.coupon;
 
   if (cart.items.length === 0) {
@@ -153,6 +162,11 @@ export function CartPage() {
       <h1 className="h1">
         ตะกร้า <span className="mono h1-sub">{count} ชิ้น</span>
       </h1>
+      {capped.length > 0 && (
+        <div className="alert alert-warn small" role="status" data-testid="build-capped">
+          บางชิ้นในสเปกมีในตะกร้าครบจำนวนที่ซื้อได้แล้ว จึงไม่ได้เพิ่ม: {capped.join(', ')}
+        </div>
+      )}
       <div className="with-summary">
         <div className="stack grow-main">
           <section className="card no-pad" aria-label="สินค้าในตะกร้า">
@@ -182,6 +196,11 @@ export function CartPage() {
                       </span>
                     )}
                     {p && p.available <= 0 && <span className="small bad-text">สินค้าหมด</span>}
+                    {p && p.available > 0 && it.qty > max && (
+                      <span className="small bad-text" data-testid={`cart-over-${it.sku}`} role="alert">
+                        เกินจำนวนที่สั่งได้ (สูงสุด {max}) · กด − หรือลบออกก่อนสั่ง
+                      </span>
+                    )}
                     {limit !== null && it.qty >= limit ? (
                       <span className="small warn-text">รุ่นนี้จำกัดคนละ {limit} ใบ</span>
                     ) : (
@@ -252,6 +271,11 @@ export function CartPage() {
                 ใช้โค้ด
               </button>
             </div>
+            {couponHint && !cart.coupon && (
+              <span className="small warn-text" role="status" data-testid="coupon-hint">
+                {couponHint}
+              </span>
+            )}
             {cart.coupon && (
               <div className={`coupon-status ${c?.status === 'APPLIED' ? 'ok' : c?.status === 'REJECTED' ? 'bad' : ''}`}>
                 <span data-testid="coupon-status" data-status={c?.status ?? 'PENDING'} role="status">
@@ -270,6 +294,7 @@ export function CartPage() {
             )}
           </section>
 
+          {cart.fromBuilder && (
           <section className="card stack">
             <label className="check">
               <input
@@ -281,6 +306,7 @@ export function CartPage() {
               ให้ร้านประกอบ (฿500 · ฟรีเมื่อมีครบ 7 หมวดในหน้าจัดสเปก หมวดละ 1 ชิ้น)
             </label>
           </section>
+          )}
 
           <section className="card">
             <ShippingForm value={ship} onChange={setShip} currentFee={quote ? (quote.shippingFee ? `฿${baht(quote.shippingFee)}` : 'ฟรี') : undefined} />
@@ -352,7 +378,7 @@ export function CartPage() {
             )}
           </ErrorMessage>
 
-          <button type="button" className="btn btn-red btn-lg" data-testid="place-order" disabled={placing || cart.items.length === 0} onClick={placeOrder}>
+          <button type="button" className="btn btn-red btn-lg" data-testid="place-order" disabled={placing || cart.items.length === 0 || overLimit} onClick={placeOrder}>
             {placing ? 'กำลังสั่งซื้อ…' : 'สั่งซื้อและกันของ 30 นาที'}
           </button>
           <span className="small muted center">ใส่ตะกร้ายังไม่กันของ · กันเมื่อกดสั่งซื้อ · ราคาล็อกตอนกดสั่ง</span>

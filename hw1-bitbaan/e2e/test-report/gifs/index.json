@@ -3,96 +3,120 @@
     "id": "TC-RACE-02",
     "gif": "gifs/TC-RACE-02.gif",
     "seconds": 9.5,
-    "kb": 1086
+    "kb": 1163
+  },
+  {
+    "id": "TC-ACCT-12",
+    "gif": "gifs/TC-ACCT-12.gif",
+    "seconds": 9.5,
+    "kb": 706
   },
   {
     "id": "TC-BUILD-19",
     "gif": "gifs/TC-BUILD-19.gif",
     "seconds": 9.5,
-    "kb": 1013
+    "kb": 1034
+  },
+  {
+    "id": "TC-BUILD-21",
+    "gif": "gifs/TC-BUILD-21.gif",
+    "seconds": 9.5,
+    "kb": 1060
+  },
+  {
+    "id": "TC-BUILD-22",
+    "gif": "gifs/TC-BUILD-22.gif",
+    "seconds": 9.5,
+    "kb": 807
   },
   {
     "id": "TC-CANCEL-08",
     "gif": "gifs/TC-CANCEL-08.gif",
     "seconds": 9.5,
-    "kb": 834
+    "kb": 725
   },
   {
     "id": "TC-NFR-14",
     "gif": "gifs/TC-NFR-14.gif",
-    "seconds": 7.1,
-    "kb": 757
+    "seconds": 7.3,
+    "kb": 784
   },
   {
     "id": "TC-PRICE-13",
     "gif": "gifs/TC-PRICE-13.gif",
     "seconds": 9.5,
-    "kb": 876
+    "kb": 976
   },
   {
     "id": "TC-PRICE-14",
     "gif": "gifs/TC-PRICE-14.gif",
     "seconds": 9.5,
-    "kb": 892
+    "kb": 939
+  },
+  {
+    "id": "TC-SHIP-07",
+    "gif": "gifs/TC-SHIP-07.gif",
+    "seconds": 9.5,
+    "kb": 986
   },
   {
     "id": "TC-ACCT-08",
     "gif": "gifs/TC-ACCT-08.gif",
     "seconds": 9.5,
-    "kb": 782
+    "kb": 789
   },
   {
     "id": "TC-BUILD-09",
     "gif": "gifs/TC-BUILD-09.gif",
     "seconds": 9.1,
-    "kb": 919
+    "kb": 982
   },
   {
     "id": "TC-BUILD-10",
     "gif": "gifs/TC-BUILD-10.gif",
     "seconds": 9.5,
-    "kb": 888
+    "kb": 925
   },
   {
     "id": "TC-CAT-03",
     "gif": "gifs/TC-CAT-03.gif",
-    "seconds": 9.3,
-    "kb": 845
+    "seconds": 9.1,
+    "kb": 868
   },
   {
     "id": "TC-CAT-05",
     "gif": "gifs/TC-CAT-05.gif",
     "seconds": 9.5,
-    "kb": 990
+    "kb": 1077
   },
   {
     "id": "TC-NFR-01",
     "gif": "gifs/TC-NFR-01.gif",
     "seconds": 9.4,
-    "kb": 435
+    "kb": 454
   },
   {
     "id": "TC-NFR-07",
     "gif": "gifs/TC-NFR-07.gif",
     "seconds": 9.5,
-    "kb": 1516
+    "kb": 1433
   },
   {
     "id": "TC-NFR-08",
     "gif": "gifs/TC-NFR-08.gif",
-    "seconds": 8.8,
-    "kb": 805
+    "seconds": 8.6,
+    "kb": 813
   },
   {
     "id": "TC-ORDER-05",
     "gif": "gifs/TC-ORDER-05.gif",
     "seconds": 9.5,
-    "kb": 1146
+    "kb": 1004
   },
   {
     "id": "TC-PRICE-11",
     "gif": "gifs/TC-PRICE-11.gif",
     "seconds": 9.5,
-    "kb": 889
+    "kb": 846
   }
 ]

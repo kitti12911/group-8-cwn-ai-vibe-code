@@ -88,6 +88,14 @@ func decode(r *http.Request, v any) error {
 		return nil
 	}
 	if err := json.NewDecoder(r.Body).Decode(v); err != nil {
+		// a wrong type inside items (qty 1.5, "2") is a bad item, not bad JSON (API-CONTRACT.md · C5 exploration)
+		var te *json.UnmarshalTypeError
+		if errors.As(err, &te) && (strings.HasPrefix(te.Field, "items") || te.Field == "qty") {
+			return store.E(http.StatusBadRequest, "INVALID_ITEMS", "รายการสินค้าไม่ถูกต้อง")
+		}
+		if errors.As(err, &te) && te.Field == "budget" {
+			return store.E(http.StatusBadRequest, "INVALID_BUDGET", "งบต้องเป็นจำนวนเต็มบาท มากกว่า ฿0")
+		}
 		return store.E(http.StatusBadRequest, "INVALID_JSON", "รูปแบบข้อมูลไม่ถูกต้อง")
 	}
 	return nil
@@ -168,7 +176,7 @@ func quoteJSON(q pricing.Quote) map[string]any {
 		"bundles": q.Bundles, "bundleDiscount": satang(q.BundleDiscount), "g2": satang(q.G2),
 		"tier": tier, "memberRate": q.MemberRate, "memberDiscount": satang(q.MemberDiscount), "g3": satang(q.G3),
 		"coupon": map[string]any{"code": q.Coupon.Code, "status": q.Coupon.Status, "reason": q.Coupon.Reason, "amount": satang(q.Coupon.Amount)},
-		"g4": satang(q.G4), "assemblyFee": satang(q.AssemblyFee), "shippingFee": satang(q.ShippingFee),
+		"g4":     satang(q.G4), "assemblyFee": satang(q.AssemblyFee), "assemblyAvailable": q.AssemblyAvailable, "shippingFee": satang(q.ShippingFee),
 		"total": satang(q.Total), "vat": q.VATSatang, "preVat": q.PreVATSatang,
 	}
 }
@@ -368,11 +376,17 @@ func (srv *Server) routes() {
 		if err := decode(r, &b); err != nil {
 			return nil, err
 		}
+		if err := b.Validate(); err != nil {
+			return nil, err
+		}
 		return builderJSON(srv.evaluate(b)), nil
 	}))
 	m.HandleFunc("POST /api/builds", srv.h(func(w http.ResponseWriter, r *http.Request) (any, error) {
 		var b store.BuildInput
 		if err := decode(r, &b); err != nil {
+			return nil, err
+		}
+		if err := b.Validate(); err != nil {
 			return nil, err
 		}
 		u, err := srv.user(r)
@@ -647,16 +661,17 @@ func (srv *Server) routes() {
 		}
 		var in struct {
 			SKU          string  `json:"sku"`
-			Qty          int     `json:"qty"`
+			Qty          *int    `json:"qty"`
 			CustomerCode *string `json:"customerCode"`
 		}
 		if err := decode(r, &in); err != nil {
 			return nil, err
 		}
-		if in.Qty == 0 {
-			in.Qty = 1
+		qty := 1 // qty left out = 1 piece; qty 0 or negative is rejected by StoreSale (C5 exploration)
+		if in.Qty != nil {
+			qty = *in.Qty
 		}
-		left, err := srv.S.StoreSale(r.Context(), u, in.SKU, in.Qty, in.CustomerCode)
+		left, err := srv.S.StoreSale(r.Context(), u, in.SKU, qty, in.CustomerCode)
 		if err != nil {
 			return nil, err
 		}

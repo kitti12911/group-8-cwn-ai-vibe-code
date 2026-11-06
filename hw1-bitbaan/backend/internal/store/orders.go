@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"sort"
 	"strconv"
@@ -76,6 +77,28 @@ func lines(items []Item) ([]pricing.Line, error) {
 	return out, nil
 }
 
+// ValidateShipping rejects unknown shipping methods, and express to a known province outside Bangkok (BR-23, FR-32).
+// An empty method means standard. A quote without a province is allowed (the cart prices before the address is typed).
+func (in OrderInput) ValidateShipping() error {
+	switch in.Shipping {
+	case "", "standard", "express", "pickup":
+	default:
+		return E(http.StatusBadRequest, "INVALID_SHIPPING", "วิธีส่งต้องเป็น standard, express หรือ pickup")
+	}
+	if in.Shipping == "express" && in.province() != "" && in.province() != Bangkok {
+		return E(http.StatusBadRequest, "EXPRESS_NOT_AVAILABLE", "ส่งด่วนได้เฉพาะกรุงเทพมหานคร")
+	}
+	return nil
+}
+
+// Validate: budget is optional, but when given it must be whole baht and more than 0 (BR-35).
+func (b BuildInput) Validate() error {
+	if b.Budget != nil && (*b.Budget <= 0 || *b.Budget%100 != 0) {
+		return E(http.StatusBadRequest, "INVALID_BUDGET", "งบต้องเป็นจำนวนเต็มบาท มากกว่า ฿0")
+	}
+	return nil
+}
+
 func normShipping(s string) string {
 	switch s {
 	case "express", "pickup":
@@ -86,6 +109,9 @@ func normShipping(s string) string {
 
 // Price computes a quote for the buyer at the web's current time (POST /api/quote). Saves nothing.
 func (s *Store) Price(ctx context.Context, u *User, in OrderInput) (pricing.Quote, error) {
+	if err := in.ValidateShipping(); err != nil {
+		return pricing.Quote{}, err
+	}
 	ls, err := lines(in.Items)
 	if err != nil {
 		return pricing.Quote{}, err
@@ -102,7 +128,11 @@ func (s *Store) priceLines(ctx context.Context, u *User, ls []pricing.Line, in O
 	if err != nil {
 		return pricing.Quote{}, err
 	}
-	p := pricing.Input{Lines: ls, Tier: tier, LoggedIn: u != nil, FirstOrder: first,
+	held, err := s.couponHeld(ctx, u)
+	if err != nil {
+		return pricing.Quote{}, err
+	}
+	p := pricing.Input{Lines: ls, Tier: tier, LoggedIn: u != nil, FirstOrder: first, FirstCouponHeld: held,
 		Shipping: normShipping(in.Shipping), Assembly: in.Assembly, Now: now, BugMode: s.BugMode}
 	if in.Coupon != nil && strings.TrimSpace(*in.Coupon) != "" {
 		p.CouponCode = strings.ToUpper(strings.TrimSpace(*in.Coupon))
@@ -126,19 +156,19 @@ type Refund struct {
 }
 
 type Order struct {
-	ID                                                                          string
-	No, Status                                                                  string
-	PlacedAt, HoldUntil                                                         time.Time
+	ID                                                                           string
+	No, Status                                                                   string
+	PlacedAt, HoldUntil                                                          time.Time
 	PaidAt, PackedAt, ShippedAt, DeliveredAt, CancelledAt, ReturnedAt, ExpiredAt *time.Time
-	UserID                                                                      *string
-	BuyerCode                                                                   *string
-	Name, Phone, Email                                                          string
-	Shipping                                                                    string
-	AddressLine, Province                                                       *string
-	Quote                                                                       pricing.Quote
-	Refunds                                                                     []Refund
-	CanCancel, CanReturn                                                        bool
-	ReturnUntil                                                                 *time.Time
+	UserID                                                                       *string
+	BuyerCode                                                                    *string
+	Name, Phone, Email                                                           string
+	Shipping                                                                     string
+	AddressLine, Province                                                        *string
+	Quote                                                                        pricing.Quote
+	Refunds                                                                      []Refund
+	CanCancel, CanReturn                                                         bool
+	ReturnUntil                                                                  *time.Time
 }
 
 // ReturnRefund: opened box pays a fee of floor(10% of goods paid); shipping is never refunded (BR-38).
@@ -185,6 +215,9 @@ func (s *Store) PlaceOrder(ctx context.Context, u *User, in OrderInput, fixed *p
 			return nil, E(http.StatusBadRequest, "GUEST_INFO_REQUIRED", "กรุณากรอกชื่อ เบอร์โทร และอีเมล")
 		}
 		name, phone, email = strings.TrimSpace(in.Guest.Name), strings.TrimSpace(in.Guest.Phone), strings.TrimSpace(in.Guest.Email)
+	}
+	if err := in.ValidateShipping(); err != nil {
+		return nil, err
 	}
 	var addrLine, province *string
 	if in.Shipping != "pickup" {
@@ -237,7 +270,7 @@ func (s *Store) PlaceOrder(ctx context.Context, u *User, in OrderInput, fixed *p
 		if errors.Is(err, pgx.ErrNoRows) {
 			var avail int
 			_ = tx.QueryRow(ctx, `SELECT available FROM products WHERE sku = $1`, l.Product.SKU).Scan(&avail)
-			return nil, &AppError{Status: http.StatusConflict, Code: "OUT_OF_STOCK", Message: "สินค้าหมดแล้ว: " + l.Product.Name,
+			return nil, &AppError{Status: http.StatusConflict, Code: "OUT_OF_STOCK", Message: stockMessage(l.Product.Name, avail),
 				Extra: map[string]any{"sku": l.Product.SKU, "available": avail}}
 		}
 		if err != nil {
@@ -488,13 +521,13 @@ func issueInvoice(ctx context.Context, tx pgx.Tx, orderID string, at time.Time) 
 }
 
 type Invoice struct {
-	No, OrderNo   string
-	IssuedAt      time.Time
-	Name          string
-	Company, Tax  *string
-	Total         int64 // baht
-	VAT, PreVAT   int64 // satang
-	Lines         []pricing.QuoteLine
+	No, OrderNo  string
+	IssuedAt     time.Time
+	Name         string
+	Company, Tax *string
+	Total        int64 // baht
+	VAT, PreVAT  int64 // satang
+	Lines        []pricing.QuoteLine
 }
 
 func (s *Store) Invoice(ctx context.Context, no string) (*Invoice, error) {
@@ -525,7 +558,15 @@ func (s *Store) Cancel(ctx context.Context, no string) (*Order, int64, error) {
 		return nil, 0, err
 	}
 	if status != "PENDING" && status != "PAID" {
-		return nil, 0, E(http.StatusConflict, "CANNOT_CANCEL", "ร้านแพ็กของแล้ว ยกเลิกไม่ได้ กรุณาใช้การคืนของเมื่อได้รับสินค้า")
+		msg := map[string]string{
+			"CANCELLED": "ออเดอร์นี้ถูกยกเลิกไปแล้ว",
+			"EXPIRED":   "ออเดอร์นี้หมดเวลาแล้ว ไม่ต้องยกเลิก",
+			"RETURNED":  "ออเดอร์นี้คืนของไปแล้ว",
+		}[status]
+		if msg == "" {
+			msg = "ร้านแพ็กของแล้ว ยกเลิกไม่ได้ กรุณาใช้การคืนของเมื่อได้รับสินค้า"
+		}
+		return nil, 0, E(http.StatusConflict, "CANNOT_CANCEL", msg)
 	}
 	var refund int64
 	if status == "PAID" {
@@ -561,6 +602,9 @@ func (s *Store) Return(ctx context.Context, no string, opened bool) (*Order, int
 	id, status, _, deliveredAt, _, _, goods, err := lockOrder(ctx, tx, no)
 	if err != nil {
 		return nil, 0, 0, err
+	}
+	if status == "RETURNED" {
+		return nil, 0, 0, E(http.StatusConflict, "ALREADY_RETURNED", "ออเดอร์นี้ขอคืนของไปแล้ว")
 	}
 	if status != "DELIVERED" || deliveredAt == nil {
 		return nil, 0, 0, E(http.StatusConflict, "NOT_DELIVERED", "คืนของได้หลังได้รับสินค้าแล้วเท่านั้น")
@@ -770,9 +814,9 @@ func (s *Store) SaveBuild(ctx context.Context, u *User, b BuildInput) (string, t
 }
 
 type BuildItem struct {
-	Category, SKU, Name        string
-	PriceAtSave, CurrentPrice  int64
-	Available                  int
+	Category, SKU, Name       string
+	PriceAtSave, CurrentPrice int64
+	Available                 int
 }
 
 type Build struct {
@@ -821,10 +865,10 @@ func (s *Store) GetBuild(ctx context.Context, code string) (*Build, error) {
 // ---------- back office ----------
 
 type AdminStock struct {
-	SKU, Name                string
-	OnHand, Held, Available  int
-	RedTag                   bool
-	PerBuyerLimit            *int
+	SKU, Name               string
+	OnHand, Held, Available int
+	RedTag                  bool
+	PerBuyerLimit           *int
 }
 
 func (s *Store) AdminStock(ctx context.Context) ([]AdminStock, error) {
@@ -855,7 +899,9 @@ func (s *Store) StoreSale(ctx context.Context, staff *User, sku string, qty int,
 	var left int
 	err = tx.QueryRow(ctx, `UPDATE products SET available = available - $2, on_hand = on_hand - $2 WHERE sku = $1 AND available >= $2 RETURNING available`, it.SKU, qty).Scan(&left)
 	if errors.Is(err, pgx.ErrNoRows) {
-		return 0, &AppError{Status: http.StatusConflict, Code: "OUT_OF_STOCK", Message: "สินค้าหมดแล้ว: " + it.Name, Extra: map[string]any{"sku": it.SKU}}
+		var avail int
+		_ = tx.QueryRow(ctx, `SELECT available FROM products WHERE sku = $1`, it.SKU).Scan(&avail)
+		return 0, &AppError{Status: http.StatusConflict, Code: "OUT_OF_STOCK", Message: stockMessage(it.Name, avail), Extra: map[string]any{"sku": it.SKU, "available": avail}}
 	}
 	if err != nil {
 		return 0, err
@@ -920,4 +966,24 @@ func (s *Store) RefundDone(ctx context.Context, id int64) (*time.Time, error) {
 		return nil, ErrNotFound
 	}
 	return &now, nil
+}
+
+// stockMessage: "หมด" only when nothing is left; otherwise say how many are left (C5 exploration).
+func stockMessage(name string, avail int) string {
+	if avail <= 0 {
+		return "สินค้าหมดแล้ว: " + name
+	}
+	return fmt.Sprintf("สินค้ามีไม่พอ: %s เหลือ %d ชิ้น", name, avail)
+}
+
+// couponHeld: the account already holds its first-order coupon on a PENDING order (BR-17).
+func (s *Store) couponHeld(ctx context.Context, u *User) (bool, error) {
+	if u == nil {
+		return false, nil
+	}
+	var held bool
+	err := s.Pool.QueryRow(ctx, `SELECT EXISTS (SELECT 1 FROM coupon_redemptions r JOIN orders o ON o.id = r.order_id
+		WHERE r.user_id = $1 AND r.status = 'held' AND o.status = 'PENDING'
+		  AND r.code IN (SELECT code FROM coupons WHERE first_order_only))`, u.ID).Scan(&held)
+	return held, err
 }

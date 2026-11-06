@@ -174,7 +174,7 @@ export function Admin() {
       <section className="card no-pad">
         <div className="card-head row-between wrap-gap">
           <h2 className="h3">สต็อก</h2>
-          <span className="small muted">พร้อมขาย = ในคลัง − กันไว้ · เว็บแสดงเฉพาะพร้อมขาย</span>
+          <span className="small muted">พร้อมขาย = ในคลัง − กันไว้/รอส่ง (รอจ่าย + จ่ายแล้วยังไม่ส่ง) · เว็บแสดงเฉพาะพร้อมขาย</span>
         </div>
         {!stock ? (
           <div className="pad">
@@ -188,7 +188,7 @@ export function Admin() {
                   <th>SKU</th>
                   <th>สินค้า</th>
                   <th className="num">ในคลัง</th>
-                  <th className="num">กันไว้</th>
+                  <th className="num">กันไว้/รอส่ง</th>
                   <th className="num">พร้อมขาย</th>
                   <th className="num">หน้าร้าน</th>
                 </tr>

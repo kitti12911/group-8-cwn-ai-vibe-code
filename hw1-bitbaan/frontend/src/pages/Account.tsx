@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { api, errorText } from '../api';
-import { useCart } from '../cart';
+import { setCart, useCart } from '../cart';
 import { ErrorMessage, Loading, useTitle } from '../components/common';
 import { baht, dateTH, statusLabel, thb, thbShort, tierLabel } from '../format';
 import { isBusiness, useAuth } from '../state';
@@ -64,6 +64,8 @@ export function Account() {
       /* ignore */
     }
     setMe(null);
+    // C2 exploration: a coupon typed by this account must not carry over to the next one
+    setCart((c) => ({ ...c, coupon: undefined }));
     await refresh();
     navigate('/');
   };
@@ -100,7 +102,7 @@ export function Account() {
 
       <div className="stack-lg grow-main">
         <div className="stack-xs" id="overview">
-          <h1 className="h1">สวัสดี คุณ{me.name}</h1>
+          <h1 className="h1">สวัสดี {me.name.startsWith('คุณ') ? me.name : `คุณ${me.name}`}</h1>
           <span className="mono small muted">
             {me.email}
             {me.company ? ` · ${me.company}` : ''}

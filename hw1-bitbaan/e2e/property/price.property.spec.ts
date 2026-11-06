@@ -7,7 +7,7 @@ import { ORACLE_READY, quote as oracleQuote } from './oracle/price';
 /**
  * การบ้านขั้น 3 · property-based testing ด้วย fast-check
  *
- * seed บันทึกทุกครั้งเพื่อให้รันซ้ำได้: `npm run test:property -- --seed 2026`
+ * seed บันทึกทุกครั้งเพื่อให้รันซ้ำได้: `SEED=2026 npm run test:property`
  * P1 ต้องมี oracle อิสระก่อน (ดู `oracle/price.ts`) · P2–P6 ตรวจได้โดยไม่ต้องรู้กฎเงิน
  * จึงรันได้ตั้งแต่ตอนนี้ และยังจับบั๊กได้จริงแม้ oracle จะผิดตรงกับเว็บพอดี
  */

@@ -1,0 +1,15 @@
+[7 พ.ย. 2026 · LAB 7 · ส่งให้ subagent ตัวใหม่ที่ไม่เคยเห็นโค้ด · ดัดแปลงจากพรอมต์ LAB 7 ของบท 04]
+
+You are a QA tester doing LAB 7 ("วางแผนสำรวจ · Charter") on our own shop "บิตบ้าน คอมพิวเตอร์".
+Write ONE new file CHARTERS.md (Thai). The site runs at http://localhost:3000, clock frozen at Fri 2026-11-13 10:00 +07:00.
+
+Hard rules: do NOT read code (backend/ frontend/ e2e/ mutation/ tools/) · never open backend/BUGS.md or _ta-only/ ·
+don't read EXPLORATION.md BUG-HUNT.md TEST-PLAN.md REVIEW.md PLAN-REVIEW.md *-REPORT.md ·
+allowed: INTERVIEW USER-STORIES REQUIREMENTS TEST-DATA ([D]) and SPEC ASSETS API-CONTRACT ([A]) ·
+no reset / clock POST, no forms, no orders, no login — recon is look-only.
+
+Steps: 1 ฟังร้าน [D] (before opening the site) → 2 ฟัง AI [A] → 3 ลาดตระเวน with playwright-cli -s=recon, every menu and
+header/footer link once [O], then close.
+CHARTERS.md: 1 แผนผังหน้า · 2 เบาะแสจากการเทียบ 3 ทาง · 3 charter C1–C6 + CX ปิดท้าย ("สำรวจ <ส่วน> ด้วย <ข้อมูล> เพื่อหา <กฎ>",
+BR, P1/P2/P3, เวลา, ≥5 สิ่งที่ต้องลองรวมค่าขอบ E##, ข้อห้าม, ส่งต่อ) · 4 ตาราง BR | charter (BR-01…40 มีเจ้าของ 1 charter) ·
+5 กติกากันชนกัน (reset/clock เป็นของ CX คนเดียว · แบ่งบัญชี เบอร์ SKU ให้แต่ละ charter) · สรุป charter | ส่วน | BR | ความเสี่ยง | เวลา

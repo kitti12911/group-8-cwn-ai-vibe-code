@@ -66,6 +66,8 @@ Product = {
 | --- | --- | --- | --- |
 | POST | `/api/builder/evaluate` | `{ "parts": { "cpu": "CPU-N5" \| null, "mb", "ram", "gpu", "ssd", "psu", "case" }, "budget"?: <สตางค์>, "assembly": bool }` | `BuilderResult` · ไม่บันทึกอะไร |
 | POST | `/api/builds` | เหมือน evaluate | `201` `{ "code": "<8 ตัว>", "savedAt" }` |
+
+`budget` ไม่บังคับ · ถ้าส่งต้องเป็นบาทเต็มมากกว่า 0 (หาร 100 ลงตัว) ไม่งั้น `400 INVALID_BUDGET` ทั้ง evaluate และ builds (BR-35)
 | GET | `/api/builds/:code` | — | `{ "code", "savedAt", "budget", "assembly", "items": [{ "category", "sku", "name", "priceAtSave", "currentPrice", "diff", "available" }], "evaluation": BuilderResult }` · ไม่พบ `404 NOT_FOUND` |
 
 ```json
@@ -111,7 +113,7 @@ Quote = {
   "bundles": 1, "bundleDiscount": 50000, "g2": 992100,
   "tier": "SILVER", "memberRate": 3, "memberDiscount": 29700, "g3": 962400,
   "coupon": { "code": "GAMER5" | null, "status": "APPLIED" | "REJECTED" | "NONE", "reason": "<ไทย>" | null, "amount": 0 },
-  "g4": 962400, "assemblyFee": 0, "shippingFee": 0,
+  "g4": 962400, "assemblyFee": 0, "assemblyAvailable": true, "shippingFee": 0,   // assemblyAvailable = ตะกร้ามี CPU + เมนบอร์ด (BR-21)
   "total": 962400, "vat": 62961, "preVat": 899439
 }
 ```
@@ -141,10 +143,11 @@ OrderSummary = { "orderNo", "status", "placedAt", "total" }
 | 400 | `COUPON_REJECTED` | ส่งโค้ดที่ใช้ไม่ได้ · `message` = เหตุผลเดียวกับ `coupon.reason` | `reason` |
 | 400 | `GUEST_INFO_REQUIRED` | ไม่ล็อกอินแต่ไม่ส่งชื่อ เบอร์ อีเมล | — |
 | 400 | `ADDRESS_REQUIRED` | ไม่ใช่รับที่ร้านแต่ไม่ส่งที่อยู่ | — |
-| 400 | `EXPRESS_NOT_AVAILABLE` | ส่งด่วนนอกกรุงเทพมหานคร (BR-23) | — |
-| 400 | `INVALID_ITEMS` | ตะกร้าว่าง sku ไม่มี หรือ qty < 1 | — |
+| 400 | `EXPRESS_NOT_AVAILABLE` | ส่งด่วนนอกกรุงเทพมหานคร (BR-23) · ใช้กับ `/api/quote` ด้วยเมื่อส่ง `province` มา | — |
+| 400 | `INVALID_SHIPPING` | `shipping` ไม่ใช่ `standard` `express` `pickup` (ไม่ส่ง = standard) · ทั้ง quote และ order | — |
+| 400 | `INVALID_ITEMS` | ตะกร้าว่าง sku ไม่มี qty < 1 หรือ qty ไม่ใช่จำนวนเต็ม (เช่น `1.5`, `"2"`) | — |
 
-**error อื่น:** `409 ORDER_EXPIRED` (จ่ายหลังหมดเวลา BR-30) · `409 CANNOT_CANCEL` (แพ็กแล้ว BR-36) · `409 RETURN_WINDOW_CLOSED` (BR-37) · `409 NOT_DELIVERED` · `409 NOT_PAID` · `401 LOGIN_REQUIRED` · `403 FORBIDDEN` · `404 NOT_FOUND`
+**error อื่น:** `409 ORDER_EXPIRED` (จ่ายหลังหมดเวลา BR-30) · `409 CANNOT_CANCEL` (แพ็กแล้ว BR-36 · ข้อความบอกสถานะจริง เช่น "ออเดอร์นี้ถูกยกเลิกไปแล้ว") · `409 RETURN_WINDOW_CLOSED` (BR-37) · `409 NOT_DELIVERED` · `409 ALREADY_RETURNED` · `409 OUT_OF_STOCK` บอก `available` และข้อความ "เหลือ N ชิ้น" เมื่อยังมีของ · `409 NOT_PAID` · `401 LOGIN_REQUIRED` · `403 FORBIDDEN` · `404 NOT_FOUND`
 
 ### 3.4 ใบเสนอราคา (บัญชี Business เท่านั้น)
 
@@ -161,7 +164,7 @@ OrderSummary = { "orderNo", "status", "placedAt", "total" }
 
 | method | path | body | ตอบ |
 | --- | --- | --- | --- |
-| POST | `/api/auth/register` | `{ "email", "password", "name", "phone", "company"?, "taxId"? }` · มี `taxId` = สมัคร Business | `201` `Me` · อีเมลซ้ำ `409 EMAIL_TAKEN` · เลขผู้เสียภาษีไม่ใช่ตัวเลข 13 หลัก `400 INVALID_TAX_ID` |
+| POST | `/api/auth/register` | `{ "email", "password", "name", "phone", "company"?, "taxId"?, "business"? }` · มี `taxId` = สมัคร Business · `business: true` (แท็บสมัครบริษัท) แต่ขาดชื่อบริษัทหรือเลขภาษี `400 INVALID_INPUT` | `201` `Me` · อีเมลซ้ำ `409 EMAIL_TAKEN` · เลขผู้เสียภาษีไม่ใช่ตัวเลข 13 หลัก `400 INVALID_TAX_ID` |
 | POST | `/api/auth/login` | `{ "email", "password" }` | `Me` + cookie · ผิด `401 INVALID_LOGIN` "อีเมลหรือรหัสผ่านไม่ถูกต้อง" |
 | POST | `/api/auth/logout` | — | `{ "ok": true }` |
 | GET | `/api/me` | — | `Me` · ไม่ล็อกอิน `401 LOGIN_REQUIRED` |
@@ -195,13 +198,15 @@ Me = { "code": "C3", "email", "name", "role": "customer" | "staff" | "owner",
 | `product-price`, `product-flash-price`, `member-price`, `product-stock`, `qty-minus`, `qty-value`, `qty-plus`, `add-to-cart`, `buy-now`, `limit-note`, `next-lot` | หน้าสินค้า |
 | `builder-select-<cat>` (`<select>`; `<option>` มี `disabled` เมื่อใส่ไม่ได้), `builder-reason-<cat>`, `builder-total`, `builder-budget`, `builder-remaining`, `builder-conflict`, `builder-warning-psu`, `psu-upgrade`, `psu-keep`, `builder-assembly`, `builder-assembly-fee`, `builder-missing`, `builder-save`, `builder-share-link`, `builder-add-all` | หน้าจัดสเปก |
 | `build-item-<cat>`, `build-price-diff-<cat>`, `build-sold-out-<cat>`, `build-remaining`, `build-add-all` | หน้าลิงก์สเปก `/b/:code` |
-| `price-changed`, `cart-line-<sku>`, `cart-qty-<sku>`, `cart-plus-<sku>`, `cart-minus-<sku>`, `cart-remove-<sku>`, `coupon-input`, `coupon-apply`, `coupon-status`, `shipping-standard`, `shipping-express`, `shipping-pickup`, `assembly-toggle` | หน้าตะกร้า |
+| `price-changed`, `build-capped`, `cart-over-<sku>`, `coupon-hint`, `shipping-switched`, `cart-line-<sku>`, `cart-qty-<sku>`, `cart-plus-<sku>`, `cart-minus-<sku>`, `cart-remove-<sku>`, `coupon-input`, `coupon-apply`, `coupon-status`, `shipping-standard`, `shipping-express`, `shipping-pickup`, `assembly-toggle` | หน้าตะกร้า |
 | `quote-line`, `quote-list-total`, `quote-flash`, `quote-bundle`, `quote-member`, `quote-coupon`, `quote-assembly`, `quote-shipping`, `quote-total`, `quote-vat`, `quote-pre-vat` | ใบสรุปราคา (ตะกร้า หน้าจ่ายเงิน ออเดอร์ ใบเสนอราคา) · ค่าเป็นตัวเลขบาท เช่น `9,624.00` |
 | `guest-name`, `guest-phone`, `guest-email`, `address-line`, `address-province`, `place-order` | ฟอร์มสั่งซื้อ |
 | `order-no`, `order-status`, `hold-until`, `countdown`, `pay-promptpay`, `pay-card` | หน้าจ่ายเงิน |
-| `cancel-order`, `refund-amount`, `return-opened`, `return-unopened`, `return-preview-refund`, `return-preview-fee`, `return-submit`, `return-until`, `warranty-link`, `invoice-link`, `invoice-total`, `invoice-vat`, `invoice-pre-vat` | หน้าออเดอร์ |
+| `cancel-order`, `refund-amount`, `return-opened`, `return-unopened`, `return-preview-refund`, `return-preview-fee`, `lookup-phone`, `return-submit`, `return-until`, `warranty-link`, `invoice-link`, `invoice-total`, `invoice-vat`, `invoice-pre-vat` | หน้าออเดอร์ |
 | `member-tier`, `spend-12m`, `to-next-tier` | หน้าบัญชี |
 | `login-email`, `login-password`, `login-submit`, `register-name`, `register-phone`, `register-email`, `register-password`, `register-company`, `register-tax-id`, `register-submit` | หน้าเข้าสู่ระบบ |
+| `track-order-no`, `track-phone`, `track-submit`, `footer-track` | ติดตามคำสั่งซื้อ `/track` |
+| `builder-budget-error`, `builder-warning-psu-kept` | หน้าจัดสเปก (งบผิดรูป · ใช้พาวเวอร์ตัวเดิมแล้วยังเตือน) |
 | `quote-create`, `quote-no`, `quote-valid-until`, `quote-order` | ใบเสนอราคา |
 | `admin-stock-<sku>`, `admin-available-<sku>`, `admin-store-sale-<sku>`, `store-sale-sku`, `store-sale-qty`, `store-sale-customer`, `store-sale-submit`, `lot-sku`, `lot-qty`, `lot-release-at`, `lot-submit`, `lot-list`, `lot-<code>`, `admin-notice`, `admin-order-<no>`, `admin-status-<no>` | หลังร้าน |
 | `error-message` | ข้อความ error ทุกจุด |
@@ -223,6 +228,7 @@ Me = { "code": "C3", "email", "name", "role": "customer" | "staff" | "owner",
 | `/quotes/:no` | ใบเสนอราคา | `design/Quote.html` · `img/us-quote.svg` |
 | `/admin` | หลังร้าน | `design/Admin.html` |
 | `/warranty?order=` | เคลมประกัน (แยกจากการคืนของ · FR-49) | — |
+| `/track` | ติดตามคำสั่งซื้อด้วยเลขออเดอร์ + เบอร์ (คนไม่ล็อกอิน · ลิงก์ท้ายเว็บ) | — |
 
 ## 6. โหมดบั๊ก
 

@@ -15,7 +15,8 @@
 | --- | --- | --- |
 | `docker compose up -d --build` | 3 container healthy · `/api/health` ตอบ | ~1 นาที |
 | `cd backend && go test ./internal/...` | ผ่านทั้ง `pricing` และ `compat` | 1 วินาที |
-| `cd e2e && npm test` | **146 ผ่าน** (api 101 + ui 15 × 3 เบราว์เซอร์) | 1 นาที 10 วินาที |
+| `cd e2e && npm test` | **167 ผ่าน** (api 110 + ui 19 × 3 เบราว์เซอร์) | 1 นาที 15 วินาที |
+| `npm run evidence` | 20 ผ่าน · GIF 20 ไฟล์ (7–10 วินาที) | 1 นาที 20 วินาที |
 | `BUG_MODE=1` · `--project=api` | แดง 9 ข้อเท่าเดิม (ตรง `BUG-HUNT.md`) | 22 วินาที |
 | `cd e2e && npm run test:race` | **7 ผ่าน** · 150 รอบ ผู้ชนะ 1 คนทุกรอบ | 1 นาที 12 วินาที |
 | `cd e2e && npm run test:property` | **5 ผ่าน** · 4,000 แบบ · seed 2026 | 2 นาที 36 วินาที |
@@ -39,8 +40,9 @@
 | --- | --- |
 | `TEST-PLAN.md` | 105 TC · 12 พื้นที่ · ตารางความครบ BR/FR/NFR/ค่าขอบ · ตาราง "สมมติฐาน → TC ที่ต้องแก้" |
 | `QUESTIONS-TO-OWNER.md` | 51 คำถามแบบปิด (ขัดกัน 9 · ขัดกับระบบ 5 · ไม่ครบ 37) + ลำดับ 8 ข้อที่ขอให้ตอบก่อน |
-| `EXPLORATION.md` | 6 charter · **พบบั๊กจริง 1 ตัวนอกโหมดบั๊ก** (`BUG-EXPLORE-01` · แก้แล้ว 7 พ.ย.) |
+| `EXPLORATION-R1.md` | รอบ 1 (6 พ.ย.) · 6 charter · **พบบั๊กจริง 1 ตัวนอกโหมดบั๊ก** (`BUG-EXPLORE-01` · แก้แล้ว 7 พ.ย.) |
 | `SPEC.md` · `ASSETS.md` | LAB 6 · คำอ้างของ AI · เจอ 10 จุดที่เว็บทำไม่ครบ **แก้ครบแล้ว** + TC ใหม่ 9 ข้อ (`TEST-PLAN.md` §3.13) |
+| `CHARTERS.md` · `exploration/` · `EXPLORATION.md` | LAB 7–9 · charter 7 ใบ · สำรวจขนาน 6 agent + ปิดท้าย · กฎ 113 ข้อ (✅ 73 · ⚠️ 36 · ❌ 4) · แก้แล้ว 29 · ถามร้าน 10 · ความเสี่ยง P1 12 · P2 14 · P3 3 · TC ใหม่ 13 ข้อ (§3.14) |
 | `e2e/` | Playwright: `tests/` 97 test · `race/` · `property/` · `index.html` · `triage.json` · `lib/data.ts` เก็บตาราง quote 27 แถว |
 | `RACE-REPORT.md` · `PROPERTY-REPORT.md` · `MUTATION-REPORT.md` · `BUG-HUNT.md` | รายงานขั้น 2 · 3 · 4 · 5 |
 | `mutation/run.mjs` | ตัวรัน mutation เขียนเอง (Stryker ใช้กับ Go ไม่ได้ · gremlins พังกับ Go 1.27) |
@@ -53,11 +55,12 @@
 | # | งาน | ได้อะไร | เวลา |
 | --- | --- | --- | --- |
 | 1 | **oracle อิสระ** — เปิดเซสชันใหม่ วางพรอมต์ `prompts/05-oracle-independent.txt` เอาไฟล์มาวางทับ `e2e/property/oracle/price.ts` → `npm run test:oracle` ต้องผ่าน 27/27 → ตั้ง `ORACLE_READY = true` | เกณฑ์ C จาก 3 → 5 | 1–2 ชม. |
-| 2 | ไล่เก็บพรอมต์ย้อนหลังใส่ `prompts/` ให้ครบทุกตัว | กันโดน −3 | 1 ชม. |
-| 3 | ~~`TC-RACE-02` 2 browser context + อัด GIF~~ | ✅ ทำแล้ว 7 พ.ย. · `e2e/race/ui-race.ui.spec.ts` · GIF คู่กัน 2 หน้าต่าง + GIF ทุก TC ชั้น ui 16 ไฟล์ใน `e2e/test-report/gifs/` | — |
+| 2 | ไล่เก็บพรอมต์ย้อนหลังใส่ `prompts/` ให้ครบทุกตัว | กันโดน −3 · 7 พ.ย. เพิ่ม `06`–`10` (LAB 6–9 · 12) แล้ว · เหลือพรอมต์ของทีมก่อนวันที่ 7 ที่ไม่ได้เก็บ | 30 น. |
+| 3 | ~~`TC-RACE-02` 2 browser context + อัด GIF~~ | ✅ ทำแล้ว 7 พ.ย. · `e2e/race/ui-race.ui.spec.ts` · GIF คู่กัน 2 หน้าต่าง + GIF ทุก TC ชั้น ui 20 ไฟล์ใน `e2e/test-report/gifs/` | — |
 | 4 | mutation รอบ 4 — เพิ่ม 6 TC ใน `compat` ตาม `MUTATION-REPORT.md` ข้อ 6 | D เต็ม · score น่าจะแตะ ~87% | 1 ชม. |
 | 5 | ~~ตัดสิน `BUG-EXPLORE-01`~~ | ✅ แก้โค้ดตาม BR-21 แล้ว (7 พ.ย.) | — |
 | 6 | ขั้น 5 แลกบั๊กกับทีมคู่ | E 5 คะแนน | รอผู้สอน |
+| 7 | ส่ง `QUESTIONS-TO-OWNER.md` §6 (รอบ 2 · 10 ข้อ) ให้ร้าน · **E8 เลขภาษีซ้ำ ผู้ตัดสินให้ P1** | ปิดคำถามจากการสำรวจ | รอร้าน |
 
 ## 6. ต้องเคลียร์กับผู้สอน
 

@@ -41,7 +41,9 @@ type AppError struct {
 
 func (e *AppError) Error() string { return e.Code + ": " + e.Message }
 
-func E(status int, code, msg string) *AppError { return &AppError{Status: status, Code: code, Message: msg} }
+func E(status int, code, msg string) *AppError {
+	return &AppError{Status: status, Code: code, Message: msg}
+}
 
 var (
 	ErrNotFound      = E(http.StatusNotFound, "NOT_FOUND", "ไม่พบข้อมูล")
@@ -253,6 +255,8 @@ type RegisterInput struct {
 	Phone    string  `json:"phone"`
 	Company  *string `json:"company"`
 	TaxID    *string `json:"taxId"`
+	// Business: sent by the "สมัครบริษัท" tab — company and tax ID become required (C4 exploration)
+	Business bool `json:"business"`
 }
 
 // Register creates a member; with a tax ID it is a Business account at once (FR-56, BR-40).
@@ -260,6 +264,9 @@ func (s *Store) Register(ctx context.Context, in RegisterInput) (*User, string, 
 	in.Email = strings.TrimSpace(in.Email)
 	if in.Email == "" || !strings.Contains(in.Email, "@") || len(in.Password) < 6 || strings.TrimSpace(in.Name) == "" {
 		return nil, "", E(http.StatusBadRequest, "INVALID_INPUT", "กรอกชื่อ อีเมล และรหัสผ่านอย่างน้อย 6 ตัว")
+	}
+	if in.Business && (in.TaxID == nil || strings.TrimSpace(*in.TaxID) == "" || in.Company == nil || strings.TrimSpace(*in.Company) == "") {
+		return nil, "", E(http.StatusBadRequest, "INVALID_INPUT", "สมัครบริษัทต้องกรอกชื่อบริษัท และเลขประจำตัวผู้เสียภาษี 13 หลัก")
 	}
 	business := in.TaxID != nil && strings.TrimSpace(*in.TaxID) != ""
 	if business {

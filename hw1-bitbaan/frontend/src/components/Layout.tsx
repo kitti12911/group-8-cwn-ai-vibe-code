@@ -176,7 +176,7 @@ function Footer() {
           <span>ชั้น 4 ห้างไอทีย่านปิ่นเกล้า · เปิด 10:00–21:00 ทุกวัน</span>
         </div>
         <nav aria-label="ลิงก์ท้ายหน้า" className="footer-nav">
-          <Link to="/account">ติดตามคำสั่งซื้อ</Link>
+          <Link to="/track" data-testid="footer-track">ติดตามคำสั่งซื้อ</Link>
           <Link to="/builder">จัดสเปกคอม</Link>
           <Link to="/login?tab=business">ลูกค้าธุรกิจ</Link>
         </nav>

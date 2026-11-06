@@ -4,7 +4,7 @@
   "bugMode0": [
     {
       "id": "BUG-EXPLORE-01",
-      "foundBy": "exploratory · EXPLORATION.md charter C3",
+      "foundBy": "exploratory รอบ 1 · EXPLORATION-R1.md charter C3",
       "severity": "medium",
       "rule": "BR-21",
       "verdict": "เว็บผิด",

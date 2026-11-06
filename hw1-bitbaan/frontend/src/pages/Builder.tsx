@@ -4,7 +4,7 @@ import { api, errorText } from '../api';
 import { setCart } from '../cart';
 import { ErrorMessage, Loading, useTitle } from '../components/common';
 import { BUILDER_CATS, BUILDER_LABEL, builderLabel, thb } from '../format';
-import { useProducts } from '../hooks';
+import { maxQty, useProducts } from '../hooks';
 import type { BuilderCat, BuilderInput, BuilderParts, BuilderResult, Product } from '../types';
 
 const EMPTY_PARTS: BuilderParts = { cpu: null, mb: null, ram: null, gpu: null, ssd: null, psu: null, case: null };
@@ -27,8 +27,14 @@ export function specLine(p: Product): string {
 /** budget input (baht, string) → satang or undefined */
 function budgetSatang(b: string): number | undefined {
   const n = Number(b.replace(/[,\s฿]/g, ''));
-  if (!b.trim() || !Number.isFinite(n) || n <= 0) return undefined;
-  return Math.round(n * 100);
+  if (!b.trim() || !Number.isInteger(n) || n <= 0) return undefined;
+  return n * 100;
+}
+
+/** BR-35 · C1 exploration: say why a typed budget is ignored (0, negative, decimals, text) */
+function budgetProblem(b: string): string | null {
+  if (!b.trim()) return null;
+  return budgetSatang(b) === undefined ? 'งบต้องเป็นจำนวนเต็มบาท มากกว่า ฿0 · ตอนนี้ยังไม่ได้ใช้งบนี้' : null;
 }
 
 export function Builder() {
@@ -128,18 +134,22 @@ export function Builder() {
   };
 
   const addAll = () => {
+    const capped: string[] = [];
     setCart((c) => {
       const items = c.items.map((i) => ({ ...i }));
       for (const cat of selected) {
         const sku = parts[cat]!;
-        // FR-16: every piece goes in — a SKU already in the cart gets +1
+        // FR-16: every piece goes in — a SKU already in the cart gets +1, but never past stock or the per-buyer limit (BR-31 · C5)
+        const max = maxQty(bySku.get(sku));
         const line = items.find((i) => i.sku === sku);
-        if (line) line.qty += 1;
-        else items.push({ sku, qty: 1 });
+        if (line) {
+          if (line.qty + 1 > max) capped.push(sku);
+          else line.qty += 1;
+        } else items.push({ sku, qty: 1 });
       }
-      return { ...c, items, assembly };
+      return { ...c, items, assembly, fromBuilder: true };
     });
-    navigate('/cart');
+    navigate('/cart', { state: capped.length ? { capped } : undefined });
   };
 
   return (
@@ -225,12 +235,19 @@ export function Builder() {
               data-testid="builder-budget"
               type="number"
               inputMode="numeric"
-              min={0}
+              min={1}
               step={1}
               placeholder="เช่น 35000"
               value={budget}
               onChange={(e) => setBudget(e.target.value)}
+              aria-invalid={!!budgetProblem(budget)}
+              aria-describedby="builder-budget-error"
             />
+            {budgetProblem(budget) && (
+              <span id="builder-budget-error" className="small bad-text" data-testid="builder-budget-error" role="alert">
+                {budgetProblem(budget)}
+              </span>
+            )}
           </div>
           {budgetVal !== undefined && result && (
             <div className="budget-bar" aria-hidden="true">
@@ -266,7 +283,9 @@ export function Builder() {
             </div>
           )}
           {psuWarning && psuAcked && (
-            <p className="small warn-text">ใช้พาวเวอร์ตัวเดิม (รับทราบคำเตือนแล้ว): {psuWarning.message}</p>
+            <div className="alert alert-warn small" role="status" data-testid="builder-warning-psu-kept">
+              ⚠ ใช้พาวเวอร์ตัวเดิม (รับทราบแล้ว · ยังเตือนอยู่): {psuWarning.message}
+            </div>
           )}
           {otherWarnings.map((w, i) => (
             <div key={i} className="alert alert-warn small">

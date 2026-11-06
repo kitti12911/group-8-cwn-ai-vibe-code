@@ -30,7 +30,7 @@
 <p class="sub">การบ้านข้อ 1 · TC ทุกตัวอ้างกลับไปที่ <code>TEST-PLAN.md</code> · อัปเดตล่าสุด 7 พ.ย. 2026</p>
 
 <div class="cards">
-  <div class="card"><b class="ok">146</b><span>TC ชั้น api + ui ผ่าน (3 เบราว์เซอร์)</span></div>
+  <div class="card"><b class="ok">167</b><span>TC ชั้น api + ui ผ่าน (3 เบราว์เซอร์)</span></div>
   <div class="card"><b class="ok">7</b><span>TC การแย่งของผ่าน (150 รอบ)</span></div>
   <div class="card"><b class="ok">5</b><span>property ผ่าน (4,000 แบบ)</span></div>
   <div class="card"><b class="warn">1</b><span>บั๊กที่เจอจากการสำรวจ ยังไม่แก้</span></div>
@@ -40,7 +40,7 @@
 <div class="wrap">
 <table>
   <tr><th>คำสั่ง</th><th>ครอบ TC</th><th>ผลล่าสุด</th></tr>
-  <tr><td><code>npm test</code></td><td>ทุก TC ชั้น api และ ui (chromium · firefox · webkit)</td><td class="ok">146 ผ่าน · 1m 10s</td></tr>
+  <tr><td><code>npm test</code></td><td>ทุก TC ชั้น api และ ui (chromium · firefox · webkit)</td><td class="ok">167 ผ่าน · 1m 15s</td></tr>
   <tr><td><code>npm run test:race</code></td><td><code>TC-RACE-01</code> ถึง <code>TC-RACE-05</code> · 50 รอบ × N = 2, 5, 10</td><td class="ok">7 ผ่าน · 49s</td></tr>
   <tr><td><code>npm run test:property</code></td><td><code>P2</code>–<code>P6</code> อย่างละ 250–1,000 แบบ · seed 2026</td><td class="ok">5 ผ่าน · 2m 36s</td></tr>
   <tr><td><code>npm run test:oracle</code></td><td><code>P1</code> + ตาราง quote 27 แถว</td><td class="warn">ข้าม — รอ oracle อิสระ</td></tr>
@@ -77,19 +77,23 @@
 <p class="sub">กรอบแดง = element ที่ test กำลังตรวจ · ค้างภาพผลลัพธ์ 3 วินาทีตอนท้าย · สร้างใหม่ด้วย <code>npm run evidence</code></p>
 <!-- gifs:start -->
 <details><summary><code>TC-RACE-02</code> · สองคนกดยืนยันพร้อมกันบนหน้าเว็บ ของชิ้นสุดท้ายได้คนเดียว — BR-32 · FR-36 · FR-37 <span class="sub">(9.5 วินาที)</span></summary><img loading="lazy" src="test-report/gifs/TC-RACE-02.gif" alt="GIF TC-RACE-02"></details>
+<details><summary><code>TC-ACCT-12</code> · คนไม่ล็อกอินติดตามออเดอร์จากลิงก์ท้ายเว็บด้วยเลขออเดอร์ + เบอร์ — FR-35 · C6 <span class="sub">(9.5 วินาที)</span></summary><img loading="lazy" src="test-report/gifs/TC-ACCT-12.gif" alt="GIF TC-ACCT-12"></details>
 <details><summary><code>TC-BUILD-19</code> · ใส่ตะกร้าทั้งชุด ชิ้นที่มีอยู่แล้วต้องเพิ่มจำนวน ไม่หายไป — FR-16 <span class="sub">(9.5 วินาที)</span></summary><img loading="lazy" src="test-report/gifs/TC-BUILD-19.gif" alt="GIF TC-BUILD-19"></details>
+<details><summary><code>TC-BUILD-21</code> · ใส่ตะกร้าทั้งชุดไม่เกินสิทธิ์คนละ 1 ใบ และบอกว่าไม่ได้เพิ่มชิ้นไหน — BR-31 · FR-16 · C5 <span class="sub">(9.5 วินาที)</span></summary><img loading="lazy" src="test-report/gifs/TC-BUILD-21.gif" alt="GIF TC-BUILD-21"></details>
+<details><summary><code>TC-BUILD-22</code> · "ให้ร้านประกอบ" มีเฉพาะตะกร้าที่มาจากหน้าจัดสเปก — BR-21 · C2 <span class="sub">(9.5 วินาที)</span></summary><img loading="lazy" src="test-report/gifs/TC-BUILD-22.gif" alt="GIF TC-BUILD-22"></details>
 <details><summary><code>TC-CANCEL-08</code> · หน้าออเดอร์แสดงยอดคืนก่อนกดยืนยัน และมีลิงก์เคลมประกันแยก — FR-48 · FR-49 <span class="sub">(9.5 วินาที)</span></summary><img loading="lazy" src="test-report/gifs/TC-CANCEL-08.gif" alt="GIF TC-CANCEL-08"></details>
-<details><summary><code>TC-NFR-14</code> · &lt;html> มี data-ready และ data-bug-mode ตามแม่แบบผู้สอน <span class="sub">(7.1 วินาที)</span></summary><img loading="lazy" src="test-report/gifs/TC-NFR-14.gif" alt="GIF TC-NFR-14"></details>
+<details><summary><code>TC-NFR-14</code> · &lt;html> มี data-ready และ data-bug-mode ตามแม่แบบผู้สอน <span class="sub">(7.3 วินาที)</span></summary><img loading="lazy" src="test-report/gifs/TC-NFR-14.gif" alt="GIF TC-NFR-14"></details>
 <details><summary><code>TC-PRICE-13</code> · บรรทัดส่วนลดที่เป็น 0 ไม่แสดง แต่ยอดยังลงตัว — FR-25 <span class="sub">(9.5 วินาที)</span></summary><img loading="lazy" src="test-report/gifs/TC-PRICE-13.gif" alt="GIF TC-PRICE-13"></details>
 <details><summary><code>TC-PRICE-14</code> · flash sale เริ่มระหว่างอยู่ในตะกร้า ต้องบอกว่าราคาเปลี่ยน — FR-30 <span class="sub">(9.5 วินาที)</span></summary><img loading="lazy" src="test-report/gifs/TC-PRICE-14.gif" alt="GIF TC-PRICE-14"></details>
+<details><summary><code>TC-SHIP-07</code> · เลือกส่งด่วนแล้วเปลี่ยนจังหวัดออกนอก กทม. ต้องกลับเป็นส่งปกติ — FR-32 · C4 <span class="sub">(9.5 วินาที)</span></summary><img loading="lazy" src="test-report/gifs/TC-SHIP-07.gif" alt="GIF TC-SHIP-07"></details>
 <details><summary><code>TC-ACCT-08</code> · ล็อกอินแล้วเห็นระดับสมาชิกและยอดที่ขาด — FR-29 · FR-57 <span class="sub">(9.5 วินาที)</span></summary><img loading="lazy" src="test-report/gifs/TC-ACCT-08.gif" alt="GIF TC-ACCT-08"></details>
 <details><summary><code>TC-BUILD-09</code> · ตัวเลือกที่ใส่กันไม่ได้ถูกปิดพร้อมเหตุผล — FR-10 · BR-25 · BR-26 <span class="sub">(9.1 วินาที)</span></summary><img loading="lazy" src="test-report/gifs/TC-BUILD-09.gif" alt="GIF TC-BUILD-09"></details>
 <details><summary><code>TC-BUILD-10</code> · เปลี่ยนการ์ดจอแล้วพาวเวอร์ไม่พอ ต้องเตือน ไม่ถอดให้เอง — FR-14 <span class="sub">(9.5 วินาที)</span></summary><img loading="lazy" src="test-report/gifs/TC-BUILD-10.gif" alt="GIF TC-BUILD-10"></details>
-<details><summary><code>TC-CAT-03</code> · สินค้าที่ขายไม่ได้แล้ว ปุ่มใส่ตะกร้ากดไม่ได้ — FR-03 <span class="sub">(9.3 วินาที)</span></summary><img loading="lazy" src="test-report/gifs/TC-CAT-03.gif" alt="GIF TC-CAT-03"></details>
+<details><summary><code>TC-CAT-03</code> · สินค้าที่ขายไม่ได้แล้ว ปุ่มใส่ตะกร้ากดไม่ได้ — FR-03 <span class="sub">(9.1 วินาที)</span></summary><img loading="lazy" src="test-report/gifs/TC-CAT-03.gif" alt="GIF TC-CAT-03"></details>
 <details><summary><code>TC-CAT-05</code> · ป้าย flash sale และราคาขีดฆ่าแสดงเฉพาะในช่วง — FR-05 <span class="sub">(9.5 วินาที)</span></summary><img loading="lazy" src="test-report/gifs/TC-CAT-05.gif" alt="GIF TC-CAT-05"></details>
 <details><summary><code>TC-NFR-01</code> · ใช้บนมือถือกว้าง 375px ได้ทุกหน้า ไม่มีเลื่อนซ้ายขวา — NFR-01 <span class="sub">(9.4 วินาที)</span></summary><img loading="lazy" src="test-report/gifs/TC-NFR-01.gif" alt="GIF TC-NFR-01"></details>
 <details><summary><code>TC-NFR-07</code> · ปุ่มและบรรทัดราคามีชื่อให้เครื่องมือหาเจอ — NFR-09 <span class="sub">(9.5 วินาที)</span></summary><img loading="lazy" src="test-report/gifs/TC-NFR-07.gif" alt="GIF TC-NFR-07"></details>
-<details><summary><code>TC-NFR-08</code> · ทุกหน้ามี data-bug-mode ตรงกับโหมดจริง <span class="sub">(8.8 วินาที)</span></summary><img loading="lazy" src="test-report/gifs/TC-NFR-08.gif" alt="GIF TC-NFR-08"></details>
+<details><summary><code>TC-NFR-08</code> · ทุกหน้ามี data-bug-mode ตรงกับโหมดจริง <span class="sub">(8.6 วินาที)</span></summary><img loading="lazy" src="test-report/gifs/TC-NFR-08.gif" alt="GIF TC-NFR-08"></details>
 <details><summary><code>TC-ORDER-05</code> · หน้าจ่ายเงินแสดงเวลาที่กันถึงและนับถอยหลัง — FR-39 · NFR-16 <span class="sub">(9.5 วินาที)</span></summary><img loading="lazy" src="test-report/gifs/TC-ORDER-05.gif" alt="GIF TC-ORDER-05"></details>
 <details><summary><code>TC-PRICE-11</code> · ใบสรุปราคาบวกลบลงตัวและเรียงตามลำดับของร้าน — FR-24 · FR-25 <span class="sub">(9.5 วินาที)</span></summary><img loading="lazy" src="test-report/gifs/TC-PRICE-11.gif" alt="GIF TC-PRICE-11"></details>
 <!-- gifs:end -->

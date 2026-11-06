@@ -271,6 +271,26 @@ TC ที่ต้องให้เวลาเดินเอง (นับถ
 
 `TC-BUILD-13b` (BR-21 · BUG-EXPLORE-01) เปลี่ยนจาก `test.fail()` เป็น test ปกติ เพราะแก้โค้ดแล้ว
 
+### 3.14 ผลสำรวจ LAB 8 (`exploration/C1–CX.md`) · เพิ่ม 7 พ.ย. 2026
+
+สำรวจขนาน 7 charter แล้วเจอ ❌ 4 · ⚠️ 35 · แก้โค้ดข้อที่เป็น "เว็บผิด" แล้วเพิ่ม TC ชุดนี้ · ข้อที่ต้องให้ร้านตัดสินอยู่ใน `QUESTIONS-TO-OWNER.md` §6
+
+| รหัส | ทดสอบอะไร | ชั้น | ข้อมูล | ผลที่ถูก | ที่มา |
+| --- | --- | --- | --- | --- | --- |
+| TC-CAT-13 | ขายหน้าร้าน qty 0 / ติดลบ ไม่หักของ | api | S1 · SSD-1T | `400 INVALID_ITEMS` · ไม่ส่ง qty = 1 ชิ้น | FR-07 · C5 ❌ |
+| TC-ORDER-12 | ของไม่พอแต่ยังเหลือ บอกจำนวนที่เหลือ | api | SSD-1T × (เหลือ + 1) | `409 OUT_OF_STOCK` "เหลือ N ชิ้น" ไม่ใช่ "หมดแล้ว" | FR-37 · C5 ⚠️ |
+| TC-ORDER-13 | qty ผิดชนิด | api | qty `1.5` · `"2"` | `400 INVALID_ITEMS` | API-CONTRACT · C5 ⚠️ |
+| TC-CANCEL-09 | ยกเลิกซ้ำ / คืนซ้ำ | api | C4 seed | "ออเดอร์นี้ถูกยกเลิกไปแล้ว" · `409 ALREADY_RETURNED` | BR-36 · BR-37 · C6 ⚠️ |
+| TC-COUPON-08 | NEWBIT200 ที่ออเดอร์รอจ่ายถืออยู่ | api | C2 สั่งรอจ่ายแล้ว quote ซ้ำ | `coupon.status = REJECTED` เหตุผลบอก "รอชำระ" | BR-17 · C3 ⚠️ |
+| TC-SHIP-06 | วิธีส่งที่ไม่มี · ส่งด่วนนอก กทม. ตั้งแต่ quote | api | `drone` · express + นนทบุรี | `400 INVALID_SHIPPING` · `400 EXPRESS_NOT_AVAILABLE` · ไม่ส่งจังหวัด = 200 | BR-23 · FR-32 · C4 ⚠️ |
+| TC-ACCT-11 | สมัครบริษัทไม่กรอกชื่อบริษัท/เลขภาษี | api | `business: true` | `400 INVALID_INPUT` · ครบแล้วได้ BUSINESS | FR-56 · C4 ❌ |
+| TC-BUILD-20 | งบ 0 · ติดลบ · มีเศษสตางค์ | api | evaluate + builds | `400 INVALID_BUDGET` · ฿1 ใช้ได้ | BR-35 · C1 ⚠️ |
+| TC-ACCT-12 | คนไม่ล็อกอินติดตามออเดอร์จากท้ายเว็บ | ui | ออเดอร์แขก 081-600-0099 | `/track` → หน้าออเดอร์สถานะ PENDING | FR-35 · C6 ❌ |
+| TC-BUILD-21 | ใส่ตะกร้าทั้งชุดไม่เกินสิทธิ์คนละ 1 ใบ | ui | ตะกร้ามี GPU-V57 แล้ว + สเปกที่มี GPU-V57 | GPU-V57 = 1 · ขึ้น `build-capped` | BR-31 · FR-16 · C5 ❌ |
+| TC-SHIP-07 | ส่งด่วนแล้วเปลี่ยนจังหวัดออกนอก กทม. | ui | SSD-1T · กทม. → นนทบุรี | กลับเป็นส่งปกติ ฿60 · ขึ้น `shipping-switched` | FR-32 · C4 ⚠️ |
+| TC-BUILD-22 | "ให้ร้านประกอบ" มีเฉพาะตะกร้าจากหน้าจัดสเปก | ui | RAM-16 จากหน้าสินค้า | ไม่มี `assembly-toggle` | BR-21 · C2 ⚠️ |
+| TC-BUILD-23 | ส่ง `assembly` มาทาง API กับชิ้นเดี่ยว | api | RAM-16 × 1 · สเปก 6 หมวด | ชิ้นเดี่ยว `assemblyAvailable=false` ค่าประกอบ 0 · 6 หมวด ฿500 | BR-21 · LAB 9 R41 |
+
 ---
 
 ## 4. ตารางความครบ
@@ -392,7 +412,7 @@ docker compose up -d --build                       # ยกเว็บทั้
 cd backend && go test ./internal/...               # TC ชั้น unit
 cd e2e && npm ci && npx playwright test            # TC ชั้น api + ui ทั้ง 3 เบราว์เซอร์
 cd e2e && npm run test:race                        # TC-RACE-01…04 (ขั้น 2)
-cd e2e && npm run test:property -- --seed 2026     # TC-PROP-01…06 (ขั้น 3)
+cd e2e && SEED=2026 npm run test:property     # TC-PROP-01…06 (ขั้น 3)
 BUG_MODE=1 docker compose up -d --build backend    # รันแผนกับบั๊กที่ฝังไว้ แล้วเขียน BUG-HUNT.md
 ```
 

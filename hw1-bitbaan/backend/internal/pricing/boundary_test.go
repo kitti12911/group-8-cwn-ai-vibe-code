@@ -213,9 +213,13 @@ func TestCategoryCouponWithNoEligibleItem(t *testing.T) {
 // ราคาป้ายรวมต้องคูณจำนวน และยอดชำระต้องรวมค่าประกอบกับค่าส่งครบทั้งสองก้อน · ฆ่า mutant S10
 func TestListTotalAndTotalComposition(t *testing.T) {
 	q := Compute(Input{
-		Lines:    []Line{{Product: synth(1000, false), Qty: 2}},
+		// CPU ฿1,000 × 2 + เมนบอร์ด ฿0 — เป็นสเปกเครื่อง จึงเลือกประกอบได้ (BR-21 · R41) · ชุดประกอบ 1 คู่ −500
+		Lines: []Line{
+			{Product: Product{SKU: "SYNTH-CPU", Name: "CPU ทดสอบ", Category: "CPU", Price: 1000}, Qty: 2},
+			{Product: Product{SKU: "SYNTH-MB", Name: "บอร์ดทดสอบ", Category: "MB", Price: 0}, Qty: 1},
+		},
 		Tier:     TierGeneral,
-		Shipping: "standard", // G4 = 2,000 < 3,000 → ค่าส่ง 60
+		Shipping: "standard", // G4 = 1,500 < 3,000 → ค่าส่ง 60
 		Assembly: true,       // ไม่ครบ 7 หมวด → ค่าประกอบ 500
 		Now:      thu1000,
 	})
@@ -225,8 +229,8 @@ func TestListTotalAndTotalComposition(t *testing.T) {
 	if q.AssemblyFee != 500 || q.ShippingFee != 60 {
 		t.Fatalf("ค่าประกอบ %d ค่าส่ง %d", q.AssemblyFee, q.ShippingFee)
 	}
-	if q.Total != 2560 {
-		t.Errorf("ยอดชำระ = %d ต้องเป็น 2560 (2,000 + 500 + 60)", q.Total)
+	if q.Total != 2060 {
+		t.Errorf("ยอดชำระ = %d ต้องเป็น 2060 (2,000 − 500 + 500 + 60)", q.Total)
 	}
 }
 
@@ -246,5 +250,13 @@ func TestFlashWindowNextStart(t *testing.T) {
 	_, nextFromFriday := FlashWindow(fri1230)
 	if nextFromFriday.Day() != 20 {
 		t.Errorf("จากศุกร์ 13 รอบถัดไปต้องเป็นศุกร์ 20 ได้วันที่ %d", nextFromFriday.Day())
+	}
+}
+
+// R41 (LAB 9): ชิ้นเดี่ยวที่ไม่ใช่สเปกเครื่อง ส่ง assembly มาก็ไม่คิดค่าประกอบ
+func TestAssemblyNeedsPCSpec(t *testing.T) {
+	q := Compute(Input{Lines: []Line{{Product: synth(1890, false), Qty: 1}}, Tier: TierGeneral, Shipping: "pickup", Assembly: true, Now: thu1000})
+	if q.AssemblyAvailable || q.AssemblyFee != 0 {
+		t.Fatalf("RAM ชิ้นเดียว + ประกอบ: available=%v fee=%d ต้องเป็น false / 0", q.AssemblyAvailable, q.AssemblyFee)
 	}
 }

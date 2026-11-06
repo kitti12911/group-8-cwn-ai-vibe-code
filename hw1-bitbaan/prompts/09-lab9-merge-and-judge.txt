@@ -1,0 +1,11 @@
+[7 พ.ย. 2026 · LAB 9 · subagent รวมผล 1 ตัว แล้วผู้ตัดสินความเสี่ยงอีก 1 ตัวที่อ่านแค่ส่วน B–C]
+
+รวมผล: merge exploration/C1–C6.md + CX.md into EXPLORATION.md (Thai) · never read code / BUGS.md / _ta-only ·
+don't edit exploration/ · reset at start and end · conflicting rows → retry once with playwright-cli -s=merge, still unsure → section F ·
+keep every original ⚠️/❌ and add column "หลังแก้ 7 พ.ย." (แก้แล้ว · ไม่แก้ → ถามร้าน · ไม่แก้ → ถามคนสร้างเว็บ · —),
+spot-check fixes on the live site and write "ยังไม่หาย" if not really fixed (ได้ 1 ข้อ: R41 → แก้ที่ API แล้ว)
+Sections: A แผนผังเว็บ · B ฟีเจอร์ F## · C กฎ 3 ทาง R## · D ช่องว่าง 3 แบบ · E (เว้นให้ผู้ตัดสิน) · F คำถาม · สถิติ
+
+ผู้ตัดสิน: read ONLY sections B and C of EXPLORATION.md · write section E: ฟีเจอร์ | ถ้าพังจะเกิดอะไร | โอกาส | ความเสียหาย | P1/P2/P3 | เหตุผล ·
+P1 = เงินผิด ขายเกิน/ขายซ้ำ สิทธิ์คนละ 1 พัง หรือเห็น/แก้ข้อมูลคนอื่น · P2 = ฟีเจอร์สำคัญผิดแต่ยังซื้อได้ · P3 = แสดงผล/เกิดไม่บ่อย ·
+add "ข้อสังเกตของผู้ตัดสิน" — anything explorers gave only ⚠️ that is really P1

@@ -84,3 +84,53 @@ test('TC-NFR-14 · <html> มี data-ready และ data-bug-mode ตามแ
   await expect(await see(page.locator('html'))).toHaveAttribute('data-ready', 'true');
   await expect(await see(page.locator('html'))).toHaveAttribute('data-bug-mode', /^[012]$/);
 });
+
+// ---- LAB 8 · ผลสำรวจ exploration/C1–C6 · แก้แล้ว 7 พ.ย. (TEST-PLAN.md §3.14) ----
+
+test('TC-ACCT-12 · คนไม่ล็อกอินติดตามออเดอร์จากลิงก์ท้ายเว็บด้วยเลขออเดอร์ + เบอร์ — FR-35 · C6', async ({ page }) => {
+  const r = await page.request.post('/api/orders', {
+    data: { items: [{ sku: 'SSD-1T', qty: 1 }], shipping: 'pickup', guest: { name: 'คุณติดตาม', phone: '081-600-0099', email: 'track@bitbaan.test' } },
+  });
+  const { orderNo } = await r.json();
+  await page.goto('/');
+  await page.getByTestId('footer-track').click();
+  await expect(page).toHaveURL(/\/track$/);
+  await page.getByTestId('track-order-no').fill(orderNo);
+  await page.getByTestId('track-phone').fill('081-600-0099');
+  await page.getByTestId('track-submit').click();
+  await expect(await see(page.getByRole('heading', { level: 1 }))).toContainText(orderNo);
+  await expect(await see(page.getByTestId('order-status'))).toHaveAttribute('data-status', 'PENDING');
+});
+
+test('TC-BUILD-21 · ใส่ตะกร้าทั้งชุดไม่เกินสิทธิ์คนละ 1 ใบ และบอกว่าไม่ได้เพิ่มชิ้นไหน — BR-31 · FR-16 · C5', async ({ page }) => {
+  await page.goto('/products/GPU-V57');
+  await page.getByTestId('add-to-cart').click();
+  await page.goto('/builder');
+  const parts: Record<string, string> = { cpu: 'CPU-N5', mb: 'MB-B6', ram: 'RAM-D4', gpu: 'GPU-V57', ssd: 'SSD-1T', psu: 'PSU-750', case: 'CASE-L' };
+  for (const [cat, sku] of Object.entries(parts)) await page.getByTestId(`builder-select-${cat}`).selectOption(sku);
+  await page.getByTestId('builder-add-all').click();
+  await expect(page).toHaveURL(/\/cart/);
+  await expect(await see(page.getByTestId('cart-qty-GPU-V57')), 'จำกัดคนละ 1 ใบ').toHaveText('1');
+  await expect(await see(page.getByTestId('build-capped'))).toContainText('GPU-V57');
+});
+
+test('TC-SHIP-07 · เลือกส่งด่วนแล้วเปลี่ยนจังหวัดออกนอก กทม. ต้องกลับเป็นส่งปกติ — FR-32 · C4', async ({ page }) => {
+  await page.goto('/products');
+  await page.getByTestId('add-to-cart-SSD-1T').click();
+  await page.goto('/cart');
+  await page.getByTestId('address-province').selectOption('กรุงเทพมหานคร');
+  await page.getByTestId('shipping-express').check();
+  await expect(page.getByTestId('quote-shipping')).toHaveText('150.00');
+  await page.getByTestId('address-province').selectOption('นนทบุรี');
+  await expect(await see(page.getByTestId('shipping-switched'))).toBeVisible();
+  await expect(page.getByTestId('shipping-standard')).toBeChecked();
+  await expect(await see(page.getByTestId('quote-shipping')), 'ส่งปกติ ฿60 (ยอดไม่ถึง ฿3,000)').toHaveText('60.00');
+});
+
+test('TC-BUILD-22 · "ให้ร้านประกอบ" มีเฉพาะตะกร้าที่มาจากหน้าจัดสเปก — BR-21 · C2', async ({ page }) => {
+  await page.goto('/products');
+  await page.getByTestId('add-to-cart-RAM-16').click();
+  await page.goto('/cart');
+  await expect(page.getByTestId('cart-line-RAM-16')).toBeVisible();
+  await expect(await see(page.getByTestId('assembly-toggle')), 'ซื้อชิ้นเดียวจากหน้าสินค้า ไม่มีตัวเลือกประกอบ').toHaveCount(0);
+});
