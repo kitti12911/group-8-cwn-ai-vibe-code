@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { cartCount, useCart } from '../cart';
 import { dateTH, dhms, pad2, timeHM } from '../format';
@@ -7,11 +7,20 @@ import { isStaff, useAuth, useClock, useServerNow } from '../state';
 export function Layout() {
   const location = useLocation();
   const { sync } = useClock();
+  const mainRef = useRef<HTMLElement>(null);
+  const firstRender = useRef(true);
 
   // resync server time on navigation (tests may move the server clock)
   useEffect(() => {
     sync();
     window.scrollTo(0, 0);
+    // move focus to the new page so keyboard and screen reader users start at its content
+    // (skip the first load: the browser already starts at the top of the document)
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
+    }
+    mainRef.current?.focus({ preventScroll: true });
   }, [location.pathname]);
 
   return (
@@ -30,7 +39,7 @@ export function Layout() {
       </div>
       <Header />
       <FlashBanner />
-      <main id="main" className="main">
+      <main id="main" className="main" ref={mainRef} tabIndex={-1}>
         <Outlet />
       </main>
       <Footer />

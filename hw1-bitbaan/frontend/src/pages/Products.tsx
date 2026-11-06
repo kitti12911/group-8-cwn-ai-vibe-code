@@ -128,7 +128,8 @@ function ProductCard({ p }: { p: Product }) {
 
   return (
     <article className="card product-card" data-testid={`product-card-${p.sku}`}>
-      <Link to={`/products/${p.sku}`} className="ph product-ph" aria-label={p.name}>
+      {/* same target as the name link below: keep it clickable but out of the tab order and screen reader list */}
+      <Link to={`/products/${p.sku}`} className="ph product-ph" tabIndex={-1} aria-hidden="true">
         {p.redTag && <span className="badge-red">ป้ายแดง</span>}
         {p.perBuyerLimit && <span className="badge-dark">คนละ {p.perBuyerLimit}</span>}
       </Link>
@@ -138,6 +139,9 @@ function ProductCard({ p }: { p: Product }) {
       <Link to={`/products/${p.sku}`} className="product-name">
         {p.name}
       </Link>
+      {/* the image badges are hidden from screen readers with the image link, so repeat them here */}
+      {p.redTag && <span className="sr-only">ป้ายแดง</span>}
+      {p.perBuyerLimit && <span className="sr-only">จำกัดคนละ {p.perBuyerLimit} ใบ</span>}
       <div className="price-row">
         {sale && (
           <span className="mono price red" data-testid={`product-flash-price-${p.sku}`}>

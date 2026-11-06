@@ -311,12 +311,12 @@ s,
   line-height: 1.35;
 }
 .eyebrow {
-  font-size: 13px;
+  font-size: 14px;
   letter-spacing: 2px;
   color: var(--muted);
 }
 .eyebrow-red {
-  font-size: 13px;
+  font-size: 14px;
   letter-spacing: 2px;
   color: #ff8a8a;
 }
@@ -501,7 +501,17 @@ s,
   border: 0;
   background: transparent;
   height: 44px;
-  font-size: 15px;
+  font-size: 16px;
+  outline: none;
+}
+/* the input drops its own ring, so the whole search box shows it instead */
+.search:has(input:focus-visible) {
+  outline: 3px solid #2f6fde;
+  outline-offset: 2px;
+  border-color: #2f6fde;
+}
+/* <main> gets focus on route change (screen readers); it is not a control */
+.main:focus {
   outline: none;
 }
 .header-actions {
@@ -653,7 +663,7 @@ s,
   left: 8px;
   background: var(--red);
   color: #fff;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   padding: 3px 8px;
   border-radius: 3px;
@@ -668,11 +678,11 @@ s,
   display: inline-block;
 }
 .sm {
-  font-size: 12px !important;
+  font-size: 13px !important;
   padding: 1px 6px !important;
 }
 .tag-outline {
-  font-size: 13px;
+  font-size: 14px;
   padding: 4px 10px;
   border: 1px solid #55575e;
   border-radius: 4px;
@@ -680,7 +690,7 @@ s,
 .tag-outline-dark {
   display: inline-block;
   border: 1.5px solid var(--ink);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   padding: 3px 10px;
   border-radius: 4px;
@@ -1186,7 +1196,7 @@ select {
 .reasons {
   list-style: none;
   padding: 0;
-  font-size: 13px;
+  font-size: 14px;
   color: var(--red-ink);
   display: flex;
   flex-direction: column;
@@ -1319,7 +1329,7 @@ select {
   flex-shrink: 0;
 }
 .ladder-sub {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--muted);
   padding-left: 12px;
   border-left: 2px solid var(--line-soft);
