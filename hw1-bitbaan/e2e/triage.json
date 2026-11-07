@@ -1,6 +1,6 @@
 {
   "$comment": "บั๊กที่เจอและการตัดสินว่าใครผิด (เว็บ / oracle / สมมติฐาน) ตามบท 04 · อัปเดตทุกครั้งที่ TC แดง",
-  "updatedAt": "2026-11-06",
+  "updatedAt": "2026-11-07",
   "bugMode0": [
     {
       "id": "BUG-EXPLORE-01",
@@ -10,13 +10,42 @@
       "verdict": "เว็บผิด",
       "title": "ประกอบฟรีทั้งที่หมวดใดหมวดหนึ่งมีมากกว่า 1 ชิ้น",
       "repro": "POST /api/quote {\"items\":[{\"sku\":\"CPU-N5\",\"qty\":2},{\"sku\":\"MB-B6\",\"qty\":1},{\"sku\":\"RAM-D4\",\"qty\":1},{\"sku\":\"GPU-V46\",\"qty\":1},{\"sku\":\"SSD-1T\",\"qty\":1},{\"sku\":\"PSU-550\",\"qty\":1},{\"sku\":\"CASE-M\",\"qty\":1}],\"shipping\":\"pickup\",\"assembly\":true}",
-      "expected": { "assemblyFee": 50000 },
-      "actual": { "assemblyFee": 0 },
+      "expected": {
+        "assemblyFee": 50000
+      },
+      "actual": {
+        "assemblyFee": 0
+      },
       "impact": "ร้านเสีย ฿500 ต่อออเดอร์ที่เข้าเงื่อนไขนี้",
       "source": "backend/internal/pricing/pricing.go · Compute() ตรวจแค่ว่าแต่ละหมวดมีของ ไม่ได้ตรวจจำนวน",
       "tc": "TC-BUILD-13b",
       "test": "e2e/tests/shipping.spec.ts (test.fail)",
       "status": "open"
+    },
+    {
+      "id": "BUG-EXPLORE-02",
+      "foundBy": "ขั้น 5 · ระหว่างรันแผนกับ BUG_MODE=2 (property P2 ยิง reset 1,000 ครั้ง)",
+      "severity": "high",
+      "rule": "NFR-15 (ผลต้องนิ่ง) · NFR-07 (reset)",
+      "verdict": "เว็บผิด",
+      "title": "งานเบื้องหลัง maintain ชนกับ POST /api/test/reset ทำให้ reset ตอบ 500 หรือค้างเกิน 10 วินาที",
+      "repro": "ยิง POST /api/test/reset ติดกันหลายร้อยครั้ง — พังที่รอบ ~903 · log ฝั่งเว็บขึ้น \"maintain: commit unexpectedly resulted in rollback\"",
+      "expected": {
+        "status": 200,
+        "body": {
+          "ok": true
+        }
+      },
+      "actual": {
+        "status": 500,
+        "alt": "timeout > 10000ms"
+      },
+      "impact": "ชุดทดสอบไม่นิ่ง ซึ่งขัด NFR-15 โดยตรง · ถ้าขึ้นระบบจริง งานเบื้องหลังปล่อยของหมดเวลาอาจถูกตัดกลางเงียบ ๆ",
+      "source": "backend/internal/store/store.go · Reset() ทำ DROP SCHEMA public CASCADE (ต้องใช้ ACCESS EXCLUSIVE lock ทุกตาราง) แต่ Maintain() วิ่งทุกวินาที (cmd/server/main.go:67) และวิ่งก่อนทุก request (internal/api/server.go:36) ในทรานแซกชันของตัวเอง · ไม่มีการกันสองตัวนี้",
+      "fix": "sync.RWMutex ใน Store · Maintain ถือ RLock · Reset ถือ Lock — แก้ที่ต้นเหตุ ไม่ใช้ retry กลบ (TEST-PLAN.md §2.5)",
+      "tc": "TC-NFR-09 · TC-PROP-02",
+      "test": "e2e/property/price.property.spec.ts (P2)",
+      "status": "fixed"
     }
   ],
   "bugMode1": [
@@ -25,9 +54,16 @@
       "rule": "BR-06",
       "verdict": "เว็บผิด (บั๊กที่ Claude ฝังไว้)",
       "title": "ราคา flash sale ยังใช้ได้ที่ 13:00:00 พอดี",
-      "caughtBy": ["TC-PRICE-01", "TC-PRICE-10 Q06"],
-      "expected": { "MB-B6": 459000 },
-      "actual": { "MB-B6": 413100 },
+      "caughtBy": [
+        "TC-PRICE-01",
+        "TC-PRICE-10 Q06"
+      ],
+      "expected": {
+        "MB-B6": 459000
+      },
+      "actual": {
+        "MB-B6": 413100
+      },
       "status": "ตรวจพบแล้ว · ดู BUG-HUNT.md ส่วนที่ 1"
     },
     {
@@ -35,9 +71,19 @@
       "rule": "BR-18",
       "verdict": "เว็บผิด (บั๊กที่ Claude ฝังไว้)",
       "title": "GAMER5 คิด 5% จากราคาก่อนหักส่วนลดสมาชิก",
-      "caughtBy": ["TC-COUPON-04", "TC-PRICE-07", "TC-PRICE-10 Q07", "TC-PRICE-10 Q22", "TC-PRICE-10 Q27"],
-      "expected": { "Q07.total": 933300 },
-      "actual": { "Q07.total": 930700 },
+      "caughtBy": [
+        "TC-COUPON-04",
+        "TC-PRICE-07",
+        "TC-PRICE-10 Q07",
+        "TC-PRICE-10 Q22",
+        "TC-PRICE-10 Q27"
+      ],
+      "expected": {
+        "Q07.total": 933300
+      },
+      "actual": {
+        "Q07.total": 930700
+      },
       "status": "ตรวจพบแล้ว · ดู BUG-HUNT.md ส่วนที่ 1"
     },
     {
@@ -45,13 +91,73 @@
       "rule": "BR-30",
       "verdict": "เว็บผิด (บั๊กที่ Claude ฝังไว้)",
       "title": "ออเดอร์ที่เลย 30 นาทีไปไม่ถึง 1 นาที ยังจ่ายได้",
-      "caughtBy": ["TC-ORDER-06", "TC-ORDER-07"],
-      "expected": { "payAt30m01s": "409 ORDER_EXPIRED" },
-      "actual": { "payAt30m01s": "200 PAID" },
+      "caughtBy": [
+        "TC-ORDER-06",
+        "TC-ORDER-07"
+      ],
+      "expected": {
+        "payAt30m01s": "409 ORDER_EXPIRED"
+      },
+      "actual": {
+        "payAt30m01s": "200 PAID"
+      },
       "status": "ตรวจพบแล้ว · ดู BUG-HUNT.md ส่วนที่ 1"
     }
   ],
-  "bugMode2": [],
+  "bugMode2": [
+    {
+      "id": "X1",
+      "rule": "BR-01",
+      "caught": true,
+      "by": [
+        "TC-ACCT-08",
+        "TC-PRICE-12",
+        "TC-ACCT-04",
+        "TC-PRICE-10 Q03/Q04/Q05/Q06/Q20/Q26/Q27",
+        "TC-PRICE-04",
+        "TC-PRICE-06",
+        "TC-COUPON-02",
+        "P1"
+      ],
+      "note": "ขอบ ฿20,000 พอดีไม่ได้ Silver · TC แดง 16 ข้อ"
+    },
+    {
+      "id": "X2",
+      "rule": "BR-23",
+      "caught": true,
+      "by": [
+        "TC-SHIP-02"
+      ],
+      "note": "ส่งด่วนฟรีเมื่อ G4 ≥ ฿3,000 · จับได้ด้วย TC ข้อเดียว · mutant S1 รูปร่างเดียวกัน"
+    },
+    {
+      "id": "X3",
+      "rule": "BR-36",
+      "caught": true,
+      "by": [
+        "TC-CANCEL-01"
+      ],
+      "note": "ยกเลิกออเดอร์ที่แพ็กแล้วได้ · จับได้ด้วย TC ข้อเดียว"
+    },
+    {
+      "id": "X4",
+      "rule": "BR-31",
+      "caught": true,
+      "by": [
+        "TC-ORDER-04"
+      ],
+      "note": "เพดานคนละ 1 ใบกลายเป็น 2 · จับได้เพราะ TC ตรวจรหัส error ไม่ใช่แค่ status"
+    },
+    {
+      "id": "X5",
+      "rule": "FR-44",
+      "caught": true,
+      "by": [
+        "TC-ORDER-09"
+      ],
+      "note": "ข้ามขั้น PAID → SHIPPED · จับได้ด้วย TC ข้อเดียว"
+    }
+  ],
   "oracleWrong": [],
   "assumptionWrong": []
 }
