@@ -147,9 +147,13 @@ test(`P2 · ตะกร้าที่ผิดกฎต้องถูกป�
     })),
   );
 
+  // reset ครั้งเดียวพอ — ทุกเคสใน P2 คาดว่าถูก **ปฏิเสธ** จึงไม่มีเคสไหนเปลี่ยนสถานะฐานข้อมูลเลย
+  // เดิมเรียก reset ในทุกรอบ พอขึ้นเป็น 1,000 รอบกลายเป็นล้าง+seed ฐานข้อมูล 1,000 ครั้งรวด
+  // จน POST /api/test/reset ตอบ 500 ที่รอบ ~903 (ดู PROPERTY-REPORT.md ข้อ 5) — เป็นข้อจำกัดของ harness ไม่ใช่บั๊กของเว็บ
+  await reset(api);
+
   await fc.assert(
     fc.asyncProperty(arbBad, async (bad) => {
-      await reset(api);
       const r = await api.post('/api/orders', {
         data: { ...bad.body, address: { line: '99/1', province: (bad.body as any).province ?? 'กรุงเทพมหานคร' } },
         headers: asUser('C2'),

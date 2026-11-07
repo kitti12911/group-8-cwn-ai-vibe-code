@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/jackc/pgx/v5"
@@ -29,6 +30,12 @@ type Store struct {
 	Pool    *pgxpool.Pool
 	Clock   *clock.Clock
 	BugMode int
+
+	// Reset ทำ DROP SCHEMA ซึ่งต้องการ ACCESS EXCLUSIVE lock ของทุกตาราง แต่ Maintain วิ่งทุกวินาที
+	// (และวิ่งก่อนทุก API request) ในทรานแซกชันของตัวเอง · ถ้าชนกัน Maintain จะถูกตัดกลาง
+	// ("commit unexpectedly resulted in rollback") และ Reset จะค้างรอ lock จน client timeout
+	// Maintain ถือ RLock จึงยังวิ่งขนานกันเองได้เหมือนเดิม · Reset ถือ Lock จึงได้สิทธิ์เดี่ยว
+	resetMu sync.RWMutex
 }
 
 // AppError becomes `{ "error": Code, "message": Message, ...Extra }` with HTTP Status (API-CONTRACT 1).
@@ -66,6 +73,8 @@ var seedHash []byte
 
 // Reset drops everything and seeds TEST-DATA.md (NFR-07).
 func (s *Store) Reset(ctx context.Context) error {
+	s.resetMu.Lock()
+	defer s.resetMu.Unlock()
 	if seedHash == nil {
 		h, err := bcrypt.GenerateFromPassword([]byte("Bit12345"), bcrypt.MinCost)
 		if err != nil {
@@ -97,6 +106,8 @@ func (s *Store) HasSchema(ctx context.Context) bool {
 // Maintain releases new lots whose time has come and expires holds past 30:00 (FR-41, BR-34).
 // Safe to call any time; runs every second and before every API request.
 func (s *Store) Maintain(ctx context.Context) error {
+	s.resetMu.RLock()
+	defer s.resetMu.RUnlock()
 	now := s.Clock.Now()
 	tx, err := s.Pool.Begin(ctx)
 	if err != nil {
