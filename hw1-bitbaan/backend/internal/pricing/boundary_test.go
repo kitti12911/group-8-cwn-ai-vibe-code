@@ -2,6 +2,9 @@ package pricing_test
 
 // TC ที่เพิ่มหลัง mutation testing รอบที่ 1 (MUTATION-REPORT.md ข้อ 4)
 // ทุกข้อในไฟล์นี้มาจาก mutant ที่รอด ไม่ใช่เขียนเผื่อไว้ลอย ๆ
+//
+// 12 ฟังก์ชันในไฟล์นี้คือ TC-MUT-01…12 ของ TEST-PLAN.md ข้อ 3.13 — รหัส TC กำกับไว้บรรทัดแรก
+// ของ doc comment แต่ละตัว เพื่อให้ไล่ย้อนแผน ↔ test ↔ mutant ได้โดยไม่ต้องเปิดแผนประกบ
 
 import (
 	"testing"
@@ -24,8 +27,8 @@ func quoteOf(price int64, shipping string) Quote {
 	})
 }
 
-// TC-SHIP-01 ค่าขอบ ฿3,000 · ฆ่า mutant S1 (`>=` → `>` และ 3000 → 3001)
-// ราคาสินค้าจริงไปไม่ถึง G4 = 3,000 พอดี จึงต้องทดสอบที่ชั้นนี้ (E67–E68)
+// TC-MUT-01 · ส่งฟรีเริ่มที่ G4 = ฿3,000 **พอดี** ไม่ใช่ "เกิน ฿3,000" · ฆ่า mutant S1 (`>=` → `>` และ 3000 → 3001)
+// ค่าขอบ ฿3,000 คู่กับ TC-SHIP-01 ที่ชั้น api — ราคาสินค้าจริงไปไม่ถึง G4 = 3,000 พอดี จึงต้องทดสอบที่ชั้นนี้ (E67–E69)
 func TestShippingFreeBoundary(t *testing.T) {
 	for _, c := range []struct {
 		g4   int64
@@ -41,7 +44,8 @@ func TestShippingFreeBoundary(t *testing.T) {
 	}
 }
 
-// ฆ่า mutant S4 — `Reship` ไม่เคยถูกเรียกใน unit test เดิมเลย ทั้งที่ออเดอร์จากใบเสนอราคาใช้ทางนี้ (FR-52)
+// TC-MUT-02 · เปลี่ยนวิธีส่งหลังคิดราคาแล้ว ค่าส่ง ยอดชำระ และ **VAT** ถูกคิดใหม่ครบทั้งสามตัว · ฆ่า mutant S4
+// `Reship` ไม่เคยถูกเรียกใน unit test เดิมเลย ทั้งที่ออเดอร์จากใบเสนอราคาใช้ทางนี้ (FR-52 · BR-22 · BR-23 · BR-40)
 func TestReshipRecomputesFeeTotalAndVAT(t *testing.T) {
 	for _, c := range []struct {
 		shipping string
@@ -67,7 +71,8 @@ func TestReshipRecomputesFeeTotalAndVAT(t *testing.T) {
 	}
 }
 
-// ฆ่า mutant S2 — ราคาที่ลูกค้าเห็นบนหน้าสินค้าและหน้าจัดสเปก (FR-05 · FR-09) ไม่มี unit test เดิม
+// TC-MUT-03 · ราคาที่ลูกค้าเห็น **บนหน้าสินค้าและหน้าจัดสเปก** ลด 10% เฉพาะป้ายแดง วันศุกร์ ในช่วง · ฆ่า mutant S2
+// ราคาที่ลูกค้าเห็น (FR-05 · FR-09 · BR-07 · BR-08) ไม่มี unit test เดิม — E18 · E19 · E21
 func TestUnitPriceFlashSale(t *testing.T) {
 	red, plain := synth(4590, true), synth(6290, false)
 	for _, c := range []struct {
@@ -87,7 +92,8 @@ func TestUnitPriceFlashSale(t *testing.T) {
 	}
 }
 
-// ฆ่า mutant S3 — ราคาสมาชิกบนหน้าสินค้า (FR-59) ไม่มี unit test เดิม
+// TC-MUT-04 · ราคาสมาชิกข้างสินค้าครบ 5 ระดับ รวมคนไม่ล็อกอิน และปัดลงเป็นบาทเต็ม · ฆ่า mutant S3
+// ราคาสมาชิกบนหน้าสินค้า (FR-59 · BR-11) ไม่มี unit test เดิม — กฎปัดจาก E33–E35 · อัตราจาก E01–E09
 func TestMemberPriceEveryTier(t *testing.T) {
 	p := synth(4590, false)
 	for _, c := range []struct {
@@ -106,7 +112,8 @@ func TestMemberPriceEveryTier(t *testing.T) {
 	}
 }
 
-// ฆ่า mutant S5 — ขอบการปัด VAT · เคสที่ปัดขึ้นกับปัดลงต่างกัน 1 สตางค์
+// TC-MUT-05 · VAT ปัดครึ่งขึ้น 2 ตำแหน่ง รวมยอดที่ **ตกขอบการปัดพอดี** · ฆ่า mutant S5
+// ขอบการปัด VAT · เคสที่ปัดขึ้นกับปัดลงต่างกัน 1 สตางค์ (BR-40 · FR-53 · E135–E138)
 // คุณจอย บ.101 "ฝ่ายบัญชีเคยตีกลับเพราะต่างกัน 1 สตางค์"
 func TestVATRoundingHalfUp(t *testing.T) {
 	for _, c := range []struct {
@@ -126,7 +133,8 @@ func TestVATRoundingHalfUp(t *testing.T) {
 	}
 }
 
-// ฆ่า mutant ในตัวจัดรูปแบบตัวเลข — ข้อความเหตุผลของคูปองเป็นส่วนหนึ่งของ FR-27
+// TC-MUT-06 · ข้อความเหตุผลที่โค้ดใช้ไม่ได้ ใส่เครื่องหมายคั่นหลักถูกต้อง · ฆ่า mutant กลุ่ม `commas`/`itoa` (ไม่มีรหัส S)
+// ข้อความเหตุผลของคูปองเป็นส่วนหนึ่งของ FR-27 · BR-15 — E43 ("฿2,000" ไม่ใช่ "฿2000")
 func TestCouponRejectMessageHasGroupedNumber(t *testing.T) {
 	q := Compute(Input{
 		Lines:      []Line{{Product: synth(1999, false), Qty: 1}},
@@ -148,7 +156,8 @@ func TestCouponRejectMessageHasGroupedNumber(t *testing.T) {
 
 // ---- รอบที่ 3 · เพิ่มจาก mutant ที่ยังรอดหลังรอบที่ 2 ----
 
-// ขอบ ฿2,000 ของ NEWBIT200 ครบ 3 ค่า (E43–E45) · ฆ่า mutant S6 (`<` → `<=`)
+// TC-MUT-07 · ขอบ ฿2,000 ของ NEWBIT200 ครบ 3 ค่าที่ชั้น unit — ราคาสินค้าจริงไปไม่ถึง (E43–E45 · BR-15)
+// ฆ่า mutant S6 (`<` → `<=`)
 func TestCouponMinAmountBoundary(t *testing.T) {
 	for _, c := range []struct {
 		g3     int64
@@ -164,7 +173,8 @@ func TestCouponMinAmountBoundary(t *testing.T) {
 	}
 }
 
-// เพดานคูปองและการตัดไม่ให้เกินยอดสินค้า · ฆ่า mutant S7 (`>` → `>=` ที่เพดานและที่ clamp)
+// TC-MUT-08 · ชนเพดานพอดียังได้เต็ม · เกินเพดานถูกตัด · ส่วนลดไม่เกินยอดสินค้า (กฎเพดานจาก E53–E55 · BR-18)
+// ฆ่า mutant S7 (`>` → `>=` ที่เพดานและที่ clamp)
 func TestCouponCapAndClamp(t *testing.T) {
 	capped := &Coupon{Code: "CAPTEST", Kind: "percent", Value: 50, MaxDiscount: 1000}
 	// 50% ของ 2,000 = 1,000 พอดี = เพดานพอดี → ต้องได้ 1,000 ไม่ใช่ถูกตัด
@@ -188,7 +198,8 @@ func TestCouponCapAndClamp(t *testing.T) {
 	}
 }
 
-// คูปองเปอร์เซ็นต์แบบไม่จำกัดหมวด (สาขาที่คูปองของร้านตอนนี้ยังไปไม่ถึง) · ฆ่า mutant S8
+// TC-MUT-09 · คูปอง % แบบ **ไม่จำกัดหมวด** คิดจาก G3 ทั้งก้อนและปัดลง — สาขาที่ร้านยังไม่มีโค้ดจริงใช้ (BR-13 · BR-18)
+// ฆ่า mutant S8
 func TestPercentCouponWithoutCategories(t *testing.T) {
 	c := &Coupon{Code: "ALL10", Kind: "percent", Value: 10}
 	q := Compute(Input{Lines: []Line{{Product: synth(1234, false), Qty: 1}}, Tier: TierGeneral, LoggedIn: true,
@@ -201,7 +212,8 @@ func TestPercentCouponWithoutCategories(t *testing.T) {
 	}
 }
 
-// คูปองจำกัดหมวด แต่ตะกร้าไม่มีหมวดนั้นเลย · ฆ่า mutant S9 (`base == 0`)
+// TC-MUT-10 · คูปองจำกัดหมวด + ตะกร้าไม่มีหมวดนั้นเลย = **ปฏิเสธ** ไม่ใช่ลดฟรี (E58 · BR-18 · FR-27)
+// ฆ่า mutant S9 (`base == 0`)
 func TestCategoryCouponWithNoEligibleItem(t *testing.T) {
 	q := Compute(Input{Lines: []Line{{Product: synth(5000, false), Qty: 1}}, Tier: TierGeneral, LoggedIn: true,
 		Coupon: coupons["GAMER5"], CouponCode: "GAMER5", Shipping: "pickup", Now: thu1000})
@@ -210,7 +222,8 @@ func TestCategoryCouponWithNoEligibleItem(t *testing.T) {
 	}
 }
 
-// ราคาป้ายรวมต้องคูณจำนวน และยอดชำระต้องรวมค่าประกอบกับค่าส่งครบทั้งสองก้อน · ฆ่า mutant S10
+// TC-MUT-11 · ราคาป้ายรวม **คูณ** จำนวนจริง และยอดชำระรวมค่าประกอบกับค่าส่งครบทั้งสองก้อน (E64 · E67 · BR-13 · BR-21 · BR-22)
+// ฆ่า mutant S10
 func TestListTotalAndTotalComposition(t *testing.T) {
 	q := Compute(Input{
 		Lines:    []Line{{Product: synth(1000, false), Qty: 2}},
@@ -230,7 +243,8 @@ func TestListTotalAndTotalComposition(t *testing.T) {
 	}
 }
 
-// ช่วง flash sale ถัดไป (ใช้โดย GET /api/time เพื่อนับถอยหลังหน้าแรก) · ฆ่า mutant S11
+// TC-MUT-12 · `FlashWindow` หา flash sale **รอบถัดไป** ถูกวันถูกเวลา — หน้าแรกใช้นับถอยหลัง (E18 · E19 · BR-06 · BR-07 · FR-05)
+// ใช้โดย GET /api/time · ฆ่า mutant S11
 func TestFlashWindowNextStart(t *testing.T) {
 	endsAt, next := FlashWindow(thu1000) // พฤหัส 12 พ.ย.
 	if next.Weekday() != time.Friday {

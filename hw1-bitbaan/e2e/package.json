@@ -19,6 +19,7 @@
     "@types/node": "^22.10.2",
     "fast-check": "^3.23.2",
     "gifenc": "^1.0.3",
+    "pg": "^8.23.1",
     "pngjs": "^7.0.0",
     "typescript": "^5.7.2"
   }

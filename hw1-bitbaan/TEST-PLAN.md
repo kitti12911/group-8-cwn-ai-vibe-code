@@ -4,6 +4,8 @@
 TC ข้อ 3.13 มาจาก `MUTATION-REPORT.md` (mutant ที่รอด ไม่ใช่ข้อกำหนดของร้าน)
 อ่านคู่กับ `QUESTIONS-TO-OWNER.md` · ผลการทบทวนอยู่ใน `PLAN-REVIEW.md`
 
+> 📍 **ถ้าจะอ่านหน้าเดียว ให้อ่านข้อ 4.6** — ข้อ 4.1–4.5 ตอบว่า "ข้อกำหนดมี TC ครบไหม" (✅ ทุกตาราง) · **ข้อ 4.6 ตอบว่า TC ข้อนั้นมี test จริงหรือยัง** ซึ่งคนละคำถามกัน และเป็นคำถามที่แผนฉบับนี้เคยตอบผิดมาตลอด · TC ที่ยังไม่มี test อยู่ที่ข้อ 6.1
+
 > ⚠️ **ร้านยังไม่ตอบคำถาม** TC ที่ผลที่คาดขึ้นกับสมมติฐาน A-xx ติดป้าย `[O-ยังไม่ยืนยัน]` ทุกข้อ ถ้าคำตอบของร้านต่างจากที่สมมติ ต้องแก้ TC เหล่านี้ก่อนแล้วบันทึกจำนวนที่แก้ใน `PLAN-REVIEW.md`
 
 ## วิธีอ่าน
@@ -19,6 +21,8 @@ TC ข้อ 3.13 มาจาก `MUTATION-REPORT.md` (mutant ที่รอ�
 | `[O-ยังไม่ยืนยัน A-xx]` | ผลที่คาดมาจากสมมติฐานของทีม ยังไม่ใช่คำตอบของร้าน |
 | `S1`–`S11` (ข้อ 3.13) | รหัส mutant ที่รอดใน `MUTATION-REPORT.md` ข้อ 3 และข้อ 4 — TC แถวนั้นเกิดขึ้นเพราะ mutant ตัวนี้ |
 | **P** | P1 = พังแล้วลูกค้าเสียเงินหรือร้านเสียของ · P2 = ผิดแล้วลูกค้าเห็น · P3 = ความสะดวก |
+| รหัสลงท้าย `b` | ขาที่สองของ TC แม่ที่ผลออกคนละทาง (เช่น แกะกล่อง / ไม่แกะ) — เป็น TC เต็มตัว ไม่ใช่ตัวแปรของแถวข้อมูล |
+| **สถานะ** (ข้อ 4.6) | `auto · วัดแล้ว` = มี test พาดรหัสนี้ และอยู่ในรอบที่บันทึกผลไว้ · `auto · ยังไม่ได้วัด` = มี test แล้วแต่เพิ่งเพิ่มหลังรอบวัด **ยังไม่รู้ว่าเขียว** · `auto · รหัสอื่น` = ครอบจริงใต้รหัสอื่น · `manual` = คนรันเองแล้วอ่านผล |
 
 **ห้ามลอกตัวเลขจากหน้าจอ** — ผลที่คาดทุกข้อมาจาก `TEST-DATA.md` ซึ่งคิดด้วยมือก่อนเว็บถูกสร้าง และผ่านการคิดซ้ำโดย subagent อิสระ (`TEST-DATA.md` ข้อ 9)
 
@@ -36,15 +40,56 @@ TC ข้อ 3.13 มาจาก `MUTATION-REPORT.md` (mutant ที่รอ�
 
 ### 2.1 เลือกชั้นทดสอบอย่างไร
 
-| ชั้น | ใช้เมื่อ | TC ที่ใช้ชั้นนี้ |
+> 🔴 **สองตัวเลขข้างล่างนี้คนละเรื่องกัน และข้อ 2.1 เคยเขียนผิดเพราะมีแต่ตัวแรก**
+> **"TC ตามแผน"** = สถานการณ์ที่แผนตั้งใจพิสูจน์ที่ชั้นนั้น — เป็น *ความตั้งใจ*
+> **"test ที่รันได้จริง"** = จำนวน test ที่มีอยู่ในโฟลเดอร์และรันผ่านวันนี้ — เป็น *ข้อเท็จจริง*
+> ตัวเลขเดิม "ชั้น `ui` = 52" ยืนอยู่ข้าง ๆ UI test ที่ตอนนั้นมีจริงแค่ **10 ข้อในไฟล์เดียว** โดยไม่มีใครทักท้วง ทั้งที่รายงานฉบับนี้สอนเองว่า "ตารางความครบเขียว ≠ แผนแข็งแรง" · หลังตรวจพบ มีการเพิ่ม UI test อีก **3 ไฟล์** และ api test อีก 1 ไฟล์ · สถานะรายข้อครบ 126 ข้ออยู่ที่ **ข้อ 4.6** · ช่องว่างที่ปิดไปแล้วและที่ยังเหลืออยู่ที่ **ข้อ 6.1**
+
+**ก. TC ตามแผน — ชั้นที่ตั้งใจพิสูจน์**
+
+| ชั้น | ใช้เมื่อ | TC ตามแผน |
 | --- | --- | ---: |
 | `unit` | ค่าขอบที่หน้าเว็บไปไม่ถึง (G3 = ฿2,000 พอดี · G4 = ฿3,000 พอดี · งบ ฿35,000 พอดี · เพดาน GAMER5) และกฎปัดเศษ — 29 แถวใน `TEST-DATA.md` ข้อ 6 ที่เขียนว่า `unit` · **บวกทั้งข้อ 3.13 ที่ mutation testing เปิดโปง** | 23 |
-| `api` | กฎเงินทุกแบบ สถานะออเดอร์ สิทธิ์ และทุกอย่างที่ต้องยิงพร้อมกัน — เร็วและนิ่งกว่า UI | 68 |
+| `api` | กฎเงินทุกแบบ สถานะออเดอร์ สิทธิ์ และทุกอย่างที่ต้องยิงพร้อมกัน — เร็วและนิ่งกว่า UI | 74 |
 | `ui` | สิ่งที่ลูกค้าต้อง **เห็น** หรือ **กด**: ป้าย ราคาขีดฆ่า ปุ่มที่กดไม่ได้ ข้อความเหตุผล นับถอยหลัง | 52 |
 
-> **120 TC** · ผลรวมช่องขวา 143 เกิน 120 เพราะ TC ที่เขียนว่า `api+ui` หรือ `unit+ui` ถูกนับทั้งสองชั้น (30 ข้อ) และ `TC-PROP` 7 ข้อไม่ผูกกับชั้นใดชั้นเดียว — ชั้น `api` พิสูจน์ตัวเลข ชั้น `ui` พิสูจน์ว่าลูกค้าเห็นและกดได้จริง
+> **126 TC** (120 เดิม + 6 แถว `*b` ที่ข้อ 3 รับเข้ามาเป็น TC จริง) · 119 ข้อมีชั้นกำกับ · ผลรวมช่องขวา 23 + 74 + 52 = **149** เกิน 119 เพราะ TC ที่เขียนว่า `api+ui` หรือ `unit+ui` ถูกนับทั้งสองชั้น (**30 ข้อ** → 119 + 30 = 149 ✓) · `TC-PROP` 7 ข้อไม่ผูกกับชั้นใดชั้นเดียวจึงไม่อยู่ในตารางนี้
 
-กฎ: **ถ้าพิสูจน์ที่ `api` ได้ ห้ามไปทำที่ `ui`** — UI test ที่ตรวจตัวเลขซ้ำกับ API ทำให้ชุดทดสอบช้าและเปราะโดยไม่เพิ่มพลังการจับบั๊ก
+**ข. test ที่รันได้จริงวันนี้ — นับจากไฟล์ ไม่ใช่จากแผน**
+
+**ข-1. ชุดที่ *วัดผลแล้ว*** — ตัวเลข passed ทุกตัวข้างล่างมาจากการรันจริง
+
+| ชั้น | ไฟล์ | test | run | คำสั่ง · ผล |
+| --- | --- | ---: | ---: | --- |
+| `unit` | `backend/internal/pricing/boundary_test.go` (12 · TC-MUT-01…12) · `pricing_test.go` (3) · `compat/compat_test.go` (3) | **18 ฟังก์ชัน** | 18 | `go test ./internal/...` → pricing ok · compat ok |
+| `api` | `e2e/tests/*.spec.ts` **8 ไฟล์** (ไม่รวม `web.ui.spec.ts`) | 71 `test()` | **97** | ส่วน `api` ของ `npm test` · 71 → 97 เพราะ `TC-PRICE-10` แตกเป็น 27 แถว quote |
+| `ui` | `e2e/tests/web.ui.spec.ts` ไฟล์เดียว | **10 `test()`** | **30** | × 3 เบราว์เซอร์ (chromium · firefox · webkit) ตาม NFR-15 |
+| | **รวม `npm test`** | | **127 passed** | 97 + 30 = 127 · รัน 3 รอบติดกัน 1.3m / 1.2m / 1.2m ผลเหมือนกันทุกรอบ |
+| `api` | `e2e/race/api-race.spec.ts` + `naive-sequential.spec.ts` | | **7 passed** | `npm run test:race` · 44.6s (50 รอบ × N = 2, 5, 10 + ตัวเทียบเรียงลำดับ) |
+| `ui` | `e2e/race/ui-race.spec.ts` | 2 | **2 passed** | `npm run test:race:ui` · 6.7s · chromium อย่างเดียว เพราะต้องอัดวิดีโอเป็นหลักฐาน |
+| `api` | `e2e/property/price.property.spec.ts` + `oracle/oracle.spec.ts` | | **33 passed** | `npm run test:property` · 1.8m (27 แถว oracle + 6 property × 1,000 = 6,000 เคส · seed 2026) · `npm run test:oracle` = 27 passed ซึ่งเป็นชุดย่อยของ 33 |
+
+**ข-2. ไฟล์ที่เพิ่มเข้ามา *หลัง* รอบวัดผล — ยังไม่มีตัวเลข passed**
+
+| ไฟล์ | ชั้น | `test()` | TC ที่ปิด |
+| --- | --- | ---: | --- |
+| `e2e/tests/account.spec.ts` | api | 7 | TC-ACCT-01 · 02 · 03 · TC-CAT-04 · TC-NFR-03 · 09 · 10 |
+| `e2e/tests/builder.ui.spec.ts` | ui | 5 | TC-BUILD-01 · 02 · 15 · 17 · TC-CAT-09 |
+| `e2e/tests/order.ui.spec.ts` | ui | 5 | TC-CAT-02 · TC-ORDER-03 · 10 · TC-SHIP-04 · 05 |
+| `e2e/tests/platform.ui.spec.ts` | ui | 3 | TC-NFR-02 · 11 · 13 (+ อ้าง TC-ORDER-05 ซ้ำ) |
+| `e2e/tests/business.spec.ts` (แก้) | api | +1 | TC-BUILD-18 |
+
+> 🔴 **`npm test = 127 passed` ไม่อธิบายชุดปัจจุบันอีกต่อไป** — ตอนวัด ชั้น `ui` มีไฟล์เดียว ตอนนี้มี **4 ไฟล์ · 23 `test()`** และชั้น `api` ในโฟลเดอร์ `tests/` เพิ่มจาก 8 เป็น **9 ไฟล์ · 79 `test()`** · **แผนนี้จงใจไม่เดาตัวเลข passed ใหม่** — ต้องรัน `npm test` ซ้ำแล้วแทนที่ทั้งบล็อก ข-1 ด้วยผลจริง ไม่ใช่คำนวณจากจำนวนบรรทัด
+
+**ค. ช่องว่างระหว่าง ก. กับ ข. ที่ต้องพูดตรง ๆ**
+
+| | TC ตามแผน | test จริง (ตอนตรวจพบ → ตอนนี้) | อ่านอย่างไร |
+| --- | ---: | --- | --- |
+| `ui` | **52** | **10 `test()`** ไฟล์เดียว → **23 `test()` 4 ไฟล์** (+ 2 ของ `ui-race`) | TC ชั้น `ui` 52 ข้อ **ไม่เคย** แปลว่าต้องมี UI test 52 ข้อ — TC จำนวนมากพิสูจน์จริงที่ `api` ซึ่งนิ่งกว่า (ตามกฎข้างล่าง) · แต่ **ช่องว่างที่ไม่มี test เลยเป็นของจริง** — 13 ใน 23 ข้อที่ผู้ตรวจจับได้อยู่ชั้น `ui` และเพิ่งถูกปิดด้วยไฟล์ ui ใหม่ 3 ไฟล์ |
+| `api` | **74** | 97 run + 7 + 33 → บวก `account.spec.ts` 7 และ `business.spec.ts` +1 | run เยอะกว่า TC เพราะ TC ข้อเดียววนหลายแถวข้อมูล (`TC-PRICE-10` = 27 แถว · `TC-PROP-07` = 27 แถว · `TC-RACE-01` = 3 ค่า N) |
+| `unit` | **23** | 18 ฟังก์ชัน (เท่าเดิม) | 12 ใน 18 คือ `TC-MUT-01…12` · ที่เปลี่ยนคือ **รหัส TC ถูกเติมลงในคอมเมนต์แล้ว** ทำให้เครื่องตามรอยได้ · ส่วน `TestUnitBoundaries` ที่เคยครอบ TC-ACCT-01/02 แบบไม่มีรหัส ถูกแทนด้วย `account.spec.ts` ที่พาดรหัสตรง (ข้อ 6.1 ก.) |
+
+กฎ: **ถ้าพิสูจน์ที่ `api` ได้ ห้ามไปทำที่ `ui`** — UI test ที่ตรวจตัวเลขซ้ำกับ API ทำให้ชุดทดสอบช้าและเปราะโดยไม่เพิ่มพลังการจับบั๊ก · **แต่กฎนี้ไม่ใช่ใบอนุญาตให้ไม่เขียน** — TC ที่ย้ายชั้นต้องเขียนไว้ในข้อ 4.6 ว่าไปอยู่ที่รหัสไหน ส่วนที่ไม่ได้เขียนเลยต้องอยู่ในข้อ 6.1
 
 ### 2.2 ข้อมูลตั้งต้นและการแยกกันของ test
 
@@ -91,6 +136,8 @@ TC ที่ต้องให้เวลาเดินเอง (นับถ
 
 ## 3. รายการ TC
 
+> **รหัสลงท้ายด้วย `b` คือ TC ที่ test เกิดก่อนแผน** — ตอนเขียน suite จริงพบว่า TC แม่บางข้อมีสองขาที่ผลต่างกันคนละทาง (แกะกล่อง/ไม่แกะ · ยกเลิกแล้ว/ไม่เคยสั่ง · ในขอบ/นอกขอบ) จึงแตกเป็น test แยก แต่ **ไม่มีใครย้อนมาเติมในแผน** 6 ข้อนั้น (`TC-BUILD-13b` · `TC-COUPON-02b` · `TC-SHIP-01b` · `TC-ORDER-02b` · `TC-CANCEL-04b` · `TC-BIZ-02b`) เคยเป็น test กำพร้าแบบเดียวกับ `TC-MUT` ที่เคยเป็น · ตอนนี้ถูกรับเข้ามาเป็นแถวจริงในข้อ 3.2 · 3.4 · 3.5 · 3.6 · 3.7 · 3.8 แล้ว (`TC-RACE-02b` อยู่ในข้อ 3.11 มาตั้งแต่ขั้น 2)
+
 ### 3.1 สินค้าและสต็อก · `TC-CAT`
 
 | รหัส | สิ่งที่พิสูจน์ | ชั้น | ข้อมูล | ผลที่คาด | ที่มา | P |
@@ -122,6 +169,7 @@ TC ที่ต้องให้เวลาเดินเอง (นับถ
 | TC-BUILD-11 | งบที่เหลือคิดจากราคาสินค้าตอนนี้ ไม่รวมค่าประกอบ ไม่หักส่วนลด | unit+ui | E119–E122 · B1 · B1b | งบ 35,000: สเปก 34,999 → "เหลือ ฿1" · 35,000 → "เหลือ ฿0" · 35,001 → "เกิน ฿1" · `BEAM35K` พฤหัส เหลือ ฿5,570 · ศุกร์ 12:30 เหลือ ฿7,397 · เกินงบยังใส่ตะกร้าได้ | BR-35 · FR-15 `[O-ยังไม่ยืนยัน A-22 · A-35]` | P2 |
 | TC-BUILD-12 | ใส่ตะกร้าทั้งชุดได้ราคาเท่าหน้าจัดสเปก | ui | Q14 ครบ 7 ชิ้น | ตะกร้ามี 7 บรรทัด · `quote-list-total` = 29,430 | FR-16 [D] | P1 |
 | TC-BUILD-13 | ค่าประกอบ ฿500 และฟรีเมื่อครบ 7 หมวด | api+ui | E64–E66 · Q14 · Q15 | 6 หมวด + ประกอบ → `assemblyFee` 500 (Q15 ยอด 17,740) · 7 หมวด + ประกอบ → 0 (Q14 ยอด 28,730) · ไม่เลือกประกอบ → 0 · ค่าประกอบไม่ถูกลดด้วยส่วนลดใด | BR-21 · FR-17 `[O-ยังไม่ยืนยัน A-04]` | P1 |
+| TC-BUILD-13b | "ครบชุด 7 หมวด" ที่ประกอบฟรี ต้องเป็น **หมวดละ 1 ชิ้น** — ครบ 7 หมวดแต่ CPU 2 ตัว ไม่ใช่ครบชุด | api | ตะกร้า `CPU-N5` ×2 + อีก 6 หมวดอย่างละ 1 | `assemblyFee` = 500 ไม่ใช่ 0 | BR-21 · FR-17 `[O-ยังไม่ยืนยัน A-04]` | P1 |
 | TC-BUILD-14 | บันทึกสเปกแล้วได้ลิงก์ที่คนไม่ล็อกอินเปิดได้ | api+ui | — | `POST /api/builds` คืน `code` 8 ตัว · เปิด `/b/<code>` โดยไม่ล็อกอินได้ 200 | FR-18 [D] | P2 |
 | TC-BUILD-15 | หน้าลิงก์สเปกเป็นแบบอ่านอย่างเดียว | ui | `BEAM35K` | ไม่มี `builder-select-*` ในหน้านี้ · มีปุ่มคัดลอกเป็นสเปกใหม่ | FR-19 `[O-ยังไม่ยืนยัน A-21]` | P3 |
 | TC-BUILD-16 | ลิงก์สเปกแสดงราคาปัจจุบันและส่วนต่างจากตอนบันทึก | ui | B1b ศุกร์ 12:30 | `build-price-diff-mb` = −459 · `-gpu` = −1,149 · `-ssd` = −219 · `build-remaining` = ฿7,397 | FR-20 `[O-ยังไม่ยืนยัน A-21]` | P2 |
@@ -152,6 +200,7 @@ TC ที่ต้องให้เวลาเดินเอง (นับถ
 | TC-COUPON-01 | NEWBIT200 ใช้ได้เมื่อ G3 ถึง ฿2,000 | unit+api | E43–E47 · Q19 · Q25 | unit G3 1,999 ✗ / 2,000 ✓ / 2,001 ✓ · เว็บ `RAM-16` ✗ (Q19 = 1,950) · `SSD-1T` ✓ (Q25 = 2,050) · `SSD-1T` ช่วง flash (1,971) ✗ | BR-15 `[O-ยังไม่ยืนยัน A-12]` | P1 |
 | TC-COUPON-02 | NEWBIT200 เฉพาะออเดอร์แรกของบัญชี และต้องล็อกอิน | api | E48–E51 · Q02 · Q20 | C2 ✓ (Q02 = 6,090) · C3 ที่มี `BB-260910-0001` ✗ (Q20 = 6,102) · มีแต่ออเดอร์หมดเวลา/ยกเลิก ✓ · ไม่ล็อกอิน ✗ "ต้องเข้าสู่ระบบ" | BR-16 `[O-ยังไม่ยืนยัน A-12]` | P1 |
 | TC-COUPON-03 | NEWBIT200 ใช้ได้ครั้งเดียวแม้กดพร้อมกัน 2 แท็บ | api | E52 | ยิง `POST /api/orders` พร้อมกัน 2 คำขอด้วยโค้ดเดียวกัน → สำเร็จ 1 · อีกอันได้ `409 COUPON_USED` | BR-17 `[O-ยังไม่ยืนยัน A-39]` | P1 |
+| TC-COUPON-02b | ออเดอร์ที่ **ยกเลิกแล้ว** ไม่นับเป็นออเดอร์แรก — แยกจาก TC-COUPON-02 เพราะเป็นเส้นทาง "จ่ายแล้วยกเลิก" ไม่ใช่ "ไม่เคยสั่ง" | api | `Q3b` · C2 สั่ง → จ่าย → ยกเลิก | เรียก `/api/quote` ด้วย NEWBIT200 อีกครั้งได้ `coupon.status = APPLIED` | BR-16 `[O-ยังไม่ยืนยัน A-12]` | P1 |
 | TC-COUPON-04 | GAMER5 คิดจากราคาการ์ดจอ/จอหลังสมาชิก และชนเพดาน ฿1,000 | unit+api | E53–E58 · Q07–Q10 · Q22 · Q24 · Q27 | unit ฐาน 19,999 → 999 / 20,000 → 1,000 / 20,020 → 1,000 · Q07 = 9,333 · Q08 = 24,916 · Q24 ไม่ล็อกอิน = 9,824 | BR-18 `[O-ยังไม่ยืนยัน A-13 · A-41]` | P1 |
 | TC-COUPON-05 | 1 โค้ดต่อออเดอร์ และ Business ใช้คูปองได้ | api+ui | E59 · E60 · Q09 | ใส่โค้ดที่ 2 → ถามแล้วแทนที่โค้ดแรก ไม่ใช้พร้อมกัน · C5 Business + GAMER5 ✓ (Q09 = 35,754) | BR-19 · FR-26 `[O-ยังไม่ยืนยัน A-08]` | P2 |
 | TC-COUPON-06 | OLD2025 หมดอายุแล้วใช้ไม่ได้ | unit+api | E61–E63 | 31 ธ.ค. 2025 23:59:59 ✓ · 1 ม.ค. 2026 00:00:00 ✗ · 13 พ.ย. 2026 ✗ "โค้ดหมดอายุแล้ว" | BR-20 [D] | P2 |
@@ -162,6 +211,7 @@ TC ที่ต้องให้เวลาเดินเอง (นับถ
 | รหัส | สิ่งที่พิสูจน์ | ชั้น | ข้อมูล | ผลที่คาด | ที่มา | P |
 | --- | --- | --- | --- | --- | --- | --- |
 | TC-SHIP-01 | ส่งปกติ ฿60 · ฟรีเมื่อ G4 ถึง ฿3,000 | unit+api | E67–E70 · Q01 · Q18 | unit G4 2,999 → 60 / 3,000 → 0 / 3,001 → 0 · เว็บ Q01 = 2,250 (มีค่าส่ง) · Q18 = 3,001 (ส่งฟรี) | BR-22 `[O-ยังไม่ยืนยัน A-15]` | P1 |
+| TC-SHIP-01b | **ฐาน** ของส่งฟรีคือ G4 หลังส่วนลด ไม่ใช่ราคาป้าย และไม่นับค่าประกอบ | api | `Q6a` · `Q6b` · `Q25` | `SSD-1T` ป้าย 2,190 + NEWBIT200 → G4 = 1,990 → **ยังมีค่าส่ง ฿60** · ยอดรวม 2,050 | BR-22 `[O-ยังไม่ยืนยัน A-15]` | P1 |
 | TC-SHIP-02 | ส่งด่วน ฿150 ไม่มีส่งฟรี และเฉพาะกรุงเทพมหานคร | api+ui | E71–E73 · Q12 · Q26 | ยอดเท่าไรก็ ฿150 (Q26 = 9,774) · จังหวัดอื่นได้ `400 EXPRESS_NOT_AVAILABLE` | BR-23 · FR-32 `[O-ยังไม่ยืนยัน A-29]` | P1 |
 | TC-SHIP-03 | รับที่ร้านฟรี และแสดงเวลาเปิด | api+ui | E74 · E75 · Q17 | ค่าส่ง 0 ทุกยอด (Q17 = 19,280) · หน้ายืนยันแสดง "10:00–21:00" | BR-24 · FR-33 [D] | P2 |
 | TC-SHIP-04 | เลือกวิธีส่ง 3 แบบและเห็นค่าส่งก่อนกดสั่ง | ui | — | กด `shipping-standard` / `-express` / `-pickup` แล้ว `quote-shipping` และ `quote-total` เปลี่ยนทันที | FR-31 [D] | P2 |
@@ -173,6 +223,7 @@ TC ที่ต้องให้เวลาเดินเอง (นับถ
 | --- | --- | --- | --- | --- | --- | --- |
 | TC-ORDER-01 | สั่งได้โดยไม่ล็อกอิน และบังคับข้อมูลที่จำเป็น | api+ui | — | ครบชื่อ/เบอร์/อีเมล/ที่อยู่ → `201` · ขาดอย่างใดอย่างหนึ่ง → `400 GUEST_INFO_REQUIRED` หรือ `ADDRESS_REQUIRED` | FR-35 `[O-ยังไม่ยืนยัน A-36]` | P2 |
 | TC-ORDER-02 | กดสั่งแล้วกันของทุกชิ้นในขั้นเดียว · ชิ้นใดไม่พอ **ไม่สร้างออเดอร์เลย** | api | ตะกร้า 3 ชิ้น ชิ้นที่ 3 เหลือ 0 | ได้ `409 OUT_OF_STOCK` · `GET /api/orders` ไม่มีออเดอร์ใหม่ · `available` ของ 2 ชิ้นแรก **ไม่ถูกหัก** | FR-36 [D] | P1 |
+| TC-ORDER-02b | ชิ้นที่ไม่พอ **ต้องถูกระบุชื่อ** ในคำตอบ และของชิ้นอื่นในตะกร้าเดียวกันห้ามถูกกัน | api | `CPU-N5` 1 (พอ) + `MB-X7` 4 (ไม่พอ) | `409 OUT_OF_STOCK` และ `body.sku = "MB-X7"` · `available` ของ `CPU-N5` เท่าเดิม | FR-36 · FR-37 [D] | P1 |
 | TC-ORDER-03 | ของหมดระหว่างสั่ง บอกชื่อชิ้นและให้ทางเลือก | ui | เหมือนบน | `error-message` มีชื่อชิ้น · มีปุ่ม `out-of-stock-remove` และ `out-of-stock-rebuild` · ไม่ตัดชิ้นนั้นออกเงียบ ๆ | FR-37 [D] | P1 |
 | TC-ORDER-04 | GPU-V57 จำกัดบัญชีละ 1 ใบต่อล็อต | api+ui | E104–E108 | ใส่ 2 ใบในออเดอร์เดียว → `409 LIMIT_REACHED` · มีออเดอร์ค้าง 1 แล้วสั่งอีก → `409` · ออเดอร์เดิมหมดเวลา/ยกเลิกแล้วสั่งใหม่ → ✓ · ไม่ล็อกอินนับตามเบอร์โทร | BR-31 · FR-38 `[O-ยังไม่ยืนยัน A-18]` | P1 |
 | TC-ORDER-05 | หน้าจ่ายเงินแสดงเวลาที่กันถึงและนับถอยหลังเป็น นาที:วินาที | ui | `clock` แบบ `running` | `hold-until` ตรง `placedAt + 30 นาที` · `countdown` ลดลงจริงและไม่ติดลบ | FR-39 · NFR-16 [D] | P2 |
@@ -191,6 +242,7 @@ TC ที่ต้องให้เวลาเดินเอง (นับถ
 | TC-CANCEL-02 | ยกเลิกแล้วคืนจำนวนที่ขายได้และคืนสิทธิ์คนละ 1 ใบ | api | สั่ง GPU-V57 แล้วยกเลิก | `available` กลับเป็น 1 · สั่ง GPU-V57 ใหม่ได้ | FR-47 [R] | P1 |
 | TC-CANCEL-03 | ขอคืนของได้ถึงสิ้นวันที่ 7 นับจากวันได้รับ | api | E126–E128 | ได้รับ 14 พ.ย. → 21 พ.ย. 23:59:58 ✓ · 23:59:59 ✓ · 22 พ.ย. 00:00:00 → `409 RETURN_WINDOW_CLOSED` | BR-37 · FR-48 `[O-ยังไม่ยืนยัน A-24]` | P1 |
 | TC-CANCEL-04 | ค่าธรรมเนียมแกะกล่อง 10% ปัดลง และไม่คืนค่าส่ง | api+ui | E129–E131 · R1 · R1b | `BB-261106-0041`: แกะแล้ว → คืน ฿8,400 (หัก ฿933) · ไม่แกะ → คืน ฿9,333 · ทั้งสองแบบไม่คืนค่าส่ง ฿150 · `refund-amount` แสดงก่อนยืนยัน | BR-38 `[O-ยังไม่ยืนยัน A-24]` | P1 |
+| TC-CANCEL-04b | **ยังไม่แกะกล่อง** = ค่าธรรมเนียม 0 — ขาตรงข้ามของ TC-CANCEL-04 ที่แยกออกมาเพราะคนละผลลัพธ์ | api | `R1b` · `BB-261106-0041` ของ C4 | `fee` = 0 · `refund` = ฿9,333 · ยังไม่คืนค่าส่ง ฿150 | BR-38 `[O-ยังไม่ยืนยัน A-24]` | P1 |
 | TC-CANCEL-05 | ของเสียจากโรงงานแยกจากการคืนของ | ui | — | หน้าคืนของมีลิงก์เคลมประกันแยกจากปุ่ม `return-submit` | FR-49 [D] | P3 |
 | TC-CANCEL-06 | สถานะเงินคืนแสดง "รอโอนคืน" / "โอนคืนแล้ว" | api+ui | — | หลังยกเลิก `refunds[0].status = PENDING` · หลัง `admin/refunds/:id/done` เป็น `DONE` พร้อมวันที่ · **ไม่แสดงจำนวนวันที่จะได้เงิน** | FR-50 `[O-ยังไม่ยืนยัน A-25]` | P2 |
 
@@ -200,6 +252,7 @@ TC ที่ต้องให้เวลาเดินเอง (นับถ
 | --- | --- | --- | --- | --- | --- | --- |
 | TC-BIZ-01 | เฉพาะบัญชี Business ออกใบเสนอราคาได้ | api+ui | C5 · C3 | C5 → `201` มี `quoteNo`, `issuedAt`, `validUntil` และราคาที่ล็อก · C3 → `403 FORBIDDEN` | FR-51 `[O-ยังไม่ยืนยัน A-26]` | P2 |
 | TC-BIZ-02 | ใบเสนอราคายืนราคาถึงสิ้นวันที่ 7 และไม่กันของ | api | E132–E134 · `Q-261106-0007` | 13 พ.ย. 23:59:59 สั่งได้ด้วยราคาในใบ ฿35,754 · 14 พ.ย. 00:00:00 → `409 QUOTE_EXPIRED` · ระหว่างนั้น `available` ของ `MON-27` ไม่ถูกกัน | BR-39 · FR-52 `[O-ยังไม่ยืนยัน A-26]` | P1 |
+| TC-BIZ-02b | ขอบหมดอายุของใบเสนอราคาที่ **วินาที** และสั่งด้วยใบที่หมดอายุไม่ได้ | api | `Q-261106-0007` ของ C5 | 13 พ.ย. 23:59:59 → `expired = false` · 14 พ.ย. 00:00:00 → `expired = true` · `POST /api/quotes/:no/order` ได้ `409 QUOTE_EXPIRED` | BR-39 · FR-52 `[O-ยังไม่ยืนยัน A-26]` | P1 |
 | TC-BIZ-03 | VAT คิดครั้งเดียวทั้งบิล ปัดครึ่งขึ้น 2 ตำแหน่ง | api | E135–E141 · Q03 · Q10 · Q11 | ฿9,624 → ฿629.61 · ฿72,508 → ฿4,743.51 · **฿53,682 → ฿3,511.91 ไม่ใช่ ฿3,511.92** · ทุกแถว `preVat + vat = total × 100` พอดี | BR-40 · FR-53 `[O-ยังไม่ยืนยัน A-27]` | P1 |
 | TC-BIZ-04 | ใบกำกับภาษีออกได้เฉพาะออเดอร์ที่จ่ายแล้ว และมีข้อมูลบริษัทครบ | api+ui | C5 | ยังไม่จ่าย → `409 NOT_PAID` · จ่ายแล้ว → มีชื่อบริษัท เลขผู้เสียภาษี 13 หลัก และยอดตรงกับที่จ่ายทุกสตางค์ | FR-53 `[O-ยังไม่ยืนยัน A-27]` | P1 |
 
@@ -309,18 +362,20 @@ TC-MUT-06 ไม่มีรหัส `S` เพราะ `MUTATION-REPORT.md` �
 
 | BR | TC | BR | TC | BR | TC | BR | TC |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| BR-01 | ACCT-01 | BR-11 | PRICE-06 · **MUT-04** | BR-21 | BUILD-13 · **MUT-11** | BR-31 | ORDER-04 · RACE-03 · RACE-02b |
-| BR-02 | ACCT-02 | BR-12 | PRICE-07 | BR-22 | SHIP-01 · **MUT-01 · MUT-02 · MUT-11** | BR-32 | ORDER-11 · CAT-04 · RACE-01 · RACE-02 · RACE-05 |
+| BR-01 | ACCT-01 | BR-11 | PRICE-06 · **MUT-04** | BR-21 | BUILD-13 · BUILD-13b ⚠️ · **MUT-11** | BR-31 | ORDER-04 · RACE-03 · RACE-02b |
+| BR-02 | ACCT-02 | BR-12 | PRICE-07 | BR-22 | SHIP-01 · SHIP-01b · **MUT-01 · MUT-02 · MUT-11** | BR-32 | ORDER-11 · CAT-04 · RACE-01 · RACE-02 · RACE-05 |
 | BR-03 | ACCT-03 | BR-13 | PRICE-08 · **MUT-09 · MUT-11** | BR-23 | SHIP-02 · **MUT-02** | BR-33 | CAT-08 |
 | BR-04 | ACCT-04 | BR-14 | PRICE-09 | BR-24 | SHIP-03 | BR-34 | CAT-06 |
 | BR-05 | ACCT-05 | BR-15 | COUPON-01 · **MUT-06 · MUT-07** | BR-25 | BUILD-03 | BR-35 | BUILD-11 |
-| BR-06 | PRICE-01 · **MUT-12** | BR-16 | COUPON-02 | BR-26 | BUILD-04 | BR-36 | CANCEL-01 |
-| BR-07 | PRICE-02 · **MUT-03 · MUT-12** | BR-17 | COUPON-03 · RACE-04 | BR-27 | BUILD-05 | BR-37 | CANCEL-03 |
-| BR-08 | PRICE-03 · **MUT-03** | BR-18 | COUPON-04 · **MUT-08 · MUT-09 · MUT-10** | BR-28 | BUILD-06 | BR-38 | CANCEL-04 |
-| BR-09 | PRICE-04 | BR-19 | COUPON-05 | BR-29 | BUILD-07 | BR-39 | BIZ-02 |
+| BR-06 | PRICE-01 · **MUT-12** | BR-16 | COUPON-02 · COUPON-02b | BR-26 | BUILD-04 | BR-36 | CANCEL-01 |
+| BR-07 | PRICE-02 · **MUT-03 · MUT-12** | BR-17 | COUPON-03 ≡ RACE-04 | BR-27 | BUILD-05 | BR-37 | CANCEL-03 |
+| BR-08 | PRICE-03 · **MUT-03** | BR-18 | COUPON-04 · **MUT-08 · MUT-09 · MUT-10** | BR-28 | BUILD-06 | BR-38 | CANCEL-04 · CANCEL-04b |
+| BR-09 | PRICE-04 | BR-19 | COUPON-05 | BR-29 | BUILD-07 | BR-39 | BIZ-02 · BIZ-02b |
 | BR-10 | PRICE-05 | BR-20 | COUPON-06 | BR-30 | ORDER-06 | BR-40 | BIZ-03 · ACCT-07 · **MUT-02 · MUT-05** |
 
-✅ **40 / 40** · ตัวหนา = TC ที่ `MUTATION-REPORT.md` บังคับให้เพิ่ม (ข้อ 3.13) — **11 ใน 40 ข้อ** (BR-06 · 07 · 08 · 11 · 13 · 15 · 18 · 21 · 22 · 23 · 40) เคยมี TC อยู่แล้ว แต่ **ไม่มีใครครอบค่าขอบที่ `TEST-DATA.md` เขียนไว้** จน mutant โผล่
+✅ **40 / 40** · ตัวหนา = TC ที่ `MUTATION-REPORT.md` บังคับให้เพิ่ม (ข้อ 3.13) — **11 ใน 40 ข้อ** (BR-06 · 07 · 08 · 11 · 13 · 15 · 18 · 21 · 22 · 23 · 40) เคยมี TC อยู่แล้ว แต่ **ไม่มีใครครอบค่าขอบที่ `TEST-DATA.md` เขียนไว้** จน mutant โผล่ · `≡` = TC สองรหัสที่เป็นงานเดียวกัน (COUPON-03 ≡ RACE-04 · ข้อ 6.1 ก.) · ⚠️ = TC ที่ test ตั้ง `test.fail` เพราะเว็บยังมีบั๊ก
+
+> ⚠️ **อ่าน ✅ ข้างบนให้ถูก** — มันแปลว่า "BR ทุกข้อมี **รหัส TC** กำกับ" ไม่ได้แปลว่า "BR ทุกข้อมี **test ที่รันได้จริง**" สองอย่างนี้ไม่ใช่เรื่องเดียวกัน และตารางนี้ขึ้น ✅ มาตลอดช่วงที่ TC 23 ข้อยังไม่มี test · สถานะจริงรายข้ออยู่ที่ **ข้อ 4.6** เท่านั้น
 
 ### 4.2 FR ทุกข้อมี TC
 
@@ -336,20 +391,27 @@ TC-MUT-06 ไม่มีรหัส `S` เพราะ `MUTATION-REPORT.md` �
 | FR-14 | BUILD-10 | FR-31 | SHIP-04 · **MUT-01** | FR-49 | CANCEL-05 |
 | FR-15 | BUILD-11 | FR-32 | SHIP-02 | FR-50 | CANCEL-06 |
 | FR-16 | BUILD-12 | FR-33 | SHIP-03 | FR-51 | BIZ-01 |
-| FR-17 | BUILD-13 | FR-34 | SHIP-05 | FR-52 | BIZ-02 · **MUT-02** |
+| FR-17 | BUILD-13 · BUILD-13b ⚠️ | FR-34 | SHIP-05 | FR-52 | BIZ-02 · BIZ-02b · **MUT-02** |
 | FR-18 | BUILD-14 | FR-35 | ORDER-01 | FR-53 | BIZ-03 · BIZ-04 · **MUT-05** |
-| FR-19 | BUILD-15 | FR-36 | ORDER-02 · RACE-02 | FR-54 | ACCT-06 |
-| FR-20 | BUILD-16 | FR-37 | ORDER-03 | FR-55 | ACCT-10 |
+| FR-19 | BUILD-15 | FR-36 | ORDER-02 · ORDER-02b · RACE-02 | FR-54 | ACCT-06 |
+| FR-20 | BUILD-16 | FR-37 | ORDER-03 ⟵ ORDER-02b · RACE-02 | FR-55 | ACCT-10 |
 | FR-21 | BUILD-17 | FR-38 | ORDER-04 | FR-56 | ACCT-07 |
 | FR-22 | BUILD-18 | FR-39 | ORDER-05 | FR-57 | ACCT-08 |
 | | | FR-40 · FR-41 | ORDER-06 · ORDER-07 | FR-58 | ACCT-09 |
 | | | | | FR-59 | CAT-09 · **MUT-04** |
 
-✅ **59 / 59** · ตัวหนา = TC จากข้อ 3.13 · สังเกตว่า **FR-05 · FR-09 · FR-59** คือราคาที่ลูกค้า *เห็น* บนหน้าจอ ซึ่งเดิมมีแต่ TC ชั้น `ui` ไม่มี unit test ของฟังก์ชันที่คำนวณเลขนั้น (`UnitPrice` · `MemberPrice`) — mutation เป็นตัวชี้
+✅ **59 / 59** · ตัวหนา = TC จากข้อ 3.13 · ⚠️ = test ตั้ง `test.fail` เพราะเว็บยังมีบั๊ก · `⟵` = FR นั้นมี TC ของตัวเองแต่ยังไม่มี test จึงพิสูจน์จริงผ่าน TC ตัวอื่น · สังเกตว่า **FR-05 · FR-09 · FR-59** คือราคาที่ลูกค้า *เห็น* บนหน้าจอ ซึ่งเดิมมีแต่ TC ชั้น `ui` ไม่มี unit test ของฟังก์ชันที่คำนวณเลขนั้น (`UnitPrice` · `MemberPrice`) — mutation เป็นตัวชี้
+
+> ⚠️ **เช่นเดียวกับข้อ 4.1** — ✅ 59/59 นับว่า FR มี **รหัส TC** ครบ ไม่ได้นับว่ามี **test** ครบ
+> ตอนตรวจพบปัญหา มี FR ถึง 6 ข้อที่ TC ของมันไม่มี test เลย (FR-02 · 08 · 19 · 21 · 22 · 34) และอีก 5 ข้อครอบแค่บางส่วน (FR-04 · 09 · 31 · 45 · 59) ทั้งที่ตารางนี้ขึ้น ✅ มาตลอด
+> ตอนนี้ทุก FR มี test พาดรหัสแล้ว **แต่ 21 TC ในนั้นยังไม่ได้วัดผล** (ข้อ 4.6) · ✅ ตารางนี้จึงยังอ่านว่า "ครบบนกระดาษ" อยู่ดี — ตัวที่เชื่อได้คือคอลัมน์สถานะในข้อ 4.6 เท่านั้น
 
 ### 4.3 NFR ทุกข้อมี TC
 
-`NFR-01→NFR-01` · `02→02` · `03→RACE-01…05` (รวม 02b) · `04→NFR-03` · `05→NFR-04 · PROP-01 · MUT-05` · `06→PRICE-09` · `07→NFR-05` · `08→NFR-06` · `09→NFR-07` · `10→NFR-08` · `11→NFR-09 · ORDER-07` · `12→NFR-10` · `13→ACCT-10` · `14→NFR-11` · `15→NFR-12` · `16→NFR-13 · ORDER-05` — ✅ **16 / 16**
+`NFR-01→NFR-01` · `02→02` · `03→RACE-01…05` (รวม 02b) · `04→NFR-03 ⟵ RACE-01 · RACE-05` · `05→NFR-04 · PROP-01 · MUT-05` · `06→PRICE-09` · `07→NFR-05` · `08→NFR-06` · `09→NFR-07` · `10→NFR-08` · `11→NFR-09 ⟵ ORDER-07` · `12→NFR-10` · `13→ACCT-10` · `14→NFR-11` · `15→NFR-12` · `16→NFR-13 · ORDER-05` — ✅ **16 / 16**
+
+> ⚠️ ✅ 16/16 นี้ก็เป็น "มีรหัส TC" เช่นกัน · ตอนตรวจพบปัญหา **NFR 4 ข้อไม่มี test เลย** — `NFR-02` (TC-NFR-02) · `NFR-12` (TC-NFR-10) · `NFR-14` (TC-NFR-11) · `NFR-16` ครึ่งหลัง (TC-NFR-13) · ทั้ง 4 ถูกปิดด้วย `platform.ui.spec.ts` กับ `account.spec.ts` แล้ว แต่ **ยังไม่ได้วัด**
+> `NFR-15` (TC-NFR-12) ยังครอบด้วย **มือ** ไม่ใช่ assertion · `NFR-04` (TC-NFR-03) และ `NFR-11` (TC-NFR-09) เดิมครอบอยู่ใต้รหัสอื่นตามเครื่องหมาย `⟵` ตอนนี้มี test พาดรหัสตรงแล้วใน `account.spec.ts` — ดูข้อ 6.1
 
 ### 4.4 ค่าขอบ 141 แถวถูกใช้ครบ
 
@@ -364,7 +426,7 @@ TC-MUT-06 ไม่มีรหัส `S` เพราะ `MUTATION-REPORT.md` �
 | E67–E75 | SHIP-01…03 · **MUT-01 · MUT-02 · MUT-11** (E67–E69 E72 E74) | E123–E134 | CANCEL-01…04 · BIZ-02 |
 | | | E135–E141 | BIZ-03 · **MUT-05** (E135–E138) |
 
-✅ **E01–E141 ครบ** · quote Q01–Q27 ใช้ใน TC-PRICE-10 · TC-PROP-07 (oracle คิดเองทั้ง 27 แถว) และอ้างซ้ำในแต่ละพื้นที่ · R1 · R1b · R2 ใน CANCEL-01 · CANCEL-04 · B1 · B1b ใน BUILD-11 · BUILD-16
+✅ **E01–E141 ครบ** · quote Q01–Q27 ใช้ใน TC-PRICE-10 · TC-PROP-07 (oracle คิดเองทั้ง 27 แถว) และอ้างซ้ำในแต่ละพื้นที่ · R1 ใน CANCEL-04 · **R1b ใน CANCEL-04b** · R2 ใน CANCEL-01 · B1 · B1b ใน BUILD-11 · BUILD-16 · **Q3b ใน COUPON-02b · Q6a · Q6b ใน SHIP-01b**
 
 ตัวหนา = แถวค่าขอบที่ **เขียนไว้ตั้งแต่ขั้น 0 แต่ไม่มี test จริงจนถึงขั้น 4** · นี่คือหลักฐานตรง ๆ ว่า "ตารางความครบ" เขียว ≠ แผนแข็งแรง — ตารางข้างบนนี้เคยขึ้น ✅ ครบทั้งที่ mutation score อยู่ที่ 56.0%
 
@@ -379,22 +441,202 @@ TC-MUT-06 ไม่มีรหัส `S` เพราะ `MUTATION-REPORT.md` �
 
 ✅ **S1–S11 ครบ 11 / 11** · equivalent mutant 21 ตัวไม่ต้องมี TC (เหตุผลรายตัวอยู่ใน `MUTATION-REPORT.md` ข้อ 5) · mutant ที่ยังรอดอีก 6 กลุ่มมีแผนรองรับใน `MUTATION-REPORT.md` ข้อ 6 — **ยังไม่ออกรหัส TC** เพราะยังไม่มี test จริง
 
+### 4.6 สถานะจริงของ TC ทุกข้อ — ตารางที่ตารางข้อ 4.1–4.5 ปิดบังไว้
+
+ข้อ 4.1–4.5 ตอบว่า "ข้อกำหนดทุกข้อมี TC ไหม" (ตอบ ✅ ทุกตาราง) แต่ **ไม่เคยตอบว่า TC ข้อนั้นมี test จริงหรือยัง** — ตารางนี้เติมช่องที่หายไป · **TC ทั้ง 126 ข้ออยู่ในตารางนี้ข้อละหนึ่งแถวพอดี**
+
+> ⏱ **ภาพนี้เป็นภาพ ณ เวลาที่เขียน และมีสองชั้นเวลาปนกันอยู่ ต้องแยกให้ออก**
+> ตอนตรวจพบปัญหา มี TC เพียง **84 ข้อ** ที่ test พาดรหัสถึง และ **23 ข้อไม่มี test ที่ชั้นไหนเลย** · ระหว่างแก้แผนรอบนี้ มีการเพิ่ม test ใหม่ **4 ไฟล์** (`e2e/tests/account.spec.ts` · `builder.ui.spec.ts` · `order.ui.spec.ts` · `platform.ui.spec.ts`) บวก `TC-BUILD-18` ใน `business.spec.ts` ซึ่งปิดช่องว่างไป **21 จาก 23 ข้อ**
+> **แต่ตัวเลขผลรัน (127 passed · 7 · 2 · 33 · 27) ถูกวัดก่อนไฟล์เหล่านี้จะมีอยู่** จึงไม่ครอบคลุมมัน · TC ที่ test เพิ่งมาถึงหลังรอบวัด ติดป้าย **`auto · ยังไม่ได้วัด`** และ **ห้ามนับเป็นเขียวจนกว่าจะรันจริงแล้วบันทึกผลใหม่**
+
+| สถานะ | ความหมาย | จำนวน |
+| --- | --- | ---: |
+| `auto · วัดแล้ว` | มี test พาดรหัส TC นี้ และอยู่ในชุดที่รันผ่านจริงในรอบที่บันทึกผลไว้ | **103** |
+| **`auto · ยังไม่ได้วัด`** | มี test พาดรหัส TC นี้แล้ว แต่ test เพิ่งถูกเพิ่ม **หลัง** รอบที่บันทึกผล — ยังไม่มีหลักฐานว่าเขียว | **21** |
+| `auto · รหัสอื่น` | ข้อความคาดถูกพิสูจน์จริง แต่อยู่ใน test ที่พาดรหัสอื่น | **1** |
+| **`manual`** | ไม่มี assertion อัตโนมัติ · พิสูจน์ด้วยคำสั่งที่คนรันเองแล้วอ่านผล | **1** |
+| | **รวม** | **126** |
+
+**ไม่มี TC ข้อใดเหลือสถานะ `ยังไม่เขียน` แล้ว** — แต่ **103 / 126 (81.7%) เท่านั้นที่มีหลักฐานผลรันรองรับ** · อีก 21 ข้อเป็นคำสัญญาจนกว่าจะรันซ้ำ · รายละเอียดรายข้ออยู่ที่ข้อ 6.1
+
+> 💡 **TC-MUT-01…12 กับ TC-PROP-01…07 รวม 19 ข้อ นับเป็น `วัดแล้ว` ทั้งที่รหัสเพิ่งถูกเติม** — เพราะ `git diff` ยืนยันว่าสิ่งที่เปลี่ยนคือ **คอมเมนต์และชื่อ test เท่านั้น** ไม่มี assertion ใดเปลี่ยน · ก่อนหน้านี้ test พวกนี้มีจริงและรันผ่าน แต่ผูกกับแผนด้วยชื่อฟังก์ชัน (`TestShippingFreeBoundary`) และชื่อ property (`P1`) ซึ่งเครื่องตามรอยไม่ได้ · ตอนนี้ผูกด้วยรหัส TC แล้ว **หนี้ข้อนี้ปิดแล้วจริง**
+
+| รหัส | สถานะ | ชั้นที่รันจริง | test จริง |
+| --- | --- | --- | --- |
+| **สินค้าและสต็อก** | | | |
+| TC-CAT-01 | auto · วัดแล้ว | api | `e2e/tests/contract.spec.ts` |
+| TC-CAT-02 | **auto · ยังไม่ได้วัด** | ui | `e2e/tests/order.ui.spec.ts` |
+| TC-CAT-03 | auto · วัดแล้ว | ui | `e2e/tests/web.ui.spec.ts` |
+| TC-CAT-04 | **auto · ยังไม่ได้วัด** | api | `e2e/tests/account.spec.ts` |
+| TC-CAT-05 | auto · วัดแล้ว | ui | `e2e/tests/web.ui.spec.ts` |
+| TC-CAT-06 | auto · วัดแล้ว | api | `e2e/tests/order.spec.ts` |
+| TC-CAT-07 | auto · วัดแล้ว | api | `e2e/tests/order.spec.ts` |
+| TC-CAT-08 | auto · วัดแล้ว | api | `e2e/tests/order.spec.ts` |
+| TC-CAT-09 | **auto · ยังไม่ได้วัด** | ui | `e2e/tests/builder.ui.spec.ts` |
+| **หน้าจัดสเปก** | | | |
+| TC-BUILD-01 | **auto · ยังไม่ได้วัด** | ui | `e2e/tests/builder.ui.spec.ts` |
+| TC-BUILD-02 | **auto · ยังไม่ได้วัด** | ui | `e2e/tests/builder.ui.spec.ts` |
+| TC-BUILD-03 | auto · วัดแล้ว | api | `e2e/tests/builder.spec.ts` |
+| TC-BUILD-04 | auto · วัดแล้ว | api | `e2e/tests/builder.spec.ts` |
+| TC-BUILD-05 | auto · วัดแล้ว | api | `e2e/tests/builder.spec.ts` |
+| TC-BUILD-06 | auto · วัดแล้ว | api | `e2e/tests/builder.spec.ts` |
+| TC-BUILD-07 | auto · วัดแล้ว | api | `e2e/tests/builder.spec.ts` |
+| TC-BUILD-08 | auto · วัดแล้ว | api | `e2e/tests/builder.spec.ts` |
+| TC-BUILD-09 | auto · วัดแล้ว | api · ui | `e2e/tests/builder.spec.ts` + `e2e/tests/web.ui.spec.ts` |
+| TC-BUILD-10 | auto · วัดแล้ว | ui | `e2e/tests/web.ui.spec.ts` |
+| TC-BUILD-11 | auto · วัดแล้ว | api | `e2e/tests/builder.spec.ts` |
+| TC-BUILD-12 | auto · วัดแล้ว | api | `e2e/tests/builder.spec.ts` |
+| TC-BUILD-13 | auto · วัดแล้ว | api | `e2e/tests/shipping.spec.ts` |
+| TC-BUILD-13b | auto · วัดแล้ว ⚠️ | api | `e2e/tests/shipping.spec.ts` · ตั้ง `test.fail(true, …)` — **เป็น test ที่คาดว่าจะแดง** เพราะเว็บยังมีบั๊ก `BUG-EXPLORE-01` (`e2e/triage.json` · `EXPLORATION.md` ข้อ 3) ที่ยังไม่แก้ · เขียวในรายงานไม่ได้แปลว่าเว็บถูก |
+| TC-BUILD-14 | auto · วัดแล้ว | api | `e2e/tests/builder.spec.ts` |
+| TC-BUILD-15 | **auto · ยังไม่ได้วัด** | ui | `e2e/tests/builder.ui.spec.ts` |
+| TC-BUILD-16 | auto · วัดแล้ว | api | `e2e/tests/builder.spec.ts` |
+| TC-BUILD-17 | **auto · ยังไม่ได้วัด** | ui | `e2e/tests/builder.ui.spec.ts` |
+| TC-BUILD-18 | **auto · ยังไม่ได้วัด** | api | `e2e/tests/business.spec.ts` |
+| **ราคาและส่วนลด** | | | |
+| TC-PRICE-01 | auto · วัดแล้ว | api | `e2e/tests/price.spec.ts` |
+| TC-PRICE-02 | auto · วัดแล้ว | api | `e2e/tests/price.spec.ts` |
+| TC-PRICE-03 | auto · วัดแล้ว | api | `e2e/tests/price.spec.ts` |
+| TC-PRICE-04 | auto · วัดแล้ว | api | `e2e/tests/price.spec.ts` |
+| TC-PRICE-05 | auto · วัดแล้ว | api | `e2e/tests/price.spec.ts` |
+| TC-PRICE-06 | auto · วัดแล้ว | api | `e2e/tests/price.spec.ts` |
+| TC-PRICE-07 | auto · วัดแล้ว | api | `e2e/tests/price.spec.ts` |
+| TC-PRICE-08 | auto · วัดแล้ว | api | `e2e/tests/contract.spec.ts` |
+| TC-PRICE-09 | auto · วัดแล้ว | api | `e2e/tests/price.spec.ts` |
+| TC-PRICE-10 | auto · วัดแล้ว | api | `e2e/tests/price.spec.ts` · แตกเป็น **27 run** (Q01–Q27) |
+| TC-PRICE-11 | auto · วัดแล้ว | ui | `e2e/tests/web.ui.spec.ts` |
+| TC-PRICE-12 | auto · วัดแล้ว | api | `e2e/tests/price.spec.ts` |
+| **คูปอง** | | | |
+| TC-COUPON-01 | auto · วัดแล้ว | api | `e2e/tests/coupon.spec.ts` |
+| TC-COUPON-02 | auto · วัดแล้ว | api | `e2e/tests/coupon.spec.ts` |
+| TC-COUPON-02b | auto · วัดแล้ว | api | `e2e/tests/coupon.spec.ts` |
+| TC-COUPON-03 | auto · รหัสอื่น | api | `e2e/race/api-race.spec.ts` **`TC-RACE-04`** — สถานการณ์ ข้อมูล และผลที่คาดตรงกันทุกตัว (บัญชีเดียวยิง 2 ออเดอร์พร้อมกันด้วย NEWBIT200 → สำเร็จ 1 · อีกอัน `409 COUPON_USED`) · **เป็นงานเดียวกัน ไม่ใช่สองงาน** |
+| TC-COUPON-04 | auto · วัดแล้ว | api | `e2e/tests/coupon.spec.ts` |
+| TC-COUPON-05 | auto · วัดแล้ว | api | `e2e/tests/coupon.spec.ts` |
+| TC-COUPON-06 | auto · วัดแล้ว | api | `e2e/tests/coupon.spec.ts` |
+| TC-COUPON-07 | auto · วัดแล้ว | api | `e2e/tests/coupon.spec.ts` |
+| **ค่าส่ง** | | | |
+| TC-SHIP-01 | auto · วัดแล้ว | unit · api | `backend/internal/pricing/boundary_test.go` + `e2e/tests/shipping.spec.ts` |
+| TC-SHIP-01b | auto · วัดแล้ว | api | `e2e/tests/shipping.spec.ts` |
+| TC-SHIP-02 | auto · วัดแล้ว | api | `e2e/tests/shipping.spec.ts` |
+| TC-SHIP-03 | auto · วัดแล้ว | api | `e2e/tests/shipping.spec.ts` |
+| TC-SHIP-04 | **auto · ยังไม่ได้วัด** | ui | `e2e/tests/order.ui.spec.ts` |
+| TC-SHIP-05 | **auto · ยังไม่ได้วัด** | ui | `e2e/tests/order.ui.spec.ts` |
+| **กดสั่ง กันของ จ่ายเงิน** | | | |
+| TC-ORDER-01 | auto · วัดแล้ว | api | `e2e/tests/order.spec.ts` |
+| TC-ORDER-02 | auto · วัดแล้ว | api | `e2e/tests/order.spec.ts` |
+| TC-ORDER-02b | auto · วัดแล้ว | api | `e2e/tests/order.spec.ts` |
+| TC-ORDER-03 | **auto · ยังไม่ได้วัด** | ui | `e2e/tests/order.ui.spec.ts` |
+| TC-ORDER-04 | auto · วัดแล้ว | api | `e2e/tests/order.spec.ts` |
+| TC-ORDER-05 | auto · วัดแล้ว | ui | `e2e/tests/platform.ui.spec.ts` + `e2e/tests/web.ui.spec.ts` |
+| TC-ORDER-06 | auto · วัดแล้ว | api | `e2e/tests/order.spec.ts` |
+| TC-ORDER-07 | auto · วัดแล้ว | api | `e2e/tests/order.spec.ts` |
+| TC-ORDER-08 | auto · วัดแล้ว | api | `e2e/tests/order.spec.ts` |
+| TC-ORDER-09 | auto · วัดแล้ว | api | `e2e/tests/order.spec.ts` |
+| TC-ORDER-10 | **auto · ยังไม่ได้วัด** | ui | `e2e/tests/order.ui.spec.ts` |
+| TC-ORDER-11 | auto · วัดแล้ว | api | `e2e/tests/order.spec.ts` |
+| **ยกเลิกและคืนของ** | | | |
+| TC-CANCEL-01 | auto · วัดแล้ว | api | `e2e/tests/cancel.spec.ts` |
+| TC-CANCEL-02 | auto · วัดแล้ว | api | `e2e/tests/cancel.spec.ts` + `e2e/tests/order.spec.ts` |
+| TC-CANCEL-03 | auto · วัดแล้ว | api | `e2e/tests/cancel.spec.ts` |
+| TC-CANCEL-04 | auto · วัดแล้ว | api | `e2e/tests/cancel.spec.ts` |
+| TC-CANCEL-04b | auto · วัดแล้ว | api | `e2e/tests/cancel.spec.ts` |
+| TC-CANCEL-05 | auto · วัดแล้ว | api | `e2e/tests/cancel.spec.ts` |
+| TC-CANCEL-06 | auto · วัดแล้ว | api | `e2e/tests/cancel.spec.ts` |
+| **ลูกค้าบริษัทและภาษี** | | | |
+| TC-BIZ-01 | auto · วัดแล้ว | api | `e2e/tests/business.spec.ts` |
+| TC-BIZ-02 | auto · วัดแล้ว | api | `e2e/tests/business.spec.ts` |
+| TC-BIZ-02b | auto · วัดแล้ว | api | `e2e/tests/business.spec.ts` |
+| TC-BIZ-03 | auto · วัดแล้ว | api | `e2e/tests/business.spec.ts` |
+| TC-BIZ-04 | auto · วัดแล้ว | api | `e2e/tests/business.spec.ts` |
+| **บัญชีและหลังร้าน** | | | |
+| TC-ACCT-01 | **auto · ยังไม่ได้วัด** | api | `e2e/tests/account.spec.ts` |
+| TC-ACCT-02 | **auto · ยังไม่ได้วัด** | api | `e2e/tests/account.spec.ts` |
+| TC-ACCT-03 | **auto · ยังไม่ได้วัด** | api | `e2e/tests/account.spec.ts` |
+| TC-ACCT-04 | auto · วัดแล้ว | api | `e2e/tests/price.spec.ts` |
+| TC-ACCT-05 | auto · วัดแล้ว | api | `e2e/tests/price.spec.ts` |
+| TC-ACCT-06 | auto · วัดแล้ว | api | `e2e/tests/business.spec.ts` |
+| TC-ACCT-07 | auto · วัดแล้ว | api | `e2e/tests/business.spec.ts` |
+| TC-ACCT-08 | auto · วัดแล้ว | api · ui | `e2e/tests/business.spec.ts` + `e2e/tests/web.ui.spec.ts` |
+| TC-ACCT-09 | auto · วัดแล้ว | api | `e2e/tests/order.spec.ts` |
+| TC-ACCT-10 | auto · วัดแล้ว | api | `e2e/tests/contract.spec.ts` |
+| **คุณภาพ** | | | |
+| TC-NFR-01 | auto · วัดแล้ว | ui | `e2e/tests/web.ui.spec.ts` |
+| TC-NFR-02 | **auto · ยังไม่ได้วัด** | ui | `e2e/tests/platform.ui.spec.ts` |
+| TC-NFR-03 | **auto · ยังไม่ได้วัด** | api | `e2e/tests/account.spec.ts` |
+| TC-NFR-04 | auto · วัดแล้ว | api | `e2e/tests/contract.spec.ts` |
+| TC-NFR-05 | auto · วัดแล้ว | api | `e2e/tests/contract.spec.ts` |
+| TC-NFR-06 | auto · วัดแล้ว | api | `e2e/tests/contract.spec.ts` |
+| TC-NFR-07 | auto · วัดแล้ว | ui | `e2e/tests/web.ui.spec.ts` |
+| TC-NFR-08 | auto · วัดแล้ว | api · ui | `e2e/tests/contract.spec.ts` + `e2e/tests/web.ui.spec.ts` |
+| TC-NFR-09 | **auto · ยังไม่ได้วัด** | api | `e2e/tests/account.spec.ts` |
+| TC-NFR-10 | **auto · ยังไม่ได้วัด** | api | `e2e/tests/account.spec.ts` |
+| TC-NFR-11 | **auto · ยังไม่ได้วัด** | ui | `e2e/tests/platform.ui.spec.ts` |
+| TC-NFR-12 | **manual** | ui | `npm run test:thrice` (`e2e/package.json`) — คนรันแล้วเทียบผลสามรอบเอง · วัดแล้ว 3 รอบติดกัน **1.3m / 1.2m / 1.2m ผลเหมือนกันทุกรอบ** · ไม่มี assertion ที่เทียบรอบต่อรอบให้อัตโนมัติ |
+| TC-NFR-13 | **auto · ยังไม่ได้วัด** | ui | `e2e/tests/platform.ui.spec.ts` |
+| **การแย่งของ · ขั้น 2** | | | |
+| TC-RACE-01 | auto · วัดแล้ว | api | `e2e/race/api-race.spec.ts` · แตกเป็น **3 run** (N = 2, 5, 10) × 50 รอบ |
+| TC-RACE-02 | auto · วัดแล้ว | ui | `e2e/race/ui-race.spec.ts` |
+| TC-RACE-02b | auto · วัดแล้ว | ui | `e2e/race/ui-race.spec.ts` |
+| TC-RACE-03 | auto · วัดแล้ว | api | `e2e/race/api-race.spec.ts` |
+| TC-RACE-04 | auto · วัดแล้ว | api | `e2e/race/api-race.spec.ts` |
+| TC-RACE-05 | auto · วัดแล้ว | api | `e2e/race/api-race.spec.ts` |
+| **property · ขั้น 3** | | | |
+| TC-PROP-01 | auto · วัดแล้ว | api | `e2e/property/price.property.spec.ts` · รหัส TC เพิ่งถูกเติมลงในชื่อ test/คอมเมนต์ · assertion ไม่เปลี่ยน |
+| TC-PROP-02 | auto · วัดแล้ว | api | `e2e/property/price.property.spec.ts` · รหัส TC เพิ่งถูกเติมลงในชื่อ test/คอมเมนต์ · assertion ไม่เปลี่ยน |
+| TC-PROP-03 | auto · วัดแล้ว | api | `e2e/property/price.property.spec.ts` · รหัส TC เพิ่งถูกเติมลงในชื่อ test/คอมเมนต์ · assertion ไม่เปลี่ยน |
+| TC-PROP-04 | auto · วัดแล้ว | api | `e2e/property/price.property.spec.ts` · รหัส TC เพิ่งถูกเติมลงในชื่อ test/คอมเมนต์ · assertion ไม่เปลี่ยน |
+| TC-PROP-05 | auto · วัดแล้ว | api | `e2e/property/price.property.spec.ts` · รหัส TC เพิ่งถูกเติมลงในชื่อ test/คอมเมนต์ · assertion ไม่เปลี่ยน |
+| TC-PROP-06 | auto · วัดแล้ว | api | `e2e/property/price.property.spec.ts` · รหัส TC เพิ่งถูกเติมลงในชื่อ test/คอมเมนต์ · assertion ไม่เปลี่ยน |
+| TC-PROP-07 | auto · วัดแล้ว | api | `e2e/property/oracle/oracle.spec.ts` · รหัส TC เพิ่งถูกเติมลงในชื่อ test/คอมเมนต์ · assertion ไม่เปลี่ยน · แตกเป็น **27 run** (ตาราง quote ที่ oracle คิดเอง) |
+| **รูที่ mutation เปิดโปง · ขั้น 4** | | | |
+| TC-MUT-01 | auto · วัดแล้ว | unit | `backend/internal/pricing/boundary_test.go` · รหัส TC เพิ่งถูกเติมลงในชื่อ test/คอมเมนต์ · assertion ไม่เปลี่ยน |
+| TC-MUT-02 | auto · วัดแล้ว | unit | `backend/internal/pricing/boundary_test.go` · รหัส TC เพิ่งถูกเติมลงในชื่อ test/คอมเมนต์ · assertion ไม่เปลี่ยน |
+| TC-MUT-03 | auto · วัดแล้ว | unit | `backend/internal/pricing/boundary_test.go` · รหัส TC เพิ่งถูกเติมลงในชื่อ test/คอมเมนต์ · assertion ไม่เปลี่ยน |
+| TC-MUT-04 | auto · วัดแล้ว | unit | `backend/internal/pricing/boundary_test.go` · รหัส TC เพิ่งถูกเติมลงในชื่อ test/คอมเมนต์ · assertion ไม่เปลี่ยน |
+| TC-MUT-05 | auto · วัดแล้ว | unit | `backend/internal/pricing/boundary_test.go` · รหัส TC เพิ่งถูกเติมลงในชื่อ test/คอมเมนต์ · assertion ไม่เปลี่ยน |
+| TC-MUT-06 | auto · วัดแล้ว | unit | `backend/internal/pricing/boundary_test.go` · รหัส TC เพิ่งถูกเติมลงในชื่อ test/คอมเมนต์ · assertion ไม่เปลี่ยน |
+| TC-MUT-07 | auto · วัดแล้ว | unit | `backend/internal/pricing/boundary_test.go` · รหัส TC เพิ่งถูกเติมลงในชื่อ test/คอมเมนต์ · assertion ไม่เปลี่ยน |
+| TC-MUT-08 | auto · วัดแล้ว | unit | `backend/internal/pricing/boundary_test.go` · รหัส TC เพิ่งถูกเติมลงในชื่อ test/คอมเมนต์ · assertion ไม่เปลี่ยน |
+| TC-MUT-09 | auto · วัดแล้ว | unit | `backend/internal/pricing/boundary_test.go` · รหัส TC เพิ่งถูกเติมลงในชื่อ test/คอมเมนต์ · assertion ไม่เปลี่ยน |
+| TC-MUT-10 | auto · วัดแล้ว | unit | `backend/internal/pricing/boundary_test.go` · รหัส TC เพิ่งถูกเติมลงในชื่อ test/คอมเมนต์ · assertion ไม่เปลี่ยน |
+| TC-MUT-11 | auto · วัดแล้ว | unit | `backend/internal/pricing/boundary_test.go` · รหัส TC เพิ่งถูกเติมลงในชื่อ test/คอมเมนต์ · assertion ไม่เปลี่ยน |
+| TC-MUT-12 | auto · วัดแล้ว | unit | `backend/internal/pricing/boundary_test.go` · รหัส TC เพิ่งถูกเติมลงในชื่อ test/คอมเมนต์ · assertion ไม่เปลี่ยน |
+
+**วิธีตรวจตารางนี้ซ้ำด้วยเครื่อง ไม่ต้องเชื่อ** — ดึงรหัสจากแผน เทียบกับรหัสที่ test พาดจริง สองทิศ:
+
+```bash
+grep -ohE 'TC-[A-Z0-9]+-[0-9]+[a-z]?' TEST-PLAN.md | sort -u > /tmp/plan.txt          # ต้องได้ 126 บรรทัด
+grep -rhoE 'TC-[A-Z0-9]+-[0-9]+[a-z]?' e2e --include=*.ts backend --include=*.go \
+  | sort -u > /tmp/tests.txt                                                           # ต้องได้ 124 บรรทัด
+comm -13 /tmp/plan.txt /tmp/tests.txt   # test กำพร้า (ไม่มีในแผน) — ต้องว่าง
+comm -23 /tmp/plan.txt /tmp/tests.txt   # TC ที่ไม่มี test พาดรหัส — ต้องได้ 2 คือ TC-COUPON-03 · TC-NFR-12
+```
+
+**และตรวจชั้นเวลาด้วย** — รหัสที่ test เพิ่งพาดถึงหลังรอบวัดผล หาได้จาก `git diff` ไม่ใช่จากความทรงจำ:
+
+```bash
+for f in $(git ls-files 'hw1-bitbaan/e2e/**/*.spec.ts' 'hw1-bitbaan/backend/**/*_test.go'); do \
+  git show "HEAD:$f" | grep -ohE 'TC-[A-Z0-9]+-[0-9]+[a-z]?'; done | sort -u > /tmp/head.txt   # 84 บรรทัด
+comm -13 /tmp/head.txt /tmp/tests.txt   # 40 รหัส = 19 (MUT/PROP เติมรหัสเฉย ๆ) + 21 (test ใหม่จริง)
+```
+
 ## 5. TC ที่ผลขึ้นกับสมมติฐาน (ต้องแก้เมื่อร้านตอบ)
 
 | สมมติฐาน | เรื่อง | TC ที่จะเปลี่ยนถ้าร้านตอบต่างจากที่สมมติ |
 | --- | --- | --- |
 | A-01 · A-02 | สมาชิกซ้อนกับคูปองและ flash sale | PRICE-07 · PRICE-10 (Q03 Q05 Q07 Q16 Q27) · COUPON-04 |
 | A-03 · A-14 | ชุดประกอบต้องมีอะไร และลดกี่ครั้ง | PRICE-05 · PRICE-10 (Q11 Q14 Q17 Q23) |
-| A-04 | "ครบชุด" ที่ประกอบฟรี | BUILD-13 · PRICE-10 (Q14 Q15 Q16) · **MUT-11** |
+| A-04 | "ครบชุด" ที่ประกอบฟรี | BUILD-13 · BUILD-13b · PRICE-10 (Q14 Q15 Q16) · **MUT-11** |
 | A-05 | พาวเวอร์ "พอ" คือเท่าไร | BUILD-07 |
 | A-07 | ของที่ใส่กันไม่ได้ ห้ามเฉพาะในหน้าจัดสเปกหรือห้ามทุกที่ | BUILD-03 · BUILD-04 · CAT-01 |
 | A-06 · A-17 | ขอบ 30 นาที และนาฬิกาที่ใช้ | ORDER-05 · ORDER-06 · ORDER-07 · NFR-09 · NFR-13 |
 | A-08 | บริษัทใช้คูปองได้ไหม | COUPON-05 · PRICE-10 (Q09 Q10) |
 | A-09 | ระดับของ C6 | ACCT-05 · PRICE-10 (Q13) |
 | A-10 · A-11 | ลำดับการลด และการปัดเศษ | PRICE-06 · PRICE-08 · PRICE-09 · PRICE-11 · **ทั้ง TC-PRICE-10** · **MUT-04 · MUT-09 · MUT-11** |
-| A-12 | ฐานและเงื่อนไขของ NEWBIT200 | COUPON-01 · COUPON-02 · PRICE-10 (Q02 Q19 Q20 Q25) · **MUT-06 · MUT-07** |
+| A-12 | ฐานและเงื่อนไขของ NEWBIT200 | COUPON-01 · COUPON-02 · COUPON-02b · PRICE-10 (Q02 Q19 Q20 Q25) · **MUT-06 · MUT-07** |
 | A-13 · A-41 | ฐาน เพดาน และสิทธิ์ของ GAMER5 | COUPON-04 · PRICE-10 (Q07–Q10 Q22 Q24 Q27) · **MUT-08 · MUT-10** |
-| A-15 | ฐานของส่งฟรี | SHIP-01 · PRICE-10 (Q18 Q25) · **MUT-01 · MUT-02 · MUT-11** |
+| A-15 | ฐานของส่งฟรี | SHIP-01 · SHIP-01b · PRICE-10 (Q18 Q25) · **MUT-01 · MUT-02 · MUT-11** |
 | A-16 | ขอบ flash sale และจุดล็อกราคา | PRICE-01 · PRICE-04 · PRICE-10 (Q05 Q06) · **MUT-12** |
 | A-18 | "คนละ 1 ใบ" นับอย่างไร | ORDER-04 · RACE-03 · RACE-02b |
 | A-19 | ของที่เลือกไว้แล้วใช้ไม่ได้ | BUILD-09 · BUILD-10 |
@@ -402,9 +644,9 @@ TC-MUT-06 ไม่มีรหัส `S` เพราะ `MUTATION-REPORT.md` �
 | A-21 | ลิงก์สเปกล็อกราคาไหม | BUILD-15 · BUILD-16 · BUILD-18 |
 | A-22 · A-35 | ฐานของงบ และเกินงบสั่งได้ไหม | BUILD-11 |
 | A-23 | ยอด 12 เดือนนับอะไร | ACCT-04 |
-| A-24 | ขอบคืนของและฐานค่าธรรมเนียม | CANCEL-01 · CANCEL-03 · CANCEL-04 |
+| A-24 | ขอบคืนของและฐานค่าธรรมเนียม | CANCEL-01 · CANCEL-03 · CANCEL-04 · CANCEL-04b |
 | A-25 | วันที่เงินคืนเข้า | CANCEL-06 |
-| A-26 | ใบเสนอราคา 7 วันและการกันของ | BIZ-01 · BIZ-02 · **MUT-02** |
+| A-26 | ใบเสนอราคา 7 วันและการกันของ | BIZ-01 · BIZ-02 · BIZ-02b · **MUT-02** |
 | A-27 | วิธีคิดและปัด VAT | BIZ-03 · BIZ-04 · **MUT-02 · MUT-05** |
 | A-28 · A-29 | แยกส่งหลายที่อยู่ · ขอบเขต "ในกรุงเทพฯ" | SHIP-02 · SHIP-05 |
 | A-31 · A-32 | เวลาเปิดล็อต · การขายหน้าร้าน | CAT-06 · CAT-07 · ACCT-10 |
@@ -414,7 +656,7 @@ TC-MUT-06 ไม่มีรหัส `S` เพราะ `MUTATION-REPORT.md` �
 | A-36 · A-37 · A-40 | ข้อมูลที่คนไม่ล็อกอินต้องกรอก · ตัวช่วยทดสอบ · ขนาดจอและความเร็ว | ORDER-01 · NFR-01 · NFR-02 · NFR-05 · NFR-06 · NFR-07 |
 | A-30 · A-33 | รับที่ร้านภายในกี่วัน · ส่วนลดพิเศษลูกค้าประจำ | — ไม่ทดสอบในรุ่นแรก (ดูข้อ 6) |
 
-**รวม TC ที่ติด `[O-ยังไม่ยืนยัน]` = 67 จาก 120** — เดิม 56 จาก 105 · ข้อ 3.13 เพิ่มมาอีก 11 ข้อ (TC-MUT ทุกข้อยกเว้น MUT-03) เพราะค่าที่คาดของมันอิงสมมติฐานชุดเดียวกับ TC ต้นทาง — ถ้าร้านตอบว่าส่งฟรีนับจากฐานอื่น `TestShippingFreeBoundary` ต้องแก้พร้อม `TC-SHIP-01` **แล้วต้องรัน mutation ซ้ำ** เพราะตัวเลขที่ใช้ฆ่า mutant เปลี่ยนไปด้วย · ตัวเลขนี้จะลดลงหลังผู้สอนตอบ `QUESTIONS-TO-OWNER.md` และต้องบันทึกใน `PLAN-REVIEW.md` ว่าแก้ไปกี่ข้อ
+**รวม TC ที่ติด `[O-ยังไม่ยืนยัน]` = 72 จาก 126** — เดิม 56 จาก 105 → 67 จาก 120 → **72 จาก 126** · ข้อ 3.13 เพิ่มมา 11 ข้อ (TC-MUT ทุกข้อยกเว้น MUT-03) และ 6 แถว `*b` ที่เพิ่งรับเข้าแผนเพิ่มอีก **5** ข้อ (SHIP-01b → A-15 · BUILD-13b → A-04 · COUPON-02b → A-12 · CANCEL-04b → A-24 · BIZ-02b → A-26 · ส่วน **ORDER-02b เป็น [D]** เพราะ FR-36 · FR-37 ร้านพูดเอง) เพราะค่าที่คาดของมันอิงสมมติฐานชุดเดียวกับ TC ต้นทาง — ถ้าร้านตอบว่าส่งฟรีนับจากฐานอื่น `TestShippingFreeBoundary` ต้องแก้พร้อม `TC-SHIP-01` **แล้วต้องรัน mutation ซ้ำ** เพราะตัวเลขที่ใช้ฆ่า mutant เปลี่ยนไปด้วย · ตัวเลขนี้จะลดลงหลังผู้สอนตอบ `QUESTIONS-TO-OWNER.md` และต้องบันทึกใน `PLAN-REVIEW.md` ว่าแก้ไปกี่ข้อ
 
 ## 6. ไม่ทดสอบ และเหตุผล
 
@@ -428,6 +670,61 @@ TC-MUT-06 ไม่มีรหัส `S` เพราะ `MUTATION-REPORT.md` �
 | การเคลมประกัน | คนละเรื่องกับการคืนของ (บ.62) — ทดสอบแค่ว่ามีลิงก์แยก |
 | ความทนทานเมื่อรันเว็บหลาย instance | เว็บชุดนี้รัน 1 instance · ข้อจำกัดนี้ต้องเขียนใน `RACE-REPORT.md` |
 
+ตารางข้างบนเป็น **เรื่องที่ตัดสินใจไม่ทดสอบ** (ตัดสินใจแล้ว มีเหตุผล) · ข้อ 6.1 ข้างล่างเป็นคนละประเภทความเสี่ยง — **TC ที่แผนตั้งใจทดสอบแล้วลืมเขียน test** ซึ่งเดิมไม่มีที่อยู่ในเอกสารเลยทั้งที่มีถึง 23 ข้อ
+
+### 6.1 ช่องว่าง 23 ข้อที่ผู้ตรวจจับได้ — ปิดไปแล้ว 21 · เหลือ 2 โดยตั้งใจ
+
+> 🔴 **นี่คือข้อบกพร่องของแผนเอง ไม่ใช่ของเว็บ** — แผนโตจาก 105 เป็น 120 TC โดยไม่เคยเทียบกลับกับ suite จริงสักครั้ง · ข้อ 4.1–4.5 ขึ้น ✅ ครบทุกตารางตลอดเวลาที่ TC **23 ข้อไม่มี test ที่ชั้นไหนเลย** และ test **6 ข้อเป็นกำพร้าอยู่นอกแผน** · **ซ้ำรอยบทเรียนของข้อ 3.13 ที่รายงานฉบับนี้เขียนเอง หนึ่งชั้นขึ้นไป** — ที่นั่นคือ "ค่าขอบเขียนไว้แต่ไม่มีใครเขียน test" ที่นี่คือ "TC เขียนไว้แต่ไม่มีใครเขียน test"
+>
+> **ห้ามลบบรรทัดนี้ทิ้งเมื่อช่องว่างถูกปิดหมด** — ตัวเลข 23 คือหลักฐานว่าตารางความครบเขียวได้โดยที่แผนมีรู ซึ่งเป็นบทเรียนหลักของเอกสารชุดนี้
+
+**ก. 21 ข้อที่ปิดแล้ว — ปิดด้วย test ใหม่ ไม่ใช่ด้วยการลบ TC ทิ้ง**
+
+| TC | เดิมขาดอะไร | ปิดด้วย | หลักฐาน |
+| --- | --- | --- | --- |
+| TC-ACCT-01 | ขอบ Silver ฿20,000 เคยครอบอยู่ใน `TestUnitBoundaries` แบบ **ไม่มีรหัส TC** — ผูกด้วยความเชื่อ ไม่ใช่กลไก | `e2e/tests/account.spec.ts` | ⚠️ ยังไม่ได้วัด |
+| TC-ACCT-02 | ขอบ Gold ฿100,000 — เหมือนกัน | `e2e/tests/account.spec.ts` | ⚠️ ยังไม่ได้วัด |
+| TC-ACCT-03 | Business 8% ไม่ขึ้นกับยอด · `TierFor(spend, true)` ไม่เคยถูกเรียกที่ชั้น unit เลย | `e2e/tests/account.spec.ts` | ⚠️ ยังไม่ได้วัด |
+| TC-CAT-02 | ทุกหน้าเขียน "ราคารวม VAT แล้ว" — ครึ่งตัวเลขครอบที่ `TC-NFR-04` อยู่แล้ว ครึ่งข้อความไม่มีใครดู | `e2e/tests/order.ui.spec.ts` | ⚠️ ยังไม่ได้วัด |
+| TC-CAT-04 | `available = onHand − held` · ไม่มีใคร assert ว่า `onHand` **ไม่เปลี่ยน** หลังกันของ | `e2e/tests/account.spec.ts` | ⚠️ ยังไม่ได้วัด |
+| TC-CAT-09 | บรรทัด `member-price` บนหน้าสินค้า — ตัวเลขครอบที่ `TC-MUT-04` แต่หน้าจอไม่มีใครดู | `e2e/tests/builder.ui.spec.ts` | ⚠️ ยังไม่ได้วัด |
+| TC-BUILD-01 | นับ `builder-select-*` ให้ครบ 7 หมวด — `TC-BUILD-09/10` ใช้แค่ 3 ช่อง | `e2e/tests/builder.ui.spec.ts` | ⚠️ ยังไม่ได้วัด |
+| TC-BUILD-02 | ราคารวมอัปเดตโดยไม่โหลดหน้าใหม่ | `e2e/tests/builder.ui.spec.ts` | ⚠️ ยังไม่ได้วัด |
+| TC-BUILD-15 | หน้า `/b/<code>` ไม่เคยถูกเปิดในชั้น `ui` เลย | `e2e/tests/builder.ui.spec.ts` | ⚠️ ยังไม่ได้วัด |
+| TC-BUILD-17 | ลิงก์สเปกบอก "หมดแล้ว" ที่ชิ้นที่ขายไม่ได้ | `e2e/tests/builder.ui.spec.ts` | ⚠️ ยังไม่ได้วัด |
+| TC-BUILD-18 | **ช่องว่างที่เสี่ยงเงินที่สุดในชุดนี้** — ส่วนลดต้องคิดตามบัญชี *คนสั่ง* ไม่ใช่คนบันทึกสเปก · ไม่มีอะไรมาทดแทนเลย | `e2e/tests/business.spec.ts` | ⚠️ ยังไม่ได้วัด |
+| TC-SHIP-04 | กดเลือกวิธีส่ง 3 แบบแล้วยอดเปลี่ยนทันที — ตัวเลขครอบที่ `TC-SHIP-01/02/03` · `TC-MUT-02` | `e2e/tests/order.ui.spec.ts` | ⚠️ ยังไม่ได้วัด |
+| TC-SHIP-05 | 1 ออเดอร์ 1 ที่อยู่ + ข้อความบอกข้อจำกัด (A-28) | `e2e/tests/order.ui.spec.ts` | ⚠️ ยังไม่ได้วัด |
+| TC-ORDER-03 | ปุ่ม `out-of-stock-remove` / `-rebuild` — ครึ่ง "บอกชื่อชิ้น" ครอบที่ `TC-ORDER-02b` · `TC-RACE-02` อยู่แล้ว | `e2e/tests/order.ui.spec.ts` | ⚠️ ยังไม่ได้วัด |
+| TC-ORDER-10 | `pay-card` **ไม่เคยถูกกดใน test ใดเลยทั้งชุด** — `pay-promptpay` ถูกกดอยู่ใน `TC-ORDER-05` | `e2e/tests/order.ui.spec.ts` | ⚠️ ยังไม่ได้วัด |
+| TC-NFR-02 | หน้าหลักโหลด ≤ 3 วิ | `e2e/tests/platform.ui.spec.ts` | ⚠️ ยังไม่ได้วัด · **ต้องเฝ้าว่านิ่งไหม** เพราะเกณฑ์เวลาบนเครื่องพัฒนาเสี่ยงผิดข้อ 2.5 |
+| TC-NFR-03 | ยิง API ตรง 10 คำขอ — ครอบอยู่ใต้ `TC-RACE-01/05` แบบไม่มีรหัส | `e2e/tests/account.spec.ts` | ⚠️ ยังไม่ได้วัด |
+| TC-NFR-09 | ปล่อยของภายใน 5 วิ — ครอบอยู่ใต้ `TC-ORDER-07` แบบไม่มีรหัส | `e2e/tests/account.spec.ts` | ⚠️ ยังไม่ได้วัด |
+| TC-NFR-10 | รหัสผ่านไม่เก็บเป็นข้อความตรง · เดิมทำไม่ได้เพราะไม่มีทางแตะ DB | `e2e/tests/account.spec.ts` (เพิ่ม `pg` ใน `package.json`) | ⚠️ ยังไม่ได้วัด · **เพิ่ม dependency ใหม่** ต้องรัน `npm ci` ก่อน |
+| TC-NFR-11 | เวลาไทยแม้ `TZ=UTC` · เดิม **ทำไม่ได้โดยนิยาม** เพราะ config ตรึง `timezoneId: 'Asia/Bangkok'` | `e2e/tests/platform.ui.spec.ts` (`test.describe` ที่ override เขตเวลา) | ⚠️ ยังไม่ได้วัด |
+| TC-NFR-13 | นับถอยหลังใช้เวลาเว็บ — `TC-ORDER-05` ครอบรูปแบบ แต่ไม่ได้ตั้งนาฬิกาเบราว์เซอร์ให้ต่าง | `e2e/tests/platform.ui.spec.ts` | ⚠️ ยังไม่ได้วัด |
+
+**ข. 2 ข้อที่ยังไม่มี test พาดรหัส — และทำไมถึงถูกแล้ว**
+
+| TC | สถานะ | เหตุผล |
+| --- | --- | --- |
+| TC-COUPON-03 | `auto · รหัสอื่น` | **ซ้ำกับ `TC-RACE-04` ทั้งข้อ** — สถานการณ์ (บัญชีเดียวยิง 2 ออเดอร์พร้อมกันด้วย NEWBIT200) ข้อมูล (E52) และผลที่คาด (สำเร็จ 1 · อีกอัน `409 COUPON_USED`) ตรงกันทุกตัว · **เขียน test ซ้ำสองไฟล์คือหนี้ ไม่ใช่ความครบ** · เก็บทั้งสองรหัสไว้เพราะ BR-17 อ้าง COUPON-03 ส่วนขั้น 2 อ้าง RACE-04 แต่ต้องรู้ว่าเป็นงานเดียว |
+| TC-NFR-12 | `manual` | "รัน 3 รอบแล้วผลเหมือนกัน" เป็นคุณสมบัติของ **ชุดทดสอบ** ไม่ใช่ของเว็บ · test ที่ assert ตัวเองว่า "ฉันนิ่ง" ต้องรันชุดเต็มซ้ำสามรอบจากข้างใน ซึ่งจะทำให้เวลารันคูณสามและทำให้ข้อ 2.5 บังคับใช้ตัวเองไม่ได้ · จึงเป็น `npm run test:thrice` ที่คนรันแล้วอ่านผล — **และต้องยอมรับว่านี่คือ manual จริง ๆ ไม่ใช่ auto** |
+
+**ค. หนี้ที่เหลืออยู่จริง ณ ตอนนี้ — 21 ข้อ "เขียนแล้วแต่ยังไม่ได้วัด"**
+
+ช่องว่างเดิมถูกปิดด้วย test ใหม่ 4 ไฟล์ แต่ **ไม่มีไฟล์ใดอยู่ในรอบที่บันทึกผล** (`npm test` = 127 passed วัดก่อนไฟล์เหล่านี้มีอยู่) · สถานะที่ถูกต้องของทั้ง 21 ข้อคือ **"มี test แล้ว ยังไม่รู้ว่าเขียว"**
+
+สิ่งที่ต้องทำก่อนจะเขียน ✅ ได้:
+
+1. `cd e2e && npm ci` — `account.spec.ts` ต้องการ `pg` ที่เพิ่งเพิ่มเข้า `package.json`
+2. `npm test` แล้ว **แทนที่บล็อก ข-1 ในข้อ 2.1 ด้วยตัวเลขจริง** ห้ามคำนวณจากจำนวนบรรทัด
+3. ไล่สถานะในข้อ 4.6 จาก `auto · ยังไม่ได้วัด` → `auto · วัดแล้ว` เฉพาะข้อที่เขียวจริง · ข้อที่แดงให้ลง `e2e/triage.json` ตามบทที่ 4 **ห้ามแก้ test ให้ผ่าน**
+4. รัน `node mutation/run.mjs` ซ้ำ — test ชุดใหม่ 21 ข้อควรดันคะแนนขึ้นจาก 78.8% ถ้า **ไม่ขึ้นเลย** แปลว่า test ชุดใหม่ไม่ได้เพิ่มพลังจับบั๊ก ซึ่งเป็นสัญญาณเดียวกับที่ข้อ 3.13 เตือนไว้
+5. `npm run test:thrice` อีกครั้ง — ไฟล์ `ui` เพิ่มจาก 1 เป็น 4 และ `TC-NFR-02` วัดเวลาโหลด ซึ่งเป็น **จุดที่ผลไม่นิ่งมักโผล่** (ข้อ 2.5 ห้าม retry กลบ)
+
+**ไม่มีหัวข้อใดในข้อ 6 ครอบ 23 ข้อนี้มาก่อน** — ข้อ 6 ว่าด้วย "เรื่องที่ตัดสินใจไม่ทดสอบ" ส่วน 23 ข้อนี้คือ "เรื่องที่ตั้งใจทดสอบแล้วลืมทำ" ซึ่งเป็นคนละประเภทความเสี่ยงและเคยไม่มีที่อยู่ในเอกสารเลย
+
 ## 7. วิธีรัน
 
 ```bash
@@ -437,6 +734,7 @@ cd e2e && npm ci && npx playwright test            # TC ชั้น api + ui �
 cd e2e && npm run test:race                        # TC-RACE-01…05 (ขั้น 2)
 cd e2e && npm run test:oracle                      # TC-PROP-07 — oracle ต้องผ่าน 27/27 ก่อน
 cd e2e && npm run test:property -- --seed 2026     # TC-PROP-01…06 (ขั้น 3)
+cd e2e && npm run test:thrice                      # TC-NFR-12 — ชั้น manual · คนเทียบผลสามรอบเอง
 node mutation/run.mjs                              # วัดว่าแผนฆ่า mutant ได้กี่ % → MUTATION-REPORT.md (ขั้น 4)
 BUG_MODE=1 docker compose up -d --build backend    # รันแผนกับบั๊กที่ฝังไว้ แล้วเขียน BUG-HUNT.md
 ```
@@ -444,3 +742,37 @@ BUG_MODE=1 docker compose up -d --build backend    # รันแผนกับ
 ลำดับที่ถูกต้องของขั้น 4 คือ **รัน `mutation/run.mjs` → อ่าน mutant ที่รอด → เพิ่ม TC ในข้อ 3.13 → รันซ้ำ** ห้ามเขียน TC ก่อนแล้วค่อยหา mutant มาอ้างย้อนหลัง
 
 ผลสรุปทุกรอบอยู่ที่ `e2e/index.html` · TC ที่แดงและการตัดสินว่าเป็นบั๊กของใครอยู่ที่ `e2e/triage.json`
+
+---
+
+## 8. ตัวเลขทุกตัวในแผนนี้ กระทบยอดแล้ว
+
+ตารางนี้มีไว้ให้ผู้ตรวจไล่ได้ในหน้าเดียวว่าเลขไหนมาจากไหน และเลขไหน **เปลี่ยนไปจากฉบับก่อน**
+
+| ตัวเลข | ค่า | ตรวจซ้ำได้อย่างไร | เปลี่ยนจากเดิมไหม |
+| --- | ---: | --- | --- |
+| TC ทั้งหมดในแผน | **126** | นับรหัสไม่ซ้ำใน `TEST-PLAN.md` (คำสั่งเต็มอยู่ในข้อ 4.6) | ✅ 120 → 126 (รับ 6 แถว `*b` เข้าแผน) |
+| แถวในตารางสถานะข้อ 4.6 | **126** | ทุก TC ปรากฏข้อละหนึ่งแถวพอดี | 🆕 ไม่เคยมี |
+| TC ตามแผน · ชั้น `unit` | **23** | ข้อ 2.1 ก. | — |
+| TC ตามแผน · ชั้น `api` | **74** | ข้อ 2.1 ก. | ✅ 68 → 74 (`*b` ทั้ง 6 อยู่ชั้น `api`) |
+| TC ตามแผน · ชั้น `ui` | **52** | ข้อ 2.1 ก. | — |
+| ผลรวมสามชั้น | **149** | 119 TC ที่มีชั้นกำกับ + 30 ที่นับสองชั้น | ✅ 143 → 149 |
+| รหัส TC ที่ test พาดตรง ๆ | **124 / 126** | นับรหัสไม่ซ้ำใน `e2e` + `backend` (คำสั่งเต็มอยู่ในข้อ 4.6) | ✅ 84 → 124 |
+| test กำพร้า (มี test ไม่มีในแผน) | **0** | `comm -13 plan.txt tests.txt` | ✅ 6 → 0 |
+| TC ที่ไม่มี test พาดรหัส | **2** (COUPON-03 ≡ RACE-04 · NFR-12 manual) | `comm -23 plan.txt tests.txt` | ✅ 42 → 2 |
+| TC ที่ auto **และวัดผลแล้ว** | **103 / 126** (81.7%) | ข้อ 4.6 คอลัมน์สถานะ | 🆕 ไม่เคยนับ |
+| TC ที่ auto **แต่ยังไม่ได้วัด** | **21 / 126** | ข้อ 4.6 · ข้อ 6.1 ค. | 🆕 หนี้ที่เพิ่งเกิด |
+| TC ที่ครอบด้วยมือ | **1** (TC-NFR-12) | ข้อ 6.1 ข. | 🆕 เดิมนับรวมเป็น ui เฉย ๆ |
+| TC ที่ยังไม่มี test เลย | **0** | ข้อ 6.1 ก. ปิดครบ 21 · ข. อธิบาย 2 | ✅ 23 → 0 |
+| TC ติด `[O-ยังไม่ยืนยัน]` | **72 / 126** | ข้อ 5 | ✅ 67/120 → 72/126 |
+| ไฟล์ test ชั้น `ui` ใน `e2e/tests/` | **4 ไฟล์ · 23 `test()`** | `ls e2e/tests/*.ui.spec.ts` | ✅ 1 ไฟล์ · 10 `test()` → 4 · 23 |
+| ไฟล์ test ชั้น `api` ใน `e2e/tests/` | **9 ไฟล์ · 79 `test()`** | นับไฟล์ที่ไม่ลงท้าย `.ui.spec.ts` | ✅ 8 ไฟล์ · 71 `test()` → 9 · 79 |
+| `npm test` | **127 passed** | 97 run ชั้น `api` + 30 run ชั้น `ui` · รัน 3 รอบ 1.3m / 1.2m / 1.2m ผลเหมือนกัน | ⚠️ **ล้าสมัย** — วัดก่อนไฟล์ test ใหม่ 4 ไฟล์ · ต้องรันซ้ำ |
+| `npm run test:race` | **7 passed** · 44.6s | 50 รอบ × N = 2, 5, 10 + ตัวเทียบเรียงลำดับ | — |
+| `npm run test:race:ui` | **2 passed** · 6.7s | TC-RACE-02 · TC-RACE-02b | — |
+| `npm run test:property` | **33 passed** · 1.8m | 27 แถว oracle + 6 property × 1,000 = 6,000 เคส · seed 2026 | — (เปลี่ยนแต่ชื่อ test) |
+| `npm run test:oracle` | **27 passed** | ชุดย่อยของ 33 | — |
+| `go test ./internal/...` | pricing ok · compat ok | 18 ฟังก์ชัน = 12 (`boundary_test.go` · TC-MUT) + 3 (`pricing_test.go`) + 3 (`compat_test.go`) | — (เปลี่ยนแต่คอมเมนต์) |
+| mutation score | 56.0% → 72.8% → **78.8%** | `node mutation/run.mjs` | ⚠️ ยังไม่ได้วัดซ้ำหลังเพิ่ม test 21 ข้อ |
+
+**ตัวเลขเดียวที่อ่านแล้วตัดสินได้ว่าแผนแข็งแรงแค่ไหนคือ `103 / 126 วัดแล้ว`** — ไม่ใช่ `126 TC` และไม่ใช่ ✅ ของข้อ 4.1–4.5 · เอกสารนี้ใช้เวลาหลายรอบกว่าจะยอมเขียนตัวเลขนี้ออกมา และนั่นเองคือบทเรียน

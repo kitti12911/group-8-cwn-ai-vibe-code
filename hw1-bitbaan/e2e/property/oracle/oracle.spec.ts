@@ -16,7 +16,7 @@ test.describe('oracle · ตาราง quote 27 แถวที่คิดด
   test.skip(!ORACLE_READY, 'ยังไม่มี oracle อิสระ — ดู prompts/05-oracle-independent.txt');
 
   for (const c of QUOTES) {
-    test(`${c.id} → ฿${c.total.toLocaleString()} · VAT ฿${c.vat}`, async () => {
+    test(`TC-PROP-07 · ${c.id} → ฿${c.total.toLocaleString()} · VAT ฿${c.vat}`, async () => {
       const got = oracle({
         items: c.items,
         now: c.now,

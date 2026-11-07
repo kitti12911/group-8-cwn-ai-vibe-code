@@ -63,7 +63,7 @@ async function priceIt(c: Case) {
   return { status: r.status(), body: await r.json() };
 }
 
-test(`P3 · ใบสรุปราคาสอดคล้องกันเองทุกครั้ง (${RUNS} แบบ · seed ${SEED})`, async () => {
+test(`TC-PROP-03 · P3 · ใบสรุปราคาสอดคล้องกันเองทุกครั้ง (${RUNS} แบบ · seed ${SEED})`, async () => {
   await fc.assert(
     fc.asyncProperty(arbCase, async (c) => {
       const { status, body: q } = await priceIt(c as Case);
@@ -80,7 +80,7 @@ test(`P3 · ใบสรุปราคาสอดคล้องกันเ�
   );
 });
 
-test(`P5 · ยอดเงินอยู่ในกรอบที่เป็นไปได้เสมอ (${RUNS} แบบ · seed ${SEED})`, async () => {
+test(`TC-PROP-05 · P5 · ยอดเงินอยู่ในกรอบที่เป็นไปได้เสมอ (${RUNS} แบบ · seed ${SEED})`, async () => {
   await fc.assert(
     fc.asyncProperty(arbCase, async (c) => {
       const { body: q } = await priceIt(c as Case);
@@ -97,7 +97,7 @@ test(`P5 · ยอดเงินอยู่ในกรอบที่เป�
   );
 });
 
-test(`P4 · metamorphic — เพิ่มของลงตะกร้าแล้วยอดสินค้าไม่ลดลง (${RUNS} แบบ · seed ${SEED})`, async () => {
+test(`TC-PROP-04 · P4 · metamorphic — เพิ่มของลงตะกร้าแล้วยอดสินค้าไม่ลดลง (${RUNS} แบบ · seed ${SEED})`, async () => {
   await fc.assert(
     fc.asyncProperty(arbCase, fc.constantFrom(...BUYABLE.map((p) => p.sku)), async (c, extra) => {
       const base = c as Case;
@@ -110,7 +110,7 @@ test(`P4 · metamorphic — เพิ่มของลงตะกร้าแ�
   );
 });
 
-test(`P6 · คิดซ้ำด้วย input เดิมและเวลาเดิม ได้ผลเดิมเสมอ (${RUNS} แบบ · seed ${SEED})`, async () => {
+test(`TC-PROP-06 · P6 · คิดซ้ำด้วย input เดิมและเวลาเดิม ได้ผลเดิมเสมอ (${RUNS} แบบ · seed ${SEED})`, async () => {
   await fc.assert(
     fc.asyncProperty(arbCase, async (c) => {
       const a = await priceIt(c as Case);
@@ -123,7 +123,7 @@ test(`P6 · คิดซ้ำด้วย input เดิมและเวล�
   );
 });
 
-test(`P2 · ตะกร้าที่ผิดกฎต้องถูกปฏิเสธเสมอ ไม่เงียบ (${RUNS} แบบ · seed ${SEED})`, async () => {
+test(`TC-PROP-02 · P2 · ตะกร้าที่ผิดกฎต้องถูกปฏิเสธเสมอ ไม่เงียบ (${RUNS} แบบ · seed ${SEED})`, async () => {
   const arbBad = fc.oneof(
     // จำนวนเกินของที่มี
     fc.constantFrom(...BUYABLE.map((p) => p.sku)).map((sku) => ({
@@ -167,7 +167,7 @@ test(`P2 · ตะกร้าที่ผิดกฎต้องถูกป�
   );
 });
 
-test(`P1 · ยอดชำระตรงกับ oracle อิสระทุกแบบ (${RUNS} แบบ · seed ${SEED})`, async () => {
+test(`TC-PROP-01 · P1 · ยอดชำระตรงกับ oracle อิสระทุกแบบ (${RUNS} แบบ · seed ${SEED})`, async () => {
   test.skip(!ORACLE_READY, 'ยังไม่มี oracle อิสระ — ดู e2e/property/oracle/price.ts และ prompts/05-oracle-independent.txt');
   await fc.assert(
     fc.asyncProperty(arbCase, async (c) => {

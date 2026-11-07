@@ -1,6 +1,6 @@
 import { test, expect, APIRequestContext } from '@playwright/test';
-import { newApi, reset, setClock, expectError, asUser, placeOrderOk, pay, available } from '../lib/api';
-import { baht, SEED, USERS } from '../lib/data';
+import { newApi, reset, setClock, expectError, asUser, placeOrderOk, pay, available, quote, getOrder } from '../lib/api';
+import { baht, SEED, USERS, FRI_1230, FULL_BUILD } from '../lib/data';
 
 /** ลูกค้าบริษัท ใบเสนอราคา และภาษี — TEST-PLAN.md §3.8 */
 let api: APIRequestContext;
@@ -125,4 +125,44 @@ test('TC-ACCT-08 · หน้าบัญชีบอกระดับ ยอ�
   const biz = await (await api.get('/api/me', { headers: asUser('C5') })).json();
   expect(biz.nextTier, 'Business ไม่มีระดับถัดไป').toBeNull();
   expect(biz.taxId).toBe('0105559000123');
+});
+
+/**
+ * TC-BUILD-18 อยู่ในแผนข้อ 3.2 (หน้าจัดสเปก) แต่เป็น TC ชั้น `api` ที่ยังไม่มี test
+ * จึงถูกเติมไว้ที่ไฟล์นี้ — `builder.spec.ts` มีเจ้าของอื่นถืออยู่ตอนเขียน
+ */
+test('TC-BUILD-18 · คนที่เปิดลิงก์สั่งเองได้ และส่วนลดคิดตามบัญชีคนสั่ง — FR-22 · Q16 · B1b', async () => {
+  await setClock(api, FRI_1230);
+
+  // ลิงก์ BEAM35K ถูกบันทึกโดย "คนไม่ล็อกอิน" (TEST-DATA.md ข้อ 4) — คนบันทึกจึงไม่มีระดับสมาชิกเลย
+  const link = await api.get(`/api/builds/${SEED.buildCode}`);
+  expect(link.status(), 'เปิดลิงก์ได้โดยไม่ต้องล็อกอิน').toBe(200);
+  const build = await link.json();
+  expect(build.assembly, 'สเปกนี้ขอให้ร้านประกอบ').toBe(true);
+  expect(build.items.map((it: any) => it.sku).sort(), 'ครบชุด 7 ชิ้น').toEqual([...FULL_BUILD].sort());
+  expect(build.evaluation.remaining, 'B1b · ศุกร์ 12:30 เหลืองบ ฿7,397').toBe(baht(7_397));
+
+  const items = build.items.map((it: any) => ({ sku: it.sku, qty: 1 }));
+
+  // ราคาของ "คนที่บันทึกลิงก์" (ไม่ล็อกอิน) = 29,430 − 1,827 (flash) − 500 (ชุดประกอบ) = 27,103
+  const asSaver = await quote(api, { items, user: 'C1', shipping: 'standard', assembly: true });
+  expect(asSaver.memberDiscount, 'คนบันทึกไม่มีส่วนลดสมาชิก').toBe(0);
+  expect(asSaver.total, 'ราคาของคนบันทึกลิงก์ = ฿27,103').toBe(baht(27_103));
+
+  // คนที่เปิดลิงก์ (C4 Gold) สั่งเอง → ต้องได้ส่วนลด Gold ของตัวเอง ไม่ใช่ของคนบันทึก (Q16)
+  const o = await placeOrderOk(api, { items, user: 'C4', shipping: 'standard', assembly: true });
+  expect(o.quote.g2, 'ก่อนส่วนลดสมาชิกเท่ากับราคาของคนบันทึก').toBe(baht(27_103));
+  expect(o.quote.tier, 'ใช้ระดับของคนสั่ง').toBe('GOLD');
+  expect(o.quote.memberRate).toBe(5);
+  expect(o.quote.memberDiscount, '5% ของ 27,103 = 1,355.15 → ปัดลง 1,355').toBe(baht(1_355));
+  expect(o.quote.assemblyFee, 'ครบ 7 หมวด ค่าประกอบฟรี').toBe(0);
+  expect(o.quote.shippingFee, 'เกิน ฿3,000 ส่งฟรี').toBe(0);
+  expect(o.quote.total, 'Q16 · ฿25,748').toBe(baht(25_748));
+  expect(o.quote.vat, 'Q16 · VAT ฿1,684.45').toBe(168_445);
+  expect(o.quote.preVat + o.quote.vat).toBe(o.quote.total);
+  expect(o.quote.total, 'ถูกกว่าราคาของคนบันทึกลิงก์พอดีเท่าส่วนลด Gold').toBe(baht(27_103) - baht(1_355));
+
+  const full = await getOrder(api, o.orderNo, 'C4');
+  expect(full.buyer.code, 'เจ้าของออเดอร์คือคนที่เปิดลิงก์').toBe('C4');
+  expect(full.quote.lines).toHaveLength(7);
 });
