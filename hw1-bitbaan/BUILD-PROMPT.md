@@ -93,4 +93,4 @@
 | ข้อมูลตั้งต้น | `curl -X POST localhost:3000/api/test/reset` | `{"ok":true}` และสินค้า 15 รายการตรง `TEST-DATA.md` 3.1 |
 | กฎเงิน | `cd backend && go test ./internal/...` | ผ่านทุก package |
 | สัญญา API | `cd e2e && npx playwright test tests/contract.spec.ts` | ผ่านทั้ง 7 ข้อ |
-| ทั้งแผน | `cd e2e && npm test` | 186 ผ่าน · รัน 3 รอบได้ผลเท่ากัน |
+| ทั้งแผน | `cd e2e && npm test` | 213 ผ่าน · รัน 3 รอบได้ผลเท่ากัน |

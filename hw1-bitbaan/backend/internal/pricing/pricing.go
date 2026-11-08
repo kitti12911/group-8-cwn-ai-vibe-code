@@ -370,7 +370,7 @@ func applyCoupon(in Input, q Quote, eligible map[string]int64) CouponResult {
 func commas(n int64) string {
 	s := ""
 	for i, d := range []byte(itoa(n)) {
-		if i > 0 && (len(itoa(n))-i)%4 == 0 {
+		if i > 0 && (len(itoa(n))-i)%3 == 0 {
 			s += ","
 		}
 		s += string(d)

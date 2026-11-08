@@ -96,12 +96,12 @@ var seedOrders = []seedOrder{
 		clock.Date(2026, 11, 12, 14, 0, 0), "PACKED", clock.Date(2026, 11, 12, 14, 5, 0), tp(clock.Date(2026, 11, 13, 9, 30, 0)), nil, nil, "88 อาคารดีไซน์โค", Bangkok},
 }
 
-func seed(ctx context.Context, c *pgx.Conn, hash string) error {
-	tx, err := c.Begin(ctx)
-	if err != nil {
-		return err
-	}
-	defer tx.Rollback(ctx)
+// seedTx เขียนข้อมูลตั้งต้นทั้งหมดลงในทรานแซกชันที่ผู้เรียกเปิดไว้
+//
+// เดิมฟังก์ชันนี้เปิด/ปิดทรานแซกชันเอง ทำให้ Reset มี 3 ขั้นแยกกัน (DROP → schema → seed)
+// ถ้าล้มกลางคันฐานข้อมูลจะค้างสภาพครึ่ง ๆ · ตอนนี้ Reset ครอบทั้งหมดไว้ในทรานแซกชันเดียวจึงเป็น all-or-nothing
+func seedTx(ctx context.Context, tx pgx.Tx, hash string) error {
+	var err error
 	ex := func(sql string, args ...any) {
 		if err != nil {
 			return
@@ -218,8 +218,5 @@ func seed(ctx context.Context, c *pgx.Conn, hash string) error {
 	// running numbers continue after the seeded ones
 	ex(`INSERT INTO counters (prefix, n) VALUES ('BB-260910',1),('BB-261106',41),('BB-261113',1),('BB-261112',1),('Q-261106',7)
 		ON CONFLICT (prefix) DO UPDATE SET n = GREATEST(counters.n, EXCLUDED.n)`)
-	if err != nil {
-		return err
-	}
-	return tx.Commit(ctx)
+	return err
 }

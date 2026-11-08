@@ -25,6 +25,15 @@ async function satang(page: Page, testid: string): Promise<number> {
   return Math.round(n * 100);
 }
 
+/**
+ * บรรทัดส่วนลดที่เป็น 0 **ไม่ถูกเรนเดอร์** ตาม FR-25 (ยืนยันแยกไว้ใน `TC-CAT-02` ของ `gaps.ui.spec.ts` → `TC-PRICE-13`)
+ * ดังนั้นการอ่านยอดของบรรทัดพวกนี้ต้องถือว่า "ไม่มีบรรทัด = 0" ไม่ใช่รอจนหมดเวลา
+ */
+async function satangOrZero(page: Page, testid: string): Promise<number> {
+  if ((await page.getByTestId(testid).count()) === 0) return 0;
+  return satang(page, testid);
+}
+
 async function catalog(page: Page): Promise<{ sku: string; name: string; available: number; price: number }[]> {
   const r = await page.request.get('/api/products');
   expect(r.status(), 'GET /api/products').toBe(200);
@@ -274,11 +283,11 @@ test('TC-CAT-02 · ทุกหน้าที่มีราคาเขีย�
   await expectVatStated('หน้าตะกร้า');
 
   const list = await satang(page, 'quote-list-total');
-  const flash = await satang(page, 'quote-flash');
-  const bundle = await satang(page, 'quote-bundle');
-  const member = await satang(page, 'quote-member');
-  const coupon = await satang(page, 'quote-coupon');
-  const assembly = await satang(page, 'quote-assembly');
+  const flash = await satangOrZero(page, 'quote-flash');
+  const bundle = await satangOrZero(page, 'quote-bundle');
+  const member = await satangOrZero(page, 'quote-member');
+  const coupon = await satangOrZero(page, 'quote-coupon');
+  const assembly = await satangOrZero(page, 'quote-assembly');
   const shipping = await satang(page, 'quote-shipping');
   const cartTotal = await satang(page, 'quote-total');
 

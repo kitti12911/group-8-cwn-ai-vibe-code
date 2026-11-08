@@ -84,18 +84,33 @@ func (s *Store) Reset(ctx context.Context) error {
 		}
 		seedHash = h
 	}
-	conn, err := s.Pool.Acquire(ctx)
+	// ตัด cancel ของ request ออก และทำทั้งหมดในทรานแซกชันเดียว
+	//
+	// เดิมใช้ ctx ของ request ตรง ๆ และยิง 3 คำสั่งแยกกัน · ถ้า client ยอมแพ้ระหว่างทาง (Playwright timeout 10 วิ)
+	// ctx จะถูกยกเลิกหลัง DROP SCHEMA สำเร็จแต่ก่อนสร้างตารางเสร็จ → ฐานข้อมูลเหลือ schema เปล่า
+	// แล้ว Maintain ก็ฟ้อง `relation "product_lots" does not exist` รัว ๆ จนกว่าจะมีใคร reset สำเร็จ
+	// (เห็นจริงใน log ตอนรัน property suite แล้วต่อด้วย race:ui — ดู BUG-EXPLORE-02 ใน e2e/triage.json)
+	//
+	// PostgreSQL ทำ DDL ในทรานแซกชันได้ ทั้ง DROP/CREATE/seed จึงเป็น all-or-nothing:
+	// ถ้าล้มกลางคันฐานข้อมูลจะย้อนกลับไปสถานะเดิมทั้งหมด ไม่เหลือสภาพครึ่ง ๆ
+	resetCtx, cancel := context.WithTimeout(context.WithoutCancel(ctx), 60*time.Second)
+	defer cancel()
+
+	tx, err := s.Pool.Begin(resetCtx)
 	if err != nil {
 		return err
 	}
-	defer conn.Release()
-	if _, err := conn.Exec(ctx, "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"); err != nil {
+	defer tx.Rollback(resetCtx)
+	if _, err := tx.Exec(resetCtx, "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"); err != nil {
 		return fmt.Errorf("drop: %w", err)
 	}
-	if _, err := conn.Exec(ctx, schemaSQL); err != nil {
+	if _, err := tx.Exec(resetCtx, schemaSQL); err != nil {
 		return fmt.Errorf("schema: %w", err)
 	}
-	return seed(ctx, conn.Conn(), string(seedHash))
+	if err := seedTx(resetCtx, tx, string(seedHash)); err != nil {
+		return err
+	}
+	return tx.Commit(resetCtx)
 }
 
 // HasSchema reports whether the database was already initialised.

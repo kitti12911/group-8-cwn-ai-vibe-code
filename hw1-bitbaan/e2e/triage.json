@@ -29,24 +29,28 @@
       "severity": "high",
       "rule": "NFR-15 (ผลต้องนิ่ง) · NFR-07 (reset)",
       "verdict": "เว็บผิด",
-      "title": "งานเบื้องหลัง maintain ชนกับ POST /api/test/reset ทำให้ reset ตอบ 500 หรือค้างเกิน 10 วินาที",
-      "repro": "ยิง POST /api/test/reset ติดกันหลายร้อยครั้ง — พังที่รอบ ~903 · log ฝั่งเว็บขึ้น \"maintain: commit unexpectedly resulted in rollback\"",
+      "title": "POST /api/test/reset ถูกยกเลิกกลางคันแล้วทิ้งฐานข้อมูลไว้ครึ่ง ๆ (schema ว่างไม่มีตาราง)",
+      "repro": "รัน property suite (6,000 เคส) แล้วต่อด้วย race:ui ทันที — ทำซ้ำได้ 2 ใน 2 ครั้ง · reset ใช้เวลา 9.992 วินาที ชน timeout 10 วินาทีของ client",
       "expected": {
         "status": 200,
         "body": {
           "ok": true
-        }
+        },
+        "note": "ล้มเมื่อไรฐานข้อมูลต้องยังอยู่ในสภาพเดิม"
       },
       "actual": {
-        "status": 500,
-        "alt": "timeout > 10000ms"
+        "status": "timeout > 10000ms",
+        "dbState": "public schema ถูกสร้างใหม่แต่ไม่มีตารางเลย",
+        "log": "maintain: ERROR: relation \"product_lots\" does not exist (SQLSTATE 42P01) · maintain: commit unexpectedly resulted in rollback"
       },
       "impact": "ชุดทดสอบไม่นิ่ง ซึ่งขัด NFR-15 โดยตรง · ถ้าขึ้นระบบจริง งานเบื้องหลังปล่อยของหมดเวลาอาจถูกตัดกลางเงียบ ๆ",
-      "source": "backend/internal/store/store.go · Reset() ทำ DROP SCHEMA public CASCADE (ต้องใช้ ACCESS EXCLUSIVE lock ทุกตาราง) แต่ Maintain() วิ่งทุกวินาที (cmd/server/main.go:67) และวิ่งก่อนทุก request (internal/api/server.go:36) ในทรานแซกชันของตัวเอง · ไม่มีการกันสองตัวนี้",
-      "fix": "sync.RWMutex ใน Store · Maintain ถือ RLock · Reset ถือ Lock — แก้ที่ต้นเหตุ ไม่ใช้ retry กลบ (TEST-PLAN.md §2.5)",
-      "tc": "TC-NFR-09 · TC-PROP-02",
+      "source": "backend/internal/store/store.go · Reset ใช้ r.Context() ของ request ตรง ๆ และแยกเป็น 3 คำสั่ง (DROP SCHEMA → schema.sql → seed) · เมื่อ client ยอมแพ้ ctx ถูกยกเลิกหลัง DROP สำเร็จแต่ก่อนสร้างตารางเสร็จ",
+      "fix": "context.WithoutCancel(ctx) + timeout 60 วินาที เพื่อให้ client ที่ยอมแพ้ไม่ตัดการสร้าง schema · และยุบ DROP + schema + seed เข้าทรานแซกชันเดียว (PostgreSQL ทำ DDL ในทรานแซกชันได้) จึงเป็น all-or-nothing · แก้ seed() ให้รับ pgx.Tx (seedTx) แทนการเปิดทรานแซกชันเอง · RWMutex ยังคงไว้เพราะยังกันการวิ่งชนกันได้",
+      "tc": "TC-NFR-09 · TC-PROP-02 · TC-RACE-02",
       "test": "e2e/property/price.property.spec.ts (P2)",
-      "status": "fixed"
+      "status": "fixed",
+      "wrongFixFirstAttempt": "รอบแรกใส่ sync.RWMutex (Maintain ถือ RLock · Reset ถือ Lock) ซึ่งกันได้แค่การวิ่งชนกัน แต่ไม่ได้กันการยกเลิกกลางคัน จึงยังพังเหมือนเดิม",
+      "after": "ลำดับ property → race:ui ผ่าน · reset ช้าสุด 397 ms (เดิม 9,992 ms) · maintain error = 0"
     }
   ],
   "bugMode1": [

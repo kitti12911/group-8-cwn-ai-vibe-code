@@ -37,13 +37,13 @@
   <p><b>ตัวเลขทุกตัวในหน้านี้วัดเมื่อ 7 พ.ย. 2026</b> บนเครื่องของทีม ที่ <code>BUG_MODE=0</code> (โหมดปกติ ไม่มีบั๊กฝัง) หลังแก้บั๊กครบทุกตัวแล้ว · ส่วน <code>BUG_MODE=2</code> แยกไว้ต่างหากด้านล่าง และมีป้ายกำกับชัดเจน</p>
   <p>ถ้าอยากรู้ว่าหน้านี้ค้างหรือยัง <b>รัน 7 คำสั่งนี้แล้วเทียบกับตารางถัดไปทีละบรรทัด</b> — ไม่ต้องเชื่อหน้านี้</p>
 <pre>cd backend &amp;&amp; go test ./internal/...            # pricing ok · compat ok
-cd e2e &amp;&amp; npm test                              # 186 ผ่าน
+cd e2e &amp;&amp; npm test                              # 213 ผ่าน
 cd e2e &amp;&amp; npm run test:thrice                    # NFR-15 · 3 รอบติด ผลต้องเท่ากัน
 cd e2e &amp;&amp; npm run test:race                      # 7 ผ่าน
 cd e2e &amp;&amp; npm run test:race:ui                   # 2 ผ่าน
 cd e2e &amp;&amp; npm run test:property                  # 33 ผ่าน · seed 2026
 cd e2e &amp;&amp; npm run test:oracle                    # 27 ผ่าน
-node mutation/run.mjs                           # 78.8%</pre>
+node mutation/run.mjs                           # 80.2% (รอบ 7)</pre>
 </div>
 
 <div class="cards">
@@ -51,7 +51,7 @@ node mutation/run.mjs                           # 78.8%</pre>
   <div class="card"><b class="ok">9</b><span>TC การแย่งของผ่าน (api 7 + หน้าเว็บ 2)</span></div>
   <div class="card"><b class="ok">33</b><span>property + oracle ผ่าน (6,000 แบบ)</span></div>
   <div class="card"><b class="ok">27/27</b><span>oracle อิสระตรงกับตาราง quote</span></div>
-  <div class="card"><b class="ok">78.8%</b><span>mutation score รอบ 3</span></div>
+  <div class="card"><b class="ok">80.2%</b><span>mutation score รอบ 7 · 197 mutant</span></div>
   <div class="card"><b class="warn">1</b><span>บั๊กจากการสำรวจ ยังไม่แก้</span></div>
 </div>
 
@@ -68,7 +68,7 @@ node mutation/run.mjs                           # 78.8%</pre>
   <tr>
     <td><code>npm test</code></td>
     <td>ทุก TC ชั้น api และ ui · ui 10 ข้อ × 3 เบราว์เซอร์ (chromium · firefox · webkit) = 30 รอบ ที่เหลือเป็นชั้น api</td>
-    <td class="ok">186 ผ่าน · 0 แดง</td>
+    <td class="ok">213 ผ่าน · 0 แดง</td>
     <td>1.2–1.3 นาที</td>
   </tr>
   <tr>
@@ -104,7 +104,7 @@ node mutation/run.mjs                           # 78.8%</pre>
   <tr>
     <td><code>node mutation/run.mjs</code></td>
     <td>mutation testing ของโมดูลกฎ (ขั้น 4) · 3 รอบ</td>
-    <td class="ok">56.0% → 72.8% → <b>78.8%</b></td>
+    <td class="ok">56.0% → … → <b>80.2%</b> (7 รอบ)</td>
     <td>~8 นาทีต่อรอบ</td>
   </tr>
 </table>
@@ -206,11 +206,11 @@ node mutation/run.mjs                           # 78.8%</pre>
 
 <h2>หลักฐานภาพของขั้น 2 (การแย่งของ)</h2>
 <ul>
-  <li><code>test-report/race-ui/race-ui.gif</code> — <b>13 เฟรม · 606×273 · 164 KB</b> · ถ่ายภาพนิ่งทั้งสองหน้าต่างทุก 120 มิลลิวินาที แล้วต่อ A ซ้าย B ขวา เข้ารหัสด้วย <code>gifenc</code> (ไม่ใช้ ffmpeg) · สร้างซ้ำด้วย <code>npm run race:gif</code></li>
+  <li><code>test-report/race-ui/race-ui.gif</code> — <b>12 เฟรม · 606×273 · 131 KB</b> · ถ่ายภาพนิ่งทั้งสองหน้าต่างทุก 120 มิลลิวินาที แล้วต่อ A ซ้าย B ขวา เข้ารหัสด้วย <code>gifenc</code> (ไม่ใช้ ffmpeg) · สร้างซ้ำด้วย <code>npm run race:gif</code></li>
   <li><code>test-report/race-ui/race-ui-A.webm</code> · <code>race-ui-B.webm</code> — วิดีโอ <code>TC-RACE-02</code> สองเครื่องแย่งของชิ้นสุดท้าย</li>
   <li><code>test-report/race-ui/race-tabs-A.webm</code> · <code>race-tabs-B.webm</code> — วิดีโอ <code>TC-RACE-02b</code> สองแท็บ บัญชีเดียวกัน</li>
   <li><code>test-report/race-ui/race-ui-side-by-side.png</code> · <code>race-tabs-side-by-side.png</code> — ภาพนิ่งคู่ ตอนผลขึ้นจอ</li>
-  <li><code>test-report/race-ui/frames/</code> — ภาพนิ่งต้นฉบับ <code>000-A.png</code> … <code>013-B.png</code> (14 คู่ = 13 เฟรมของ GIF)</li>
+  <li><code>test-report/race-ui/frames/</code> — ภาพนิ่งต้นฉบับ <code>000-A.png</code> … <code>013-B.png</code> (14 คู่ = 12 เฟรมของ GIF)</li>
   <li><code>test-report/html/index.html</code> — รายงานของ Playwright (สร้างหลังรัน <code>npm test</code>)</li>
 </ul>
 <p class="sub">project <code>race-ui</code> ตั้ง <code>video: 'on'</code> หลักฐานจึงเหลือรอดแม้ test <b>ผ่าน</b></p>
@@ -234,10 +234,10 @@ node mutation/run.mjs                           # 78.8%</pre>
   <p>บันทึกไว้แทนที่จะลบเงียบ ๆ — หน้านี้ฉบับก่อนขัดกับ <code>README.md</code> และรายงานฉบับเต็ม ทั้งที่ <code>README.md</code> บอกให้ผู้ตรวจเปิดหน้านี้เป็นที่แรก</p>
   <table>
     <tr><th>เคยเขียน</th><th>ของจริง</th><th>เพราะอะไร</th></tr>
-    <tr><td><code>npm test</code> → 186 ผ่าน</td><td class="ok">186 ผ่าน</td><td>นับก่อนเพิ่ม TC ชุดสุดท้าย</td></tr>
-    <tr><td>property → 5 ผ่าน · 6,000 แบบ</td><td class="ok">33 ผ่าน · 6,000 แบบ</td><td>4,000 คิดเลขผิดมาแต่ต้น (ตอนนั้นของจริงคือ 3,000) · ตอนนี้ทั้ง 6 property รัน <code>RUNS</code> 1,000 เท่ากันหมด และนับแถว oracle 27 แถวรวมเข้ามาด้วย</td></tr>
+    <tr><td><code>npm test</code> → 213 ผ่าน</td><td class="ok">213 ผ่าน</td><td>นับก่อนเพิ่ม TC ชุดสุดท้าย</td></tr>
+    <tr><td>property → 5 ผ่าน · 4,000 แบบ</td><td class="ok">33 ผ่าน · 6,000 แบบ</td><td>4,000 คิดเลขผิดมาแต่ต้น (ตอนนั้นของจริงคือ 3,000) · ตอนนี้ทั้ง 6 property รัน <code>RUNS</code> 1,000 เท่ากันหมด และนับแถว oracle 27 แถวรวมเข้ามาด้วย</td></tr>
     <tr><td>oracle → ข้าม · รอ oracle อิสระ</td><td class="ok">27 / 27 ผ่าน · <code>ORACLE_READY = true</code></td><td>oracle เขียนเสร็จและผ่าน auditor แล้ว · เคยเป็นโครงเปล่าที่โยน error</td></tr>
-    <tr><td>GIF → 13 เฟรม · 164 KB</td><td class="ok">13 เฟรม · 164 KB</td><td>ตัวเลขของ GIF ตัวแรก ก่อนรัน <code>test:race:ui</code> ใหม่</td></tr>
+    <tr><td>GIF → 12 เฟรม · 131 KB</td><td class="ok">12 เฟรม · 131 KB</td><td>ตัวเลขของ GIF ตัวแรก ก่อนรัน <code>test:race:ui</code> ใหม่</td></tr>
   </table>
 </div>
 

@@ -810,6 +810,6 @@ BUG_MODE=1 docker compose up -d --build backend    # รันแผนกับ
 | `npm run test:property` | **33 passed** · 1.8m | 27 แถว oracle + 6 property × 1,000 = 6,000 เคส · seed 2026 | — (เปลี่ยนแต่ชื่อ test) |
 | `npm run test:oracle` | **27 passed** | ชุดย่อยของ 33 | — |
 | `go test ./internal/...` | pricing ok · compat ok | 18 ฟังก์ชัน = 12 (`boundary_test.go` · TC-MUT) + 3 (`pricing_test.go`) + 3 (`compat_test.go`) | — (เปลี่ยนแต่คอมเมนต์) |
-| mutation score | 56.0% → 72.8% → **78.8%** | `node mutation/run.mjs` | ⚠️ ยังไม่ได้วัดซ้ำหลังเพิ่ม test 21 ข้อ |
+| mutation score | 56.0% → … → **80.2%** (รอบ 7 · 197 mutant) | `node mutation/run.mjs` | ✅ วัดซ้ำแล้วบนทรีที่ merge · ดู `MUTATION-REPORT.md` ข้อ 2.1 — ⚠️ เดิมยังไม่ได้วัดซ้ำหลังเพิ่ม test 21 ข้อ |
 
 **ตัวเลขเดียวที่อ่านแล้วตัดสินได้ว่าแผนแข็งแรงแค่ไหนคือ `103 / 126 วัดแล้ว`** — ไม่ใช่ `147 TC` และไม่ใช่ ✅ ของข้อ 4.1–4.5 · เอกสารนี้ใช้เวลาหลายรอบกว่าจะยอมเขียนตัวเลขนี้ออกมา และนั่นเองคือบทเรียน
