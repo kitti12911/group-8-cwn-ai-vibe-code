@@ -10,8 +10,18 @@
 | ไฟล์ที่ mutate | `backend/internal/pricing/pricing.go` · `backend/internal/compat/compat.go` — **เฉพาะโมดูลกฎ** ไม่แตะชั้น API, store หรือ seed |
 | ตัวฆ่า mutant | `go test ./internal/...` (ตาราง quote 27 แถว + ความเข้ากันได้ทุกคู่ + TC ที่เพิ่มใหม่) |
 | ชนิด mutant | ขอบเงื่อนไข (`>=`↔`>`, `<=`↔`<`) · กลับเงื่อนไข (`==`↔`!=`) · กลับตรรกะ (`&&`↔`\|\|`) · เลขคณิต (`+`↔`-`, `*`↔`/`) · เลขคงที่ (`n` → `n+1`) |
-| mutant ทั้งหมด | 222 ตัว · **ใช้ได้จริง 184 ตัว** (38 ตัวคอมไพล์ไม่ผ่าน = ไม่นับ · 1 ตัว timeout) |
+| mutant ทั้งหมด | **223 ตัว** = แถวใน `mutation/round*.json` ทุกไฟล์ · **ใช้ได้จริง 184 ตัว** (killed + survived) · ไม่นับ 39 ตัว = คอมไพล์ไม่ผ่าน 38 + timeout 1 |
+| นับซ้ำเองได้ด้วย | `node -e "const j=require('./mutation/round1.json'); const c={}; for (const r of j.results) c[r.status]=(c[r.status]||0)+1; console.log(j.results.length, c)"` → `223 { invalid: 38, killed: 103, survived: 81, timeout: 1 }` |
 | เวลาต่อรอบ | ~8 นาที (184 mutant × `go test` ~1.6 วินาที) |
+
+### ⚠️ score นี้วัดอะไร และ **ไม่ได้** วัดอะไร — อ่านก่อนเชื่อเลข 78.8%
+
+| | |
+| --- | --- |
+| **วัด** | ความแข็งแรงของ **ชุด unit** ที่ `go test ./internal/...` รัน คือ `pricing_test.go` + `boundary_test.go` + `compat_test.go` — ตรงกับ **ชั้น `unit` 23 TC จาก 120 TC** ของ `TEST-PLAN.md` §2.1 |
+| **ไม่ได้วัด** | TC อีก 97 ข้อของแผน · ชุด Playwright ตามแผน **127 ข้อ** (`npm test`) · race **7 + 2** ข้อ · property **33** ข้อ — `mutation/run.mjs` บรรทัด 108 เรียก `execSync('go test ./internal/...')` **บรรทัดเดียว** ไม่มีที่ไหนในไฟล์เรียก Playwright หรือ fast-check |
+| **จึงต้องพูดว่า** | **"ชุด unit ฆ่า mutant ได้ 56.0% → 78.8%"** · ห้ามพูดว่า "แผน 120 TC แข็งแรงขึ้น 22.8 จุด" — เป็นคนละประธาน และเป็นคำเคลมที่พิสูจน์ไม่ได้จากข้อมูลชุดนี้ |
+| **ทำไมไม่ใช้ `npm test` เป็นตัวฆ่า** | จะได้เลขระดับแผนจริง แต่ต้องจ่าย 184 mutant × 1.2 นาทีต่อรอบของ `npm test` (แทน ~8 นาที) และต้องยกเว็บ + ฐานข้อมูลใหม่ทุก mutant · เขียนไว้เป็นข้อจำกัดที่รู้ตัว ไม่ใช่ข้ออ้าง |
 
 ### ทำไมไม่ใช้ Stryker หรือ gremlins
 
