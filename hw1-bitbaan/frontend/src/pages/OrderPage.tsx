@@ -80,7 +80,10 @@ export function OrderPage() {
   const lookup = (e: FormEvent) => {
     e.preventDefault();
     const ph = phoneInput.trim();
-    if (!ph) return;
+    if (!ph) {
+      setError('กรุณากรอกเบอร์โทรที่ใช้สั่ง');
+      return;
+    }
     saveGuestPhone(orderNo, ph);
     void load(ph);
   };
@@ -97,7 +100,7 @@ export function OrderPage() {
             <p>สั่งซื้อแบบไม่สมัครสมาชิก? ใส่เบอร์โทรที่ใช้สั่งเพื่อดูออเดอร์</p>
             <div className="field">
               <label htmlFor="lookup-phone">เบอร์โทร</label>
-              <input id="lookup-phone" type="tel" value={phoneInput} onChange={(e) => setPhoneInput(e.target.value)} />
+              <input id="lookup-phone" data-testid="lookup-phone" type="tel" value={phoneInput} onChange={(e) => setPhoneInput(e.target.value)} />
             </div>
             <button type="submit" className="btn btn-dark">
               ดูออเดอร์
@@ -179,7 +182,7 @@ export function OrderPage() {
           <button type="button" className="btn btn-outline self-start" data-testid="invoice-link" onClick={showInvoice} disabled={busy}>
             ดูใบกำกับภาษี
           </button>
-          {invoice && <InvoiceView inv={invoice} />}
+          {invoice && <InvoiceView inv={invoice} quote={order.quote} />}
         </section>
 
         <section className="card stack">
@@ -237,7 +240,21 @@ export function OrderPage() {
                     แกะกล่องแล้ว (หัก 10%)
                   </label>
                 </fieldset>
-                <button type="submit" className="btn btn-dark self-start" data-testid="return-submit" disabled={busy}>
+                {/* FR-48: show the refund before the customer confirms */}
+                {opened !== null && order.returnPreview && (
+                  <div className="alert alert-ok small" role="status">
+                    ได้เงินคืน{' '}
+                    <span className="mono strong" data-testid="return-preview-refund">
+                      ฿{baht((opened ? order.returnPreview.opened : order.returnPreview.unopened).refund)}
+                    </span>
+                    {' · '}ค่าธรรมเนียม{' '}
+                    <span className="mono" data-testid="return-preview-fee">
+                      ฿{baht((opened ? order.returnPreview.opened : order.returnPreview.unopened).fee)}
+                    </span>
+                    {' · '}ไม่คืนค่าส่ง
+                  </div>
+                )}
+                <button type="submit" className="btn btn-dark self-start" data-testid="return-submit" disabled={busy || opened === null}>
                   ขอคืนของ
                 </button>
               </form>
@@ -251,9 +268,9 @@ export function OrderPage() {
             <span className="small muted-2">
               ของเสียจากโรงงาน เคลมตามประกันผู้ผลิต แยกจากการคืนของ ไม่หักค่าธรรมเนียม · นำสินค้าและเลขออเดอร์มาที่ร้าน ชั้น 4 ห้างไอที ปิ่นเกล้า
             </span>
-            <a href="#warranty" className="small">
-              ช่องทางเคลมประกัน
-            </a>
+            <Link to={`/warranty?order=${encodeURIComponent(order.orderNo)}`} className="small" data-testid="warranty-link">
+              ของเสียจากโรงงาน → เคลมประกัน
+            </Link>
           </div>
 
           {(order.refunds?.length ?? 0) > 0 && (
@@ -280,7 +297,18 @@ export function OrderPage() {
   );
 }
 
-function InvoiceView({ inv }: { inv: Invoice }) {
+function InvoiceView({ inv, quote }: { inv: Invoice; quote?: Order['quote'] }) {
+  // C4 exploration: lines are list prices, so show every discount and fee between them and the total
+  const adj: [string, number][] = quote
+    ? ([
+        ['ส่วนลด flash sale', -quote.flashDiscount],
+        ['ส่วนลดชุดประกอบ', -quote.bundleDiscount],
+        ['ส่วนลดสมาชิก', -quote.memberDiscount],
+        [`คูปอง${quote.coupon?.code ? ` ${quote.coupon.code}` : ''}`, -(quote.coupon?.amount ?? 0)],
+        ['ค่าประกอบ', quote.assemblyFee],
+        ['ค่าส่ง', quote.shippingFee],
+      ] as [string, number][]).filter(([, v]) => v !== 0)
+    : [];
   return (
     <div className="invoice stack-sm" aria-label="ใบกำกับภาษี">
       <div className="row-between wrap-gap">
@@ -290,7 +318,7 @@ function InvoiceView({ inv }: { inv: Invoice }) {
       <span className="small muted">ออกเมื่อ {dateTimeTH(inv.issuedAt)} · ออเดอร์ {inv.orderNo}</span>
       <div className="small">
         ผู้ซื้อ: {inv.buyer?.name}
-        {inv.buyer?.company ? ` · ${inv.buyer.company}` : ''}
+        {inv.buyer?.company && inv.buyer.company !== inv.buyer.name ? ` · ${inv.buyer.company}` : ''}
         {inv.buyer?.taxId ? (
           <>
             {' '}
@@ -307,6 +335,12 @@ function InvoiceView({ inv }: { inv: Invoice }) {
                 {l.qty ? ` × ${l.qty}` : ''}
               </span>
               <span className="mono">{typeof l.amount === 'number' ? baht(l.amount) : ''}</span>
+            </li>
+          ))}
+          {adj.map(([label, v]) => (
+            <li key={label} data-testid="invoice-adjustment">
+              <span>{label}</span>
+              <span className="mono">{baht(v)}</span>
             </li>
           ))}
         </ul>

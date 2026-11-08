@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { PROVINCES } from '../format';
 import type { Shipping } from '../types';
 
@@ -25,6 +26,7 @@ export function ShippingForm({
     { id: 'pickup', name: 'รับที่ร้าน', desc: 'ฟรี · ชั้น 4 ห้างไอที ปิ่นเกล้า · เปิด 10:00–21:00 ทุกวัน', fee: 'ฟรี' },
   ];
   const expressBad = value.shipping === 'express' && value.province !== 'กรุงเทพมหานคร';
+  const [switched, setSwitched] = useState(false);
 
   return (
     <div className="stack">
@@ -71,7 +73,17 @@ export function ShippingForm({
               id="address-province"
               data-testid="address-province"
               value={value.province}
-              onChange={(e) => set({ province: e.target.value })}
+              onChange={(e) => {
+                const province = e.target.value;
+                // FR-32 · C4 exploration: express is Bangkok only — switch to standard instead of keeping ฿150 in the total
+                if (value.shipping === 'express' && province && province !== 'กรุงเทพมหานคร') {
+                  set({ province, shipping: 'standard' });
+                  setSwitched(true);
+                } else {
+                  set({ province });
+                  setSwitched(false);
+                }
+              }}
             >
               <option value="">— เลือกจังหวัด —</option>
               {PROVINCES.map((p) => (
@@ -82,6 +94,11 @@ export function ShippingForm({
             </select>
           </div>
           {expressBad && <p className="note warn">ส่งด่วนได้เฉพาะที่อยู่ในกรุงเทพมหานคร</p>}
+          {switched && (
+            <p className="note warn" role="status" data-testid="shipping-switched">
+              เปลี่ยนเป็นส่งปกติแล้ว เพราะส่งด่วนได้เฉพาะกรุงเทพมหานคร
+            </p>
+          )}
           <p className="small muted">1 ออเดอร์ส่งได้ 1 ที่อยู่ ถ้าต้องส่งหลายที่ให้แยกออเดอร์</p>
         </div>
       )}

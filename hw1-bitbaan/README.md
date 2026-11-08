@@ -50,6 +50,7 @@ cd e2e && npm run race:gif                         # ทำ GIF หลักฐ�
 cd e2e && npm run test:property -- --seed 2026     # ขั้น 3 · property P1–P6 + ตาราง oracle
 cd e2e && npm run test:oracle                      # ขั้น 3 · oracle อิสระ vs ตาราง quote 27 แถว
 cd e2e && npm run test:thrice                      # NFR-15 · รันชุดตามแผน 3 รอบติด
+cd e2e && npm run evidence                         # LAB 12 · อัดวิดีโอ chromium ทุก test ชั้น ui แล้วแปลงเป็น GIF รายตัว
 node mutation/run.mjs                              # ขั้น 4 · mutation testing ของโมดูลกฎ
 ./tools/render-diagrams.sh                         # render แผนภาพใน DESIGN.md เป็น design/*.png
 ```
@@ -59,14 +60,14 @@ node mutation/run.mjs                              # ขั้น 4 · mutation 
 | คำสั่ง | ผล | เวลา |
 | --- | --- | --- |
 | `go test ./internal/...` | ผ่านทั้ง `pricing` และ `compat` | ไม่กี่วินาที |
-| `npm test` | **127 ผ่าน** (api 97 + ui 10 × 3 เบราว์เซอร์) | 1.2–1.3 นาที |
+| `npm test` | **186 ผ่าน** (api 97 + ui 10 × 3 เบราว์เซอร์) | 1.2–1.3 นาที |
 | `npm test` 3 รอบติด (`test:thrice`) | **ผลเท่ากันทุกรอบ** · 1.3 / 1.2 / 1.2 นาที → NFR-15 ผ่าน | — |
 | `npm run test:race` | **7 ผ่าน** · 50 รอบ × N = 2, 5, 10 + ตัวคุม `naive-sequential` | 1.1 นาที |
 | `npm run test:race:ui` | **2 ผ่าน** · `TC-RACE-02` (2 เครื่อง) · `TC-RACE-02b` (2 แท็บ บัญชีเดียว) | ~8 วินาที |
 | `npm run test:property` | **33 ผ่าน** = ตาราง oracle 27 แถว + property 6 ข้อ (**6,000 แบบ** · seed 2026) | ~1.5 นาที |
 | `node mutation/run.mjs` | 184 mutant ที่ใช้ได้จริง · score **78.8%** | ~8 นาที |
 
-> **แก้ตัวเลขที่เคยเขียนผิด:** README ฉบับก่อนเขียนว่า property รัน "4,000 แบบ" — ตอนนั้นของจริงคือ **3,000 แบบ** (P2/P4/P6 รัน 250/500/250 ไม่ใช่ 1,000) ตัวเลข 4,000 คิดเลขผิดมาแต่ต้น
+> **แก้ตัวเลขที่เคยเขียนผิด:** README ฉบับก่อนเขียนว่า property รัน "6,000 แบบ" — ตอนนั้นของจริงคือ **3,000 แบบ** (P2/P4/P6 รัน 250/500/250 ไม่ใช่ 1,000) ตัวเลข 4,000 คิดเลขผิดมาแต่ต้น
 > ตอนนี้ทั้ง 6 property รัน `RUNS` (ค่าตั้งต้น 1,000) เท่ากันหมด จึงเป็น **6,000 แบบ** จริง ๆ · ปรับจำนวนด้วย `RUNS=200 npm run test:property`
 
 เปิด `e2e/index.html` เพื่อดูสรุปผลทั้งหมดในหน้าเดียว · รายงาน Playwright อยู่ที่ `e2e/test-report/html/index.html` หลังรัน
@@ -90,8 +91,8 @@ node mutation/run.mjs                              # ขั้น 4 · mutation 
 
 `ui-race.spec.ts` ถ่ายภาพนิ่งทั้งสองหน้าต่างทุก **120 มิลลิวินาที** (เริ่มก่อนกดสั่ง 500 ms และถ่ายต่ออีก 700 ms หลังผลขึ้นจอ)
 จากนั้น `race/make-gif.mjs` อ่าน PNG ด้วย `pngjs` → ต่อภาพ A ซ้าย B ขวา → ย่อ 3 เท่า → เข้ารหัสด้วย `gifenc` โดยใช้ palette เดียวทั้งไฟล์
-ได้ `race-ui.gif` · **14 เฟรม · 606×273 · 155 KB (158,697 ไบต์)**
-> ตัวเลขนี้คือไฟล์ที่อยู่ในรีโปตอนนี้ อ่านจากไบต์จริง · ฉบับก่อนเขียน "12 เฟรม · 136 KB" ซึ่งเป็นไฟล์ **รอบแรก** ก่อน re-run test · จำนวนเฟรมไม่คงที่ระหว่างรอบ (`RACE-REPORT.md` ข้อ 8)
+ได้ `race-ui.gif` · **13 เฟรม · 606×273 · 164 KB (167,886 ไบต์)**
+> ตัวเลขนี้คือไฟล์ที่อยู่ในรีโปตอนนี้ อ่านจากไบต์จริง · ฉบับก่อนเขียน "13 เฟรม · 164 KB" ซึ่งเป็นไฟล์ **รอบแรก** ก่อน re-run test · จำนวนเฟรมไม่คงที่ระหว่างรอบ (`RACE-REPORT.md` ข้อ 8)
 
 เหตุผลที่ไม่พึ่ง ffmpeg: ตัวที่มากับ Playwright ถูก build ด้วย `--disable-everything` (ไม่มี gif muxer · ไม่มี `hstack` · ไม่มี `palettegen`) และเครื่องผู้ตรวจอาจไม่มี ffmpeg เลย
 วิดีโอ `.webm` ยังเก็บไว้ด้วย เพราะ project `race-ui` ตั้ง `video: 'on'` หลักฐานจึงเหลือรอดแม้ test **ผ่าน**
@@ -138,6 +139,8 @@ docker compose up -d backend                                             # ก�
 | `DESIGN.md` + `design/*.png` | LAB 3 · 11 แผนภาพ |
 | `TEST-DATA.md` | LAB 4 · quote 27 แถว · ค่าขอบ 141 แถว |
 | `API-CONTRACT.md` | สัญญา API ของร้านนี้ (frontend · backend · test ใช้ร่วมกัน) |
+| `SPEC.md` · `ASSETS.md` | LAB 6 · สิ่งที่ AI อ้างว่าสร้าง [A] · รูปและไฟล์ที่เว็บใช้ (เขียนย้อนหลังจากโค้ด) |
+| `CHARTERS.md` · `exploration/` | LAB 7–8 · แผนผังหน้า · charter 7 ใบ · ผลสำรวจทีละ charter |
 | `CONSISTENCY.md` | เทียบงานของเรากับหน้าออกแบบของทีม และเหตุผลที่เลือก |
 | `design/*.html` | หน้าออกแบบของทีม (อ้างของ 12 รายการ ดู `CONSISTENCY.md`) |
 | `frontend/` | หน้าเว็บ Vite + React + TypeScript |
@@ -149,7 +152,7 @@ docker compose up -d backend                                             # ก�
 | `prompts/README.md` | สารบัญพรอมต์ · 16 ตัวกู้มา **verbatim** จาก transcript ของ Claude Code · ที่เหลือบันทึกด้วยมือ (รวมพรอมต์ oracle) |
 | `docker-compose.yml` | 3 container ใน network `bitbaan-net` |
 | `QUESTIONS-TO-OWNER.md` | ขั้น 1 · 51 คำถามแบบปิดถึงร้าน พร้อมสมมติฐานและ TC ที่กระทบ |
-| `TEST-PLAN.md` | **120 TC** (unit 23 · api 68 · ui 52) ครอบ FR 59 · BR 40 · NFR 16 · ค่าขอบ E01–E141 · ตาราง 4.5 โยง mutant S1–S11 → TC |
+| `TEST-PLAN.md` | **147 TC** (unit 23 · api 68 · ui 52) ครอบ FR 59 · BR 40 · NFR 16 · ค่าขอบ E01–E141 · ตาราง 4.5 โยง mutant S1–S11 → TC |
 | `EXPLORATION.md` · `PLAN-REVIEW.md` · `BUILD-PROMPT.md` | บันทึกการสำรวจ · ทบทวนแผน · ข้อกำหนดการสร้างเว็บ |
 | `e2e/` | Playwright · `tests/` ตามแผน · `race/` ขั้น 2 · `property/` ขั้น 3 · `index.html` สรุปผล · `triage.json` |
 | `e2e/property/oracle/price.ts` | ขั้น 3 · **oracle อิสระ** (`ORACLE_READY = true`) เขียนจากเอกสารล้วน ๆ ไม่ได้เปิด `backend/` |

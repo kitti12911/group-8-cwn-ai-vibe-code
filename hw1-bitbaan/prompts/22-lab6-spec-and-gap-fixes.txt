@@ -1,0 +1,15 @@
+[7 พ.ย. 2026 · LAB 6 · คำสั่งของผู้ใช้ตามลำดับ (ย่อจากแชต) + พรอมต์ที่ส่งให้ subagent]
+
+ผู้ใช้:
+1. "checkout playground? is it up-to-date? and is it satisfy image.png (ตาราง LAB 0–13 ของบท 04) ... report me first."
+2. "what is 6 wrong?"  → ตอบ: เว็บสร้างก่อน BUILD-PROMPT.md · ขาด SPEC.md ASSETS.md
+3. "ok, please fix them then push to github"
+4. "when you found problem, you should fix those problem and yeah, please continue our work."
+
+พรอมต์ subagent เขียน SPEC.md / ASSETS.md (สรุป):
+- เขียน SPEC.md (คำอ้างของ AI [A]) และ ASSETS.md จากโค้ดใน backend/ frontend/ docker-compose.yml
+- ห้ามเปิด backend/BUGS.md และ _ta-only/ · ห้ามบอกว่า BUG_MODE=1/2 เปลี่ยนอะไร บอกแค่ว่ามีสวิตช์และอ่านค่าได้ที่ไหน
+- ทุกคำอ้างต้องมาจากโค้ด · REQUIREMENTS ใช้แค่ติดรหัส FR/BR · ข้อที่ยังไม่สร้างหรือทำต่างให้ลงตาราง "ยังไม่ได้สร้าง / ทำต่าง"
+- ผ่าน markdownlint-cli2
+
+ผล: เจอ 12 จุดใน SPEC.md §8 → แก้ 10 จุด (FR-05/06/07/16/22/25/30/48/49 · BR-21) + TC ใหม่ 9 ข้อ (TEST-PLAN §3.13)

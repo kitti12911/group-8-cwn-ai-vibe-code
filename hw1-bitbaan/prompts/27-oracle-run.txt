@@ -1,0 +1,16 @@
+[7 พ.ย. 2026 · ขั้น 3.1 oracle อิสระ · ส่ง prompts/05-oracle-independent.txt ให้ subagent ตัวใหม่แบบคำต่อคำ]
+
+เพิ่มกติกาให้เข้มกว่าเดิม: ห้ามเปิด backend/BUGS.md · _ta-only/ · SPEC.md · API-CONTRACT.md · EXPLORATION*.md · exploration/ ·
+TEST-PLAN.md · *-REPORT.md · REVIEW.md · BUG-HUNT.md · USER-STORIES.md · mutation/ · ห้ามรัน test ใน e2e/ (จะเห็นค่าที่คาด) ·
+type-check ได้แค่ไฟล์ตัวเอง
+
+ผลรอบแรก: npm run test:oracle 26/27 · Q10 ไม่ผ่าน
+
+ข้อความตามไปถึง agent ตัวเดิม (ไม่บอกตัวเลขที่คาด):
+"The oracle is a PRICE calculator: stock (BR-33) and the per-buyer limit (BR-31) are checked only when an order is placed
+(FR-36 / FR-38), not when a cart is priced. So do NOT set valid=false for qty over the 6.1 stock or for GPU-V57 qty > 1 —
+price those carts normally. Keep valid=false only for things that make a price impossible."
+
+ผลรอบสอง: 27/27 → ORACLE_READY = true → SEED=2026 npm run test:property
+P1 เจอความต่าง: CPU-N5 × 1 + assembly → เว็บ 6,290 oracle 6,790 → ทีมตัดสินว่า "เว็บผิด" (กั้น CPU + เมนบอร์ดเกิน BR-21)
+→ ถอยการกั้นที่ API · ถามร้าน E11 · ไม่แก้ oracle ให้ตรงเว็บ → P1 ผ่าน seed 2026 · 7 · 99 · BUG_MODE=1 แดงตั้งแต่แบบที่ 81

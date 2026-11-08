@@ -15,6 +15,7 @@ import type {
   QuoteDoc,
   SavedBuild,
   Shipping,
+  LotRow,
   StockRow,
   TimeInfo,
 } from './types';
@@ -135,7 +136,7 @@ export const api = {
   ) => request<PlacedOrder>('POST', `/quotes/${enc(no)}/order`, body),
 
   // account
-  register: (body: { email: string; password: string; name: string; phone: string; company?: string; taxId?: string }) =>
+  register: (body: { email: string; password: string; name: string; phone: string; company?: string; taxId?: string; business?: boolean }) =>
     request<Me>('POST', '/auth/register', body),
   login: (email: string, password: string) => request<Me>('POST', '/auth/login', { email, password }),
   logout: () => request<{ ok: boolean }>('POST', '/auth/logout'),
@@ -149,6 +150,8 @@ export const api = {
       '/admin/store-sale',
       customerCode ? { sku, qty, customerCode } : { sku, qty },
     ),
+  adminLots: () => request<LotRow[]>('GET', '/admin/lots'),
+  scheduleLot: (sku: string, qty: number, releaseAt: string) => request<LotRow>('POST', '/admin/lots', { sku, qty, releaseAt }),
   adminOrders: (status?: string, date?: string) => request<Order[]>('GET', `/admin/orders${q({ status, date })}`),
   setStatus: (no: string, status: 'PACKED' | 'SHIPPED' | 'DELIVERED') =>
     request<Order>('POST', `/admin/orders/${enc(no)}/status`, { status }),

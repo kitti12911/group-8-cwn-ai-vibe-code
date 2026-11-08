@@ -5,6 +5,8 @@ import { defineConfig, devices } from '@playwright/test';
  * ชั้น `api` รันครั้งเดียว (ไม่ขึ้นกับเบราว์เซอร์) · ชั้น `ui` รันครบ 3 เบราว์เซอร์ตาม NFR-15
  */
 const BASE_URL = process.env.BASE_URL ?? 'http://localhost:3000';
+/** LAB 12 หลักฐาน: `npm run evidence` = EVIDENCE=1 → project `evidence` อัดวิดีโอ Chromium ทุก test ui แล้ว scripts/make-gifs.mjs แปลงเป็น GIF */
+const EVIDENCE = process.env.EVIDENCE === '1';
 
 export default defineConfig({
   testDir: '.',
@@ -29,22 +31,32 @@ export default defineConfig({
     locale: 'th-TH',
     timezoneId: 'Asia/Bangkok',
   },
-  projects: [
-    // `ui-race.spec.ts` ไม่ใช่ชั้น api — ต้อง ignore ที่นี่ด้วย ไม่งั้น `npm run test:race` จะลากไปรันซ้ำแบบไม่มีวิดีโอ
-    { name: 'api', testMatch: /.*\.spec\.ts/, testIgnore: [/.*\.ui\.spec\.ts/, /ui-race\.spec\.ts/] },
-    { name: 'chromium-ui', testMatch: /.*\.ui\.spec\.ts/, use: { ...devices['Desktop Chrome'] } },
-    { name: 'firefox-ui', testMatch: /.*\.ui\.spec\.ts/, use: { ...devices['Desktop Firefox'] } },
-    { name: 'webkit-ui', testMatch: /.*\.ui\.spec\.ts/, use: { ...devices['Desktop Safari'] } },
-    /**
-     * TC-RACE-02 · หลักฐานขั้น 2 คือ **วิดีโอสองจอตอน test ผ่าน** จึงต้อง `video: 'on'`
-     * (`retain-on-failure` ของ config หลักจะลบไฟล์ทิ้งทุกครั้งที่ผ่าน = ใช้เป็นหลักฐานไม่ได้)
-     * ไฟล์ลงที่ `test-report/race-ui/` เพื่อให้ `npm run race:gif` หยิบไปต่อเป็น GIF ได้
-     */
-    {
-      name: 'race-ui',
-      testMatch: /ui-race\.spec\.ts/,
-      outputDir: 'test-report/race-ui',
-      use: { ...devices['Desktop Chrome'], video: { mode: 'on', size: { width: 900, height: 820 } } },
-    },
-  ],
+  projects: EVIDENCE
+    ? [
+        // โหมดเก็บหลักฐาน LAB 12 — รันเฉพาะชั้น ui ด้วย chromium เดียว เปิดวิดีโอและหน่วงให้ดูทัน
+        {
+          name: 'evidence',
+          testMatch: /.*\.ui\.spec\.ts/,
+          outputDir: 'test-results/evidence',
+          use: { ...devices['Desktop Chrome'], video: { mode: 'on', size: { width: 1280, height: 800 } }, launchOptions: { slowMo: 120 } },
+        },
+      ]
+    : [
+        // `ui-race.spec.ts` ไม่ใช่ชั้น api — ต้อง ignore ที่นี่ด้วย ไม่งั้น `npm run test:race` จะลากไปรันซ้ำแบบไม่มีวิดีโอ
+        { name: 'api', testMatch: /.*\.spec\.ts/, testIgnore: [/.*\.ui\.spec\.ts/, /ui-race\.spec\.ts/] },
+        { name: 'chromium-ui', testMatch: /.*\.ui\.spec\.ts/, use: { ...devices['Desktop Chrome'] } },
+        { name: 'firefox-ui', testMatch: /.*\.ui\.spec\.ts/, use: { ...devices['Desktop Firefox'] } },
+        { name: 'webkit-ui', testMatch: /.*\.ui\.spec\.ts/, use: { ...devices['Desktop Safari'] } },
+        /**
+         * TC-RACE-02 · หลักฐานขั้น 2 คือ **วิดีโอสองจอตอน test ผ่าน** จึงต้อง `video: 'on'`
+         * (`retain-on-failure` ของ config หลักจะลบไฟล์ทิ้งทุกครั้งที่ผ่าน = ใช้เป็นหลักฐานไม่ได้)
+         * ไฟล์ลงที่ `test-report/race-ui/` เพื่อให้ `npm run race:gif` หยิบไปต่อเป็น GIF ได้
+         */
+        {
+          name: 'race-ui',
+          testMatch: /ui-race\.spec\.ts/,
+          outputDir: 'test-report/race-ui',
+          use: { ...devices['Desktop Chrome'], video: { mode: 'on', size: { width: 900, height: 820 } } },
+        },
+      ],
 });

@@ -12,6 +12,7 @@
     "test:property": "playwright test property --project=api --workers=1",
     "test:oracle": "playwright test property/oracle --project=api",
     "test:thrice": "playwright test tests && playwright test tests && playwright test tests",
+    "evidence": "EVIDENCE=1 playwright test tests race/ui-race.ui.spec.ts --reporter=list; node scripts/make-gifs.mjs",
     "report": "playwright show-report"
   },
   "devDependencies": {

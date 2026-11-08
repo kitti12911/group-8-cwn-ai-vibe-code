@@ -262,3 +262,24 @@ func TestFlashWindowNextStart(t *testing.T) {
 		t.Errorf("จากศุกร์ 13 รอบถัดไปต้องเป็นศุกร์ 20 ได้วันที่ %d", nextFromFriday.Day())
 	}
 }
+
+// ---- mutation รอบ 5 · MUTATION-REPORT.md ข้อ 6 ----
+
+// ใบเสนอราคาที่มีค่าประกอบ เปลี่ยนวิธีส่งแล้วยอดต้องยังบวกค่าประกอบ (BR-39 · A-37) · ฆ่า pricing.go Reship G4 + AssemblyFee → −
+func TestReshipKeepsAssemblyFee(t *testing.T) {
+	q := quoteOf(2000, "pickup")
+	q.AssemblyFee = 500
+	Reship(&q, "standard")
+	if want := int64(2000 + 500 + 60); q.Total != want {
+		t.Errorf("Reship ใบที่มีค่าประกอบ: ยอดชำระ = %d ต้องเป็น %d (2,000 + 500 + 60)", q.Total, want)
+	}
+}
+
+// คูปองที่จำกัด 1 หมวด ต้องตรวจหมวดเหมือนคูปองหลายหมวด (BR-18) · ฆ่า pricing.go len(c.Categories) > 0 → > 1
+func TestCouponLimitedToOneCategory(t *testing.T) {
+	one := &Coupon{Code: "ONECAT", Kind: "fixed", Value: 100, Categories: []string{"GPU"}}
+	q := Compute(Input{Lines: []Line{{Product: synth(5000, false), Qty: 1}}, Tier: TierGeneral, Coupon: one, CouponCode: "ONECAT", Shipping: "pickup", Now: thu1000})
+	if q.Coupon.Status != "REJECTED" || q.Coupon.Amount != 0 {
+		t.Errorf("คูปองเฉพาะ GPU กับตะกร้า SSD: status=%s amount=%d ต้องเป็น REJECTED / 0", q.Coupon.Status, q.Coupon.Amount)
+	}
+}

@@ -61,7 +61,7 @@ const results = await Promise.all(            // ← ยิงพร้อมก
 SELECT sku, on_hand, available FROM products WHERE sku = 'GPU-V57';
 ```
 
-```
+```text
    sku   | on_hand | available
 ---------+---------+-----------
  GPU-V57 |       1 |        -9       ← ขายเกินไป 9 ใบ
@@ -73,7 +73,7 @@ FROM orders o JOIN order_items oi ON oi.order_id = o.id
 WHERE oi.sku = 'GPU-V57' ORDER BY o.order_no;
 ```
 
-```
+```text
     order_no    | buyer_name |    buyer_key     | qty
 ----------------+------------+------------------+-----
  BB-261113-0002 | ผู้ซื้อ 8   | phone:0820000008 |   1
@@ -203,7 +203,7 @@ WHERE oi.sku = 'GPU-V57' ORDER BY o.order_no;
 
 | ไฟล์ | ขนาด | คือ |
 | --- | ---: | --- |
-| `race-ui.gif` | 155 KB · 606×273 · 14 เฟรม | สองจอต่อกัน (ซ้าย = หน้าต่าง A · ขวา = หน้าต่าง B) ตั้งแต่ก่อนกดจนรู้ผล · เฟรมละ 140 ms |
+| `race-ui.gif` | 164 KB · 606×273 · 13 เฟรม | สองจอต่อกัน (ซ้าย = หน้าต่าง A · ขวา = หน้าต่าง B) ตั้งแต่ก่อนกดจนรู้ผล · เฟรมละ 140 ms |
 | `race-ui-A.webm` | 596 KB | วิดีโอหน้าต่าง A ของ `TC-RACE-02` |
 | `race-ui-B.webm` | 647 KB | วิดีโอหน้าต่าง B ของ `TC-RACE-02` |
 | `race-ui-side-by-side.png` | 98 KB · 1848×896 | ภาพนิ่งสองจอเรียงกัน ณ วินาทีที่รู้ผล มีคำบรรยายว่าฝั่งไหน "ได้ของ" / "ของหมด" |

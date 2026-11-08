@@ -63,19 +63,19 @@ var seedLedger = []ledgerRow{
 }
 
 type seedOrder struct {
-	no, code   string
-	items      []pricing.Line
-	tier       pricing.Tier
-	coupon     string
-	shipping   string
-	placed     time.Time
-	status     string
-	paid       time.Time
-	packed     *time.Time
-	shipped    *time.Time
-	delivered  *time.Time
-	address    string
-	province   string
+	no, code  string
+	items     []pricing.Line
+	tier      pricing.Tier
+	coupon    string
+	shipping  string
+	placed    time.Time
+	status    string
+	paid      time.Time
+	packed    *time.Time
+	shipped   *time.Time
+	delivered *time.Time
+	address   string
+	province  string
 }
 
 func tp(t time.Time) *time.Time { return &t }
@@ -95,7 +95,6 @@ var seedOrders = []seedOrder{
 	{"BB-261112-0001", "C5", []pricing.Line{line("MON-27", 1)}, pricing.TierBusiness, "", "standard",
 		clock.Date(2026, 11, 12, 14, 0, 0), "PACKED", clock.Date(2026, 11, 12, 14, 5, 0), tp(clock.Date(2026, 11, 13, 9, 30, 0)), nil, nil, "88 อาคารดีไซน์โค", Bangkok},
 }
-
 
 func seed(ctx context.Context, c *pgx.Conn, hash string) error {
 	tx, err := c.Begin(ctx)

@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { api, errorText } from '../api';
 import { setCart } from '../cart';
 import { ErrorMessage, Loading, useTitle } from '../components/common';
 import { BUILDER_CATS, builderLabel, dateTimeTH, thb, thbShort } from '../format';
+import { maxQty, useProducts } from '../hooks';
 import { useClock } from '../state';
 import type { SavedBuild as SavedBuildT } from '../types';
 
@@ -12,6 +13,8 @@ export function SavedBuild() {
   const { code = '' } = useParams();
   const navigate = useNavigate();
   const { flashActive } = useClock();
+  const { products } = useProducts();
+  const bySku = useMemo(() => new Map((products ?? []).map((p) => [p.sku, p])), [products]);
   const [build, setBuild] = useState<SavedBuildT | null>(null);
   const [error, setError] = useState<string | null>(null);
   useTitle(`สเปก ${code}`);
@@ -45,12 +48,21 @@ export function SavedBuild() {
   const canAdd = items.length > 0 && (ev ? ev.canAddToCart : true);
 
   const addAll = () => {
+    const capped: string[] = [];
     setCart((c) => {
       const next = c.items.map((i) => ({ ...i }));
-      for (const it of items) if (!next.some((i) => i.sku === it.sku)) next.push({ sku: it.sku, qty: 1 });
-      return { ...c, items: next, assembly: !!build.assembly };
+      // FR-22: every piece goes in — a SKU already in the cart gets +1, capped by stock and the per-buyer limit (BR-31 · C5)
+      for (const it of items) {
+        const max = maxQty(bySku.get(it.sku));
+        const line = next.find((i) => i.sku === it.sku);
+        if (line) {
+          if (line.qty + 1 > max) capped.push(it.sku);
+          else line.qty += 1;
+        } else next.push({ sku: it.sku, qty: 1 });
+      }
+      return { ...c, items: next, assembly: !!build.assembly, fromBuilder: true };
     });
-    navigate('/cart');
+    navigate('/cart', { state: capped.length ? { capped } : undefined });
   };
 
   return (

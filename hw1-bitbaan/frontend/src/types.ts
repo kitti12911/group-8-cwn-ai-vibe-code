@@ -182,6 +182,8 @@ export interface Order {
   quote: Quote;
   canCancel: boolean;
   canReturn: boolean;
+  /** FR-48: refund for each box condition, only while canReturn */
+  returnPreview: { unopened: { refund: number; fee: number }; opened: { refund: number; fee: number } } | null;
   returnUntil: string | null;
   refunds: Refund[];
 }
@@ -242,4 +244,13 @@ export interface StockRow {
   available: number;
   redTag: boolean;
   perBuyerLimit: number | null;
+}
+
+/** FR-06: a stock lot that opens for sale at releaseAt */
+export interface LotRow {
+  code: string;
+  sku: string;
+  qty: number;
+  releaseAt: string;
+  released: boolean;
 }

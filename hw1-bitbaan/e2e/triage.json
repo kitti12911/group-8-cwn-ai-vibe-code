@@ -1,10 +1,10 @@
 {
   "$comment": "บั๊กที่เจอและการตัดสินว่าใครผิด (เว็บ / oracle / สมมติฐาน) ตามบท 04 · อัปเดตทุกครั้งที่ TC แดง",
-  "updatedAt": "2026-11-07",
+  "updatedAt": "2026-11-08",
   "bugMode0": [
     {
       "id": "BUG-EXPLORE-01",
-      "foundBy": "exploratory · EXPLORATION.md charter C3",
+      "foundBy": "exploratory รอบ 1 · EXPLORATION-R1.md charter C3",
       "severity": "medium",
       "rule": "BR-21",
       "verdict": "เว็บผิด",
@@ -19,8 +19,9 @@
       "impact": "ร้านเสีย ฿500 ต่อออเดอร์ที่เข้าเงื่อนไขนี้",
       "source": "backend/internal/pricing/pricing.go · Compute() ตรวจแค่ว่าแต่ละหมวดมีของ ไม่ได้ตรวจจำนวน",
       "tc": "TC-BUILD-13b",
-      "test": "e2e/tests/shipping.spec.ts (test.fail)",
-      "status": "open"
+      "test": "e2e/tests/shipping.spec.ts",
+      "status": "fixed",
+      "fixedIn": "backend/internal/pricing/pricing.go · 2026-11-07 · ฟรีเมื่อทุกหมวดมี 1 ชิ้นพอดี"
     },
     {
       "id": "BUG-EXPLORE-02",

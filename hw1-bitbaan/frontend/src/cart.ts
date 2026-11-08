@@ -9,6 +9,8 @@ import type { CartItem } from './types';
 export interface Cart {
   items: CartItem[];
   assembly: boolean;
+  /** BR-21: "ให้ร้านประกอบ" exists only for specs from the builder — set by "ใส่ตะกร้าทั้งชุด" */
+  fromBuilder?: boolean;
   coupon?: string;
 }
 
@@ -28,6 +30,7 @@ function parse(raw: string | null): Cart {
     return {
       items,
       assembly: !!obj?.assembly,
+      fromBuilder: !!obj?.fromBuilder,
       coupon: typeof obj?.coupon === 'string' && obj.coupon ? obj.coupon : undefined,
     };
   } catch {
@@ -60,7 +63,9 @@ export function setCart(next: Cart | ((c: Cart) => Cart)): void {
   const value = typeof next === 'function' ? next(getCart()) : next;
   const clean: Cart = {
     items: value.items.filter((i) => i.qty > 0),
-    assembly: value.assembly,
+    // no builder spec in the cart any more → no assembly option either
+    assembly: value.fromBuilder && value.items.some((i) => i.qty > 0) ? value.assembly : false,
+    ...(value.fromBuilder && value.items.some((i) => i.qty > 0) ? { fromBuilder: true } : {}),
     ...(value.coupon ? { coupon: value.coupon } : {}),
   };
   try {

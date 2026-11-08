@@ -35,8 +35,17 @@ export function Login() {
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
-    setBusy(true);
     setError(null);
+    // C2/C4 exploration: say what is missing instead of a generic error
+    if (tab === 'login' && (!form.email.trim() || !form.password)) {
+      setError('กรุณากรอกอีเมลและรหัสผ่าน');
+      return;
+    }
+    if (tab === 'business' && (!form.company.trim() || !/^\d{13}$/.test(form.taxId.replace(/[\s-]/g, '')))) {
+      setError('สมัครบริษัทต้องกรอกชื่อบริษัท และเลขประจำตัวผู้เสียภาษี 13 หลัก');
+      return;
+    }
+    setBusy(true);
     try {
       if (tab === 'login') {
         const me = await api.login(form.email.trim(), form.password);
@@ -49,6 +58,7 @@ export function Login() {
           phone: form.phone.trim(),
         };
         if (tab === 'business') {
+          body.business = true;
           body.company = form.company.trim();
           body.taxId = form.taxId.replace(/[\s-]/g, '');
         }

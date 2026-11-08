@@ -92,6 +92,8 @@ type Input struct {
 	Assembly   bool
 	Now        time.Time
 	BugMode    int
+	// FirstCouponHeld: the account's first-order coupon is already held by a PENDING order (BR-17)
+	FirstCouponHeld bool
 }
 
 type QuoteLine struct {
@@ -184,7 +186,7 @@ func Compute(in Input) Quote {
 	flash := FlashActive(in.Now, in.BugMode)
 	var cpu, mb int64
 	eligible := map[string]int64{} // coupon category -> amount after flash
-	cats := map[string]bool{}
+	catQty := map[string]int{}
 	for _, l := range in.Lines {
 		unit := l.Product.Price
 		var fp *int64
@@ -200,7 +202,7 @@ func Compute(in Input) Quote {
 		q.G1 += amt
 		eligible[l.Product.Category] += amt
 		if l.Qty > 0 {
-			cats[l.Product.Category] = true
+			catQty[l.Product.Category] += l.Qty
 		}
 		switch l.Product.Category {
 		case "CPU":
@@ -228,12 +230,14 @@ func Compute(in Input) Quote {
 	}
 	q.G4 = q.G3 - q.Coupon.Amount
 
-	// assembly (BR-21)
+	// assembly (BR-21): ฿500 when asked for · free only for a full set — all 7 builder categories, exactly 1 piece each.
+	// "only for builder specs" is enforced by the cart UI (the option shows only for carts from the builder);
+	// the server can't tell where a cart came from (LAB 9 R41 · QUESTIONS-TO-OWNER E11).
 	if in.Assembly {
 		q.AssemblyFee = 500
 		all := true
 		for _, c := range BuilderCats {
-			if !cats[c] {
+			if catQty[c] != 1 {
 				all = false
 			}
 		}
@@ -322,6 +326,9 @@ func applyCoupon(in Input, q Quote, eligible map[string]int64) CouponResult {
 	if c.FirstOrderOnly && !in.FirstOrder {
 		return reject("โค้ดนี้ใช้ได้กับออเดอร์แรกเท่านั้น")
 	}
+	if c.FirstOrderOnly && in.FirstCouponHeld {
+		return reject("โค้ดนี้ใช้กับออเดอร์ที่รอชำระอยู่แล้ว · ยกเลิกออเดอร์นั้นก่อน หรือชำระให้เสร็จ")
+	}
 	var amount int64
 	if len(c.Categories) > 0 {
 		var base int64
@@ -363,7 +370,7 @@ func applyCoupon(in Input, q Quote, eligible map[string]int64) CouponResult {
 func commas(n int64) string {
 	s := ""
 	for i, d := range []byte(itoa(n)) {
-		if i > 0 && (len(itoa(n))-i)%3 == 0 {
+		if i > 0 && (len(itoa(n))-i)%4 == 0 {
 			s += ","
 		}
 		s += string(d)
